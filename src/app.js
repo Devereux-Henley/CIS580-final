@@ -15,7 +15,10 @@ var input = {
   right: false
 }
 
+
 var player = new Player({x: 500, y: 500});
+var background = new Image();
+background.src = 'assets/background.png';
 
 /**
  * @function onkeydown
@@ -133,6 +136,12 @@ function render(elapsedTime, ctx) {
   */
 function renderWorld(elapsedTime, ctx) {
     // Render the player
+	ctx.drawImage(
+		background,
+		0, 0, 640, 400,
+		0, 0, canvas.width, canvas.height);
+
+	ctx.save();
     player.render(elapsedTime, ctx);
 	ctx.restore();
 }

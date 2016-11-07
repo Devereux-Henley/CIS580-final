@@ -3,7 +3,7 @@
 /* Classes and Libraries */
 
 /* Constants */
-const PLAYER_SPEED = 5;
+const PLAYER_SPEED = 10;
 
 /**
  * @module Player
@@ -35,8 +35,8 @@ Player.prototype.update = function(elapsedTime, input) {
   if(input.left) this.velocity.x -= PLAYER_SPEED;
   if(input.right) this.velocity.x += PLAYER_SPEED;
   this.velocity.y = 0;
-  if(input.up) this.velocity.y -= PLAYER_SPEED / 2;
-  if(input.down) this.velocity.y += PLAYER_SPEED / 2;
+  if(input.up) this.velocity.y -= PLAYER_SPEED;
+  if(input.down) this.velocity.y += PLAYER_SPEED;
 
   // determine player angle
 
@@ -60,6 +60,6 @@ Player.prototype.render = function(elapasedTime, ctx) {
   ctx.save();
   ctx.translate(this.position.x, this.position.y);
   ctx.fillStyle = "pink";
-  ctx.fillRect(0, 0, 15, 15);
+  ctx.fillRect(0, 0, 30, 30);
   ctx.restore();
 }

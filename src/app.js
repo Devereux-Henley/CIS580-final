@@ -3,7 +3,7 @@
 /* Classes and Libraries */
 const Game = require('./game');
 const Player = require('./player');
-
+const Map = require('./map');
 
 /* Global variables */
 var canvas = document.getElementById('screen');
@@ -18,6 +18,7 @@ var input = {
 
 var player = new Player({x: 500, y: 500});
 var background = new Image();
+var map = new Map.Map(2);
 background.src = 'assets/background.png';
 
 /**
@@ -99,7 +100,7 @@ masterLoop(performance.now());
  */
 function update(elapsedTime) {
   // update the player
-  player.update(elapsedTime, input); 
+  player.update(elapsedTime, input);
 }
 
 /**
@@ -120,7 +121,7 @@ function render(elapsedTime, ctx) {
   // objects in the world - that way they
   // can be rendered in WORLD cooridnates
   // but appear in SCREEN coordinates
-  renderWorld(elapsedTime, ctx); 
+  renderWorld(elapsedTime, ctx);
 
   // Render the GUI without transforming the
   // coordinate system
@@ -140,7 +141,9 @@ function renderWorld(elapsedTime, ctx) {
 		background,
 		0, 0, 640, 400,
 		0, 0, canvas.width, canvas.height);
-
+  map.getLayers().forEach(function(layer) {
+    layer.render(ctx);
+  });
 	ctx.save();
     player.render(elapsedTime, ctx);
 	ctx.restore();

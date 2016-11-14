@@ -17,7 +17,7 @@ function SpawnManager() {
   this.associations = {};
 }
 
-function getLocations(layers) {
+SpawnManager.prototype.getLocations = function(layers) {
   for (var i = 0; i < layers.length; i++) {
     if(layers[i].spawning){
       for (var j = 0; j < layers[i].objects.length; j++) {
@@ -33,11 +33,11 @@ function getLocations(layers) {
   }
 }
 
-function addLocation(position, type){
+SpawnManager.prototype.addLocation = function(position, type){
   this.locations.push(new SpawnLocation(position, type));
 }
 
-function addAssociation(type, spawner){
+SpawnManager.prototype.addAssociation = function(type, spawner){
   if(this.associations[type] == null){
     this.associations[type] = spawner;
   }
@@ -46,7 +46,7 @@ function addAssociation(type, spawner){
   }
 }
 
-function update(){
+SpawnManager.prototype.update = function(){
   for (var i = 0; i < locations.length; i++) {
     associations[locations[i].Type].update();
   }

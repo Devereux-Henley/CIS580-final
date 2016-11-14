@@ -46,6 +46,14 @@ window.onkeydown = function(event) {
       input.right = true;
       event.preventDefault();
       break;
+	case "Shift":
+	  player.state.sprinting = true;
+	  event.preventDefault();
+	  break;
+	case " ":
+	  player.state.dodging = true;
+	  event.preventDefault();
+	  break;
   }
 }
 
@@ -75,6 +83,14 @@ window.onkeyup = function(event) {
       input.right = false;
       event.preventDefault();
       break;
+	case "Shift":
+	  player.state.sprinting = false;
+	  event.preventDefault();
+	  break;
+	case " ":
+	  player.state.dodging = false;
+	  event.preventDefault();
+	  break;
   }
 }
 
@@ -99,7 +115,55 @@ masterLoop(performance.now());
  */
 function update(elapsedTime) {
   // update the player
+  checkMoveState();
   player.update(elapsedTime, input); 
+}
+
+function checkMoveState() {
+	if(input.up) {
+		if(input.right) {
+			player.moveNorthEast();
+		} 
+		else if (input.left) {
+			player.moveNorthWest();
+		}
+		else if (input.down) {
+			player.still();
+		}
+		else {
+			player.moveNorth();
+		}
+		return;
+	}
+	else if(input.right) {
+		if(input.left) {
+			player.still();
+		}
+		else if (input.down) {
+			player.moveSouthEast();
+		}
+		else {
+			player.moveEast();
+		}
+		return;
+	}
+	else if(input.down) {
+		if(input.left) {
+			player.moveSouthWest();
+		}
+		else {
+			player.moveSouth();
+		}
+		return;
+	}
+	else if(input.left) {
+		player.moveWest();
+		return;
+	}
+	else {
+		player.still();
+		return;
+	}
 }
 
 /**

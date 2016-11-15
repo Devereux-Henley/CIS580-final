@@ -4,6 +4,7 @@
 
 /* Constants */
 const PLAYER_SPEED = 2;
+const RENDER_TIMER = 200;
 	/**
 	 * @module Player
 	 * A class representing a player's helicopter
@@ -34,6 +35,7 @@ function Player(position) {
 	this.state = new PlayerState('STILL', false, false);
 	this.renderSource = new Image();
 	this.renderSource.src = 'assets/rpg_sprite_walk.png';
+	this.timer = 0;
 	this.renderPosition = 0;
 	this.renderSources = 
 		{'STILL':     [new SheetPosition(0, 0)],
@@ -199,15 +201,23 @@ Player.prototype.update = function(elapsedTime) {
 	 * @param {DOMHighResTimeStamp} elapsedTime
 	 * @param {CanvasRenderingContext2D} ctx
 	 */
-Player.prototype.render = function(elapasedTime, ctx) { 
+Player.prototype.render = function(elapsedTime, ctx) { 
 	ctx.save();
 	ctx.translate(this.position.x, this.position.y);
+
+	this.timer += elapsedTime;
+
 	var renderstates = this.renderSources[this.state.moveState][this.renderPosition];
 	if(renderstates == undefined) {
 		this.renderPosition = 0;
 		renderstates = this.renderSources[this.state.moveState][this.renderPosition];
 	}
-	this.renderPosition++;
+	
+	if(this.timer > RENDER_TIMER) {
+		this.renderPosition++;
+		this.timer = 0;
+	}	
+
 	ctx.drawImage(
 		this.renderSource,
 		renderstates.x, renderstates.y, renderstates.width, renderstates.height,

@@ -3,8 +3,7 @@
 /* Classes and Libraries */
 
 /* Constants */
-const PLAYER_SPEED = 10;
-
+const PLAYER_SPEED = 2;
 	/**
 	 * @module Player
 	 * A class representing a player's helicopter
@@ -17,6 +16,13 @@ function PlayerState(initDirection, sprinting, dodging) {
 	this.dodging = dodging;
 }
 
+function SheetPosition(x, y) {
+	this.x = x;
+	this.y = y;
+	this.width = 24;
+	this.height = 32;
+}
+
 	/**
 	 * @constructor Player
 	 * Creates a player
@@ -26,6 +32,76 @@ function Player(position) {
 	this.position = position;
 	this.velocity = {x: 0, y: 0};
 	this.state = new PlayerState('STILL', false, false);
+	this.renderSource = new Image();
+	this.renderSource.src = 'assets/rpg_sprite_walk.png';
+	this.renderPosition = 0;
+	this.renderSources = 
+		{'STILL':     [new SheetPosition(0, 0)],
+		 'EAST':      [new SheetPosition(0, 96),
+		               new SheetPosition(24, 96),
+		               new SheetPosition(48, 96),
+		               new SheetPosition(72, 96),
+		               new SheetPosition(96, 96),
+		               new SheetPosition(120, 96),
+		               new SheetPosition(144, 96),
+		               new SheetPosition(168, 96)],
+		 'NORTH':     [new SheetPosition(0, 32),
+		               new SheetPosition(24, 32),
+		               new SheetPosition(48, 32),
+		               new SheetPosition(72, 32),
+		               new SheetPosition(96, 32),
+		               new SheetPosition(120, 32),
+		               new SheetPosition(144, 32),
+		               new SheetPosition(168, 32)],
+		 'SOUTH':     [new SheetPosition(0, 0),
+		               new SheetPosition(24, 0),
+		               new SheetPosition(48, 0),
+		               new SheetPosition(72, 0),
+		               new SheetPosition(96, 0),
+		               new SheetPosition(120, 0),
+		               new SheetPosition(144, 0),
+		               new SheetPosition(168, 0)],
+		 'WEST':      [new SheetPosition(0, 64),
+		               new SheetPosition(24, 64),
+		               new SheetPosition(48, 64),
+		               new SheetPosition(72, 64),
+		               new SheetPosition(96, 64),
+		               new SheetPosition(120, 64),
+		               new SheetPosition(144, 64),
+		               new SheetPosition(168, 64)],
+		 'NORTHWEST': [new SheetPosition(0, 64),
+		               new SheetPosition(24, 64),
+		               new SheetPosition(48, 64),
+		               new SheetPosition(72, 64),
+		               new SheetPosition(96, 64),
+		               new SheetPosition(120, 64),
+		               new SheetPosition(144, 64),
+		               new SheetPosition(168, 64)],
+		 'NORTHEAST': [new SheetPosition(0, 96),
+		               new SheetPosition(24, 96),
+		               new SheetPosition(48, 96),
+		               new SheetPosition(72, 96),
+		               new SheetPosition(96, 96),
+		               new SheetPosition(120, 96),
+		               new SheetPosition(144, 96),
+		               new SheetPosition(168, 96)],
+		 'SOUTHWEST': [new SheetPosition(0, 64),
+		               new SheetPosition(24, 64),
+		               new SheetPosition(48, 64),
+		               new SheetPosition(72, 64),
+		               new SheetPosition(96, 64),
+		               new SheetPosition(120, 64),
+		               new SheetPosition(144, 64),
+		               new SheetPosition(168, 64)],
+		 'SOUTHEAST': [new SheetPosition(0, 96),
+		               new SheetPosition(24, 96),
+		               new SheetPosition(48, 96),
+		               new SheetPosition(72, 96),
+		               new SheetPosition(96, 96),
+		               new SheetPosition(120, 96),
+		               new SheetPosition(144, 96),
+		               new SheetPosition(168, 96)],
+};
 }
 
 Player.prototype.moveWest = function() {
@@ -78,7 +154,7 @@ Player.prototype.update = function(elapsedTime) {
 
 	var updateSpeed = PLAYER_SPEED;
 	if(this.state.sprinting) {
-		updateSpeed = 2 * PLAYER_SPEED;
+		updateSpeed = 1.5 * PLAYER_SPEED;
 	}
 
 	switch(this.state.moveState) {
@@ -126,15 +202,15 @@ Player.prototype.update = function(elapsedTime) {
 Player.prototype.render = function(elapasedTime, ctx) { 
 	ctx.save();
 	ctx.translate(this.position.x, this.position.y);
-	if(this.state.sprinting) {
-		ctx.fillStyle = 'red';
+	var renderstates = this.renderSources[this.state.moveState][this.renderPosition];
+	if(renderstates == undefined) {
+		this.renderPosition = 0;
+		renderstates = this.renderSources[this.state.moveState][this.renderPosition];
 	}
-	else if(this.state.dodging) {
-		ctx.fillStyle = 'yellow';
-	}
-	else {
-		ctx.fillStyle = "pink";
-	}
-	ctx.fillRect(0, 0, 30, 30);
+	this.renderPosition++;
+	ctx.drawImage(
+		this.renderSource,
+		renderstates.x, renderstates.y, renderstates.width, renderstates.height,
+		0, 0, 24, 32);
 	ctx.restore();
 }

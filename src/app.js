@@ -116,7 +116,7 @@ masterLoop(performance.now());
 function update(elapsedTime) {
   // update the player
   checkMoveState();
-  player.update(elapsedTime, input); 
+  player.update(elapsedTime); 
 }
 
 function checkMoveState() {

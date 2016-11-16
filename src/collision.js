@@ -1,6 +1,7 @@
 "use strict";
 
 const MS_PER_FRAME = 1000/8;
+const Vector = require('vector');
 
 /**
  * @module exports the Player class
@@ -31,11 +32,11 @@ Collision.prototype.checkForSingleCircleCollision = function(entity1, entity2)
   }
 }
 
-Collision.prototype.checkForShapeCollision(entity1, entity2) {
-    var axes = findAxes(entity1) + findAxes(entity2);
+Collision.prototype.checkForShapeCollision = function(entity1, entity2) {
+    var axes = Vector.findAxes(entity1) + Vector.findAxes(entity2);
     for(var i = 0; i < axes.length; i++) {
-        var proj1 = project(entity1, axes[i]);
-        var proj2 = project(entity2, axes[i]);
+        var proj1 = Vector.project(entity1, axes[i]);
+        var proj2 = Vector.project(entity2, axes[i]);
         if(proj1.max < proj2.min || proj1.min > proj2.max) {
             return false;
         }

@@ -1,7 +1,7 @@
 "use strict";
 
 const MS_PER_FRAME = 1000/8;
-const Vector = require('vector');
+const Vector = require('./vector');
 
 /**
  * @module exports the Player class

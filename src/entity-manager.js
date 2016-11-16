@@ -1,3 +1,10 @@
+"use strict";
+
+const Collision = require('./collision');
+
+/**
+ * 
+ */
 module.exports = exports = EntityManager;
 
 function EntityManager(width, height, cellSize) {

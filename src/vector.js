@@ -2,7 +2,11 @@ module.exports = exports = {
   rotate: rotate,
   dotProduct: dotProduct,
   magnitude: magnitude,
-  normalize: normalize
+  normalize: normalize,
+  subtract: subtract,
+  perpendicular: perpendicular,
+  findAxes: findAxes,
+  project: project
 }
 
 
@@ -31,14 +35,39 @@ function normalize(a)
   return {x: a.x / mag, y: a.y / mag};
 }
 
-function subtract(p1, p2) {
-
+/**
+ * Subtract two vectors
+ * 
+ * @param {Vector} a, the first vector
+ * @param {Vector} b, the second vector
+ * @returns Vector
+ */
+function subtract(a, b) {
+    return {
+        x: a.x - b.x,
+        y: a.y - b.y
+    }
 }
 
-function perpendicular(edge) {
-
+/**
+ * Find a perpendicular vector
+ * 
+ * @param {Vector} a
+ * @returns Vector perpendicular to a
+ */
+function perpendicular(a) {
+    return {
+        x: -a.y,
+        y: a.x
+    }
 }
 
+/**
+ * 
+ * 
+ * @param {any} shape
+ * @returns
+ */
 function findAxes(shape) {
     var axes = [];
     shape.forEach(function(p1, i) {
@@ -52,6 +81,13 @@ function findAxes(shape) {
     return axes;
 }
 
+/**
+ * 
+ * 
+ * @param {any} shape
+ * @param {any} axis
+ * @returns
+ */
 function project(shape, axis) {
     var min = dotProduct(shape[0], axis.x);
     var max = min;

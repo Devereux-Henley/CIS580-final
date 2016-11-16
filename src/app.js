@@ -12,7 +12,9 @@ var input = {
   up: false,
   down: false,
   left: false,
-  right: false
+  right: false,
+  shift: false,
+  dodge: false
 }
 
 
@@ -44,14 +46,14 @@ window.onkeydown = function(event) {
     case "ArrowRight":
     case "d":
       input.right = true;
-      event.preventDefault();
+	  event.preventDefault();
       break;
 	case "Shift":
-	  player.state.sprinting = true;
+	  input.shift = true;
 	  event.preventDefault();
 	  break;
 	case " ":
-	  player.state.dodging = true;
+	  input.space = true;
 	  event.preventDefault();
 	  break;
   }
@@ -83,12 +85,12 @@ window.onkeyup = function(event) {
       input.right = false;
       event.preventDefault();
       break;
-	case "Shift":
-	  player.state.sprinting = false;
+	case "Shift": 
+	  input.shift = false;
 	  event.preventDefault();
 	  break;
 	case " ":
-	  player.state.dodging = false;
+	  input.space = false;
 	  event.preventDefault();
 	  break;
   }
@@ -120,6 +122,14 @@ function update(elapsedTime) {
 }
 
 function checkMoveState() {
+	
+	if(input.shift) {
+		player.sprint();
+	}
+	else if(input.space) {
+		player.dodge();
+	}
+	
 	if(input.up) {
 		if(input.right) {
 			player.moveNorthEast();

@@ -106,6 +106,14 @@ function Player(position) {
 };
 }
 
+Player.prototype.sprint = function() {
+	this.state.sprinting = true;
+}
+
+Player.prototype.dodge = function() {
+	this.state.dodging = true;
+}
+
 Player.prototype.moveWest = function() {
 	this.state.moveState = 'WEST';
 }

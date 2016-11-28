@@ -124,7 +124,9 @@ function update(elapsedTime) {
 }
 
 function checkMoveState() {
-	
+
+	player.walk();
+
 	if(input.shift) {
 		player.sprint();
 	}

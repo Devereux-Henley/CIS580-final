@@ -106,6 +106,10 @@ function Player(position) {
 };
 }
 
+Player.prototype.walk = function() {
+	this.state.sprinting = false;
+}
+
 Player.prototype.sprint = function() {
 	this.state.sprinting = true;
 }
@@ -163,8 +167,12 @@ Player.prototype.update = function(elapsedTime) {
 	this.velocity.y = 0;
 
 	var updateSpeed = PLAYER_SPEED;
-	if(this.state.sprinting) {
-		updateSpeed = 1.5 * PLAYER_SPEED;
+
+	if(this.state.dodging) {
+
+	}
+	else if(this.state.sprinting) {	
+		updateSpeed = 2 * PLAYER_SPEED;
 	}
 
 	switch(this.state.moveState) {
@@ -205,7 +213,7 @@ Player.prototype.update = function(elapsedTime) {
 
 	/**
 	 * @function render
-	 * Renders the player helicopter in world coordinates
+	 * Renders the player in world coordinates
 	 * @param {DOMHighResTimeStamp} elapsedTime
 	 * @param {CanvasRenderingContext2D} ctx
 	 */
@@ -214,8 +222,10 @@ Player.prototype.render = function(elapsedTime, ctx) {
 	ctx.translate(this.position.x, this.position.y);
 
 	this.timer += elapsedTime;
-
+	
+	//Select rendersheet based on time passed since starting this state.
 	var renderstates = this.renderSources[this.state.moveState][this.renderPosition];
+
 	if(renderstates == undefined) {
 		this.renderPosition = 0;
 		renderstates = this.renderSources[this.state.moveState][this.renderPosition];

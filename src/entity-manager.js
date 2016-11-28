@@ -64,6 +64,45 @@ EntityManager.prototype.collide = function(callback) {
       // check for collisions with cellmates
       cell.forEach(function(entity2) {
         //if(entity1 != entity2) checkForCollision(entity1, entity2, callback);
+        if(entity1 != entity2) {
+          if(entity1.shape == "square" && entity2.shape == "square") {
+            if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
+              return true;
+            }
+            else {
+              return false;
+            }
+          }
+          else if(entity1.shape == "circle" && entity2.shape == "circle") {
+            if(Collision.checkForSingleCircleCollision(entity1, entity2)) {
+              return true;
+            }
+            else {
+              return false;
+            }
+          }
+          else if(entity1.shape == "circle" && entity2.shape == "square" || entity1.shape == "square" && entity2.shape == "circle") {
+            if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
+              return true;
+            }
+            else {
+              return false;
+            }
+          }
+          else if(entity1.shape == "complex" || entity2.shape == "complex") {
+            if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
+              if(Collision.checkForShapeCollision(entity1, entity2)) {
+                return true;
+              }
+              else {
+                return false;
+              }
+            }
+            else {
+              return false;
+            }
+          }
+        }
 
         // check for collisions in cell to the right
         if(i % (self.widthInCells - 1) != 0) {
@@ -88,15 +127,4 @@ EntityManager.prototype.collide = function(callback) {
       });
     });
   });
-}
-
-
-function checkForCollision(entity1, entity2, callback) {
-  var collides = !(entity1.x + entity1.width < entity2.x ||
-                   entity1.x > entity2.x + entity2.width ||
-                   entity1.y + entity1.height < entity2.y ||
-                   entity1.y > entity2.y + entity2.height);
-  if(collides) {
-    callback(entity1, entity2);
-  }
 }

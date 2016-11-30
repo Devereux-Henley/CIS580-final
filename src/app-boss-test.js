@@ -3,13 +3,21 @@
 /* Classes and Libraries */
 const Game = require('./game');
 const Boss = require('./boss');
+const Player = require('./player');
 
 /* Global variables */
 var canvas = document.getElementById('screen');
 var game = new Game(canvas, update, render);
 
-var background = new Image();
-background.src = 'assets/background.png';
+var input = {
+  up: false,
+  down: false,
+  left: false,
+  right: false,
+  shift: false,
+  dodge: false
+}
+var player = new Player({x: 500, y: 500});
 
 /**
  * @function masterLoop
@@ -32,6 +40,11 @@ masterLoop(performance.now());
  */
 function update(elapsedTime) {
   // TODO: Update the Boss
+
+
+  // Update the Player
+  checkMoveState();
+  player.update(elapsedTime);
 }
 
 /**
@@ -65,7 +78,143 @@ function renderWorld(elapsedTime, ctx) {
 	ctx.save();
 
   //TODO: Render the Boss
-
-
+  player.render(elapsedTime, ctx);
 	ctx.restore();
+}
+
+
+
+
+
+/**
+ * @function onkeydown
+ * Handles keydown events
+ */
+window.onkeydown = function(event) {
+  input.shift = event.shiftKey;
+  switch(event.key) {
+	case "W":
+    case "ArrowUp":
+    case "w":
+      input.up = true;
+      event.preventDefault();
+      break;
+	case "S":
+    case "ArrowDown":
+    case "s":
+      input.down = true;
+      event.preventDefault();
+      break;
+	case "A":
+    case "ArrowLeft":
+    case "a":
+      input.left = true;
+      event.preventDefault();
+      break;
+	case "D":
+    case "ArrowRight":
+    case "d":
+      input.right = true;
+	  event.preventDefault();
+      break;
+	case " ":
+	  input.space = true;
+	  event.preventDefault();
+	  break;
+  }
+}
+
+/**
+ * @function onkeyup
+ * Handles keydown events
+ */
+window.onkeyup = function(event) {
+  input.shift = event.shiftKey;
+  switch(event.key) {
+	case "W":
+    case "ArrowUp":
+    case "w":
+      input.up = false;
+      event.preventDefault();
+      break;
+	case "S":
+    case "ArrowDown":
+    case "s":
+      input.down = false;
+      event.preventDefault();
+      break;
+	case "A":
+    case "ArrowLeft":
+    case "a":
+      input.left = false;
+      event.preventDefault();
+      break;
+	case "D":
+    case "ArrowRight":
+    case "d":
+      input.right = false;
+      event.preventDefault();
+      break;
+	case " ":
+	  input.space = false;
+	  event.preventDefault();
+	  break;
+  }
+}
+
+function checkMoveState() {
+
+	player.walk();
+
+	if(input.shift) {
+		player.sprint();
+	}
+	else if(input.space) {
+		player.dodge();
+	}
+
+	if(input.up) {
+		if(input.right) {
+			player.moveNorthEast();
+		}
+		else if (input.left) {
+			player.moveNorthWest();
+		}
+		else if (input.down) {
+			player.still();
+		}
+		else {
+			player.moveNorth();
+		}
+		return;
+	}
+	else if(input.right) {
+		if(input.left) {
+			player.still();
+		}
+		else if (input.down) {
+			player.moveSouthEast();
+		}
+		else {
+			player.moveEast();
+		}
+		return;
+	}
+	else if(input.down) {
+		if(input.left) {
+			player.moveSouthWest();
+		}
+		else {
+			player.moveSouth();
+		}
+		return;
+	}
+	else if(input.left) {
+		player.moveWest();
+		return;
+	}
+	else {
+		player.still();
+		return;
+	}
 }

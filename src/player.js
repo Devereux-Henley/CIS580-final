@@ -29,7 +29,7 @@ function SheetPosition(x, y) {
 	 * Creates a player
 	 * @param {Position} starting location of the player;
 	 */
-function Player(position) { 
+function Player(position) {
 	this.position = position;
 	this.velocity = {x: 0, y: 0};
 	this.state = new PlayerState('STILL', false, false);
@@ -37,7 +37,7 @@ function Player(position) {
 	this.renderSource.src = 'assets/rpg_sprite_walk.png';
 	this.timer = 0;
 	this.renderPosition = 0;
-	this.renderSources = 
+	this.renderSources =
 		{'STILL':     [new SheetPosition(0, 0)],
 		 'EAST':      [new SheetPosition(0, 96),
 		               new SheetPosition(24, 96),
@@ -171,7 +171,7 @@ Player.prototype.update = function(elapsedTime) {
 	if(this.state.dodging) {
 
 	}
-	else if(this.state.sprinting) {	
+	else if(this.state.sprinting) {
 		updateSpeed = 2 * PLAYER_SPEED;
 	}
 
@@ -217,12 +217,12 @@ Player.prototype.update = function(elapsedTime) {
 	 * @param {DOMHighResTimeStamp} elapsedTime
 	 * @param {CanvasRenderingContext2D} ctx
 	 */
-Player.prototype.render = function(elapsedTime, ctx) { 
+Player.prototype.render = function(elapsedTime, ctx) {
 	ctx.save();
 	ctx.translate(this.position.x, this.position.y);
 
 	this.timer += elapsedTime;
-	
+
 	//Select rendersheet based on time passed since starting this state.
 	var renderstates = this.renderSources[this.state.moveState][this.renderPosition];
 
@@ -230,11 +230,11 @@ Player.prototype.render = function(elapsedTime, ctx) {
 		this.renderPosition = 0;
 		renderstates = this.renderSources[this.state.moveState][this.renderPosition];
 	}
-	
+
 	if(this.timer > RENDER_TIMER) {
 		this.renderPosition++;
 		this.timer = 0;
-	}	
+	}
 
 	ctx.drawImage(
 		this.renderSource,

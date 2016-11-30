@@ -52,7 +52,7 @@ window.onkeydown = function(event) {
     case "d":
       input.right = true;
 	  event.preventDefault();
-      break;	
+      break;
 	case " ":
 	  input.space = true;
 	  event.preventDefault();
@@ -120,7 +120,7 @@ masterLoop(performance.now());
 function update(elapsedTime) {
   // update the player
   checkMoveState();
-  player.update(elapsedTime); 
+  player.update(elapsedTime);
 }
 
 function checkMoveState() {
@@ -133,11 +133,11 @@ function checkMoveState() {
 	else if(input.space) {
 		player.dodge();
 	}
-	
+
 	if(input.up) {
 		if(input.right) {
 			player.moveNorthEast();
-		} 
+		}
 		else if (input.left) {
 			player.moveNorthWest();
 		}
@@ -198,7 +198,7 @@ function render(elapsedTime, ctx) {
   // objects in the world - that way they
   // can be rendered in WORLD cooridnates
   // but appear in SCREEN coordinates
-  renderWorld(elapsedTime, ctx); 
+  renderWorld(elapsedTime, ctx);
 
   // Render the GUI without transforming the
   // coordinate system

@@ -24,7 +24,7 @@ function Boulder(position,direction) {
   this.direction = direction
 }
 
-Boulder.prototype.onCollision = function()
+Boulder.prototype.onCollision = function(entity)
 {
 
 }

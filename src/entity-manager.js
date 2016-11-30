@@ -4,7 +4,13 @@ const Collision = require('./collision');
 
 module.exports = exports = EntityManager;
 
-
+/**
+ * Entity Manager Constructor
+ * Entity must contain a collide Method, x position, y position,
+ * a shape property ("square", "circle", "complex"),
+ * a points property holding an array of points(x,y) for complex shapes.
+ * 
+ */
 function EntityManager(width, height, cellSize) {
   this.cellSize = cellSize;
   this.widthInCells = Math.ceil(width / cellSize);
@@ -29,7 +35,11 @@ function getIndex(x, y) {
   return y * this.widthInCells + x;
 }
 
-
+/**
+ * Method to add an Entity to the Manager
+ * 
+ * 
+ */
 EntityManager.prototype.addEntity = function(entity){
   var index = getIndex.call(this, entity.x, entity.y);
   this.cells[index].push(entity);

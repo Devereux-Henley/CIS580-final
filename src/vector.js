@@ -2,15 +2,11 @@ module.exports = exports = {
   rotate: rotate,
   dotProduct: dotProduct,
   magnitude: magnitude,
-<<<<<<< HEAD
-  normalize: normalize
-=======
   normalize: normalize,
   subtract: subtract,
   perpendicular: perpendicular,
   findAxes: findAxes,
   project: project
->>>>>>> collision-jt
 }
 
 

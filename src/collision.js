@@ -16,7 +16,6 @@ Collision.prototype.checkForSingleSquareCollision = function(entity1, entity2)
                    entity1.points[0].x > entity2.points[0].x + entity2.width ||
                    entity1.points[0].y + entity1.height < entity2.points[0].y ||
                    entity1.points[0].y > entity2.points[0].y + entity2.height);
->>>>>>> collision-jt
   if(collides) {
     return true;
   }
@@ -34,6 +33,7 @@ Collision.prototype.checkForSingleCircleCollision = function(entity1, entity2)
     return true;
   }
 }
+
 Collision.prototype.checkForShapeCollision = function(entity1, entity2) {
     var axes = Vector.findAxes(entity1.points) + Vector.findAxes(entity2.points);
     for(var i = 0; i < axes.length; i++) {

@@ -66,20 +66,6 @@ EntityManager.prototype.removeEntity = function(entity) {
   entity._cell = undefined;
 }
 
-EntityManager.prototype.update = function(entity) {
-  this.cells.forEach(function(cell) {
-    cells.forEach(function(entity){
-      entity.update(elapsedTime);
-      var index = cellIndex(entity);
-      if (index != entity._cell) {
-        // Remove from old cell
-        var subIndex = this.cells[entity._cell].indexOf(entity);
-        if(subIndex != -1) this.cells[entity._cell].splice(subIndex, 1);
-        // Place in new cell
-        this.cells[index].push(entity);
-        entity._cell = index;
-      }
-
 EntityManager.prototype.collide = function() {
   var self = this;
   this.cells.forEach(function(cell, i) {

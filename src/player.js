@@ -5,16 +5,80 @@
 /* Constants */
 const PLAYER_SPEED = 2;
 const RENDER_TIMER = 200;
-	/**
-	 * @module Player
-	 * A class representing a player's helicopter
-	 */
+
+const EAST_WALK =
+[new SheetPosition(0, 96),
+ new SheetPosition(24, 96),
+ new SheetPosition(48, 96),
+ new SheetPosition(72, 96),
+ new SheetPosition(96, 96),
+ new SheetPosition(120, 96),
+ new SheetPosition(144, 96),
+ new SheetPosition(168, 96)];
+
+ const NORTH_WALK =
+ [new SheetPosition(0, 32),
+	new SheetPosition(24, 32),
+	new SheetPosition(48, 32),
+	new SheetPosition(72, 32),
+	new SheetPosition(96, 32),
+	new SheetPosition(120, 32),
+	new SheetPosition(144, 32),
+	new SheetPosition(168, 32)];
+
+ const WEST_WALK =
+ [new SheetPosition(0, 64),
+	new SheetPosition(24, 64),
+	new SheetPosition(48, 64),
+	new SheetPosition(72, 64),
+	new SheetPosition(96, 64),
+	new SheetPosition(120, 64),
+	new SheetPosition(144, 64),
+	new SheetPosition(168, 64)];
+
+ const SOUTH_WALK=
+ [new SheetPosition(0, 0),
+	new SheetPosition(24, 0),
+	new SheetPosition(48, 0),
+	new SheetPosition(72, 0),
+	new SheetPosition(96, 0),
+	new SheetPosition(120, 0),
+	new SheetPosition(144, 0),
+	new SheetPosition(168, 0)];
+
+	const EAST_DODGE=
+	[new SheetPosition(0, 96),
+	 new SheetPosition(0, 0),
+	 new SheetPosition(0, 64),
+	 new SheetPosition(0, 32)];
+
+	const NORTH_DODGE=
+	[new SheetPosition(0, 32),
+	 new SheetPosition(0, 96),
+	 new SheetPosition(0, 0),
+	 new SheetPosition(0, 64)];
+
+	const WEST_DODGE=
+	[new SheetPosition(0, 64),
+	 new SheetPosition(0, 96),
+   new SheetPosition(0, 32),
+   new SheetPosition(0, 0)];
+
+	const SOUTH_DODGE=
+	[new SheetPosition(0, 0),
+	 new SheetPosition(0, 64),
+	 new SheetPosition(0, 96),
+	 new SheetPosition(0, 32)];
+
+/**
+ * @module Player
+ * A class representing a player's helicopter
+ */
 module.exports = exports = Player;
 
-function PlayerState(initDirection, sprinting, dodging) {
+function PlayerState(initDirection, ty) {
 	this.moveState = initDirection;
-	this.sprinting = sprinting;
-	this.dodging = dodging;
+	this.moveType = ty;
 }
 
 function SheetPosition(x, y) {
@@ -24,98 +88,94 @@ function SheetPosition(x, y) {
 	this.height = 32;
 }
 
-	/**
-	 * @constructor Player
-	 * Creates a player
-	 * @param {Position} starting location of the player;
-	 */
-function Player(position) { 
+function MoveStyleRenders(normal, sprinting, dodging) {
+	this.NORMAL = normal;
+	this.SPRINTING = sprinting;
+	this.DODGING = dodging;
+}
+
+/**
+ * @constructor Player
+ * Creates a player
+ * @param {Position} starting location of the player;
+ */
+function Player(position) {
 	this.position = position;
 	this.velocity = {x: 0, y: 0};
-	this.state = new PlayerState('STILL', false, false);
+	this.state = new PlayerState('STILL', 'NORMAL');
 	this.renderSource = new Image();
 	this.renderSource.src = 'assets/rpg_sprite_walk.png';
 	this.timer = 0;
 	this.renderPosition = 0;
-	this.renderSources = 
-		{'STILL':     [new SheetPosition(0, 0)],
-		 'EAST':      [new SheetPosition(0, 96),
-		               new SheetPosition(24, 96),
-		               new SheetPosition(48, 96),
-		               new SheetPosition(72, 96),
-		               new SheetPosition(96, 96),
-		               new SheetPosition(120, 96),
-		               new SheetPosition(144, 96),
-		               new SheetPosition(168, 96)],
-		 'NORTH':     [new SheetPosition(0, 32),
-		               new SheetPosition(24, 32),
-		               new SheetPosition(48, 32),
-		               new SheetPosition(72, 32),
-		               new SheetPosition(96, 32),
-		               new SheetPosition(120, 32),
-		               new SheetPosition(144, 32),
-		               new SheetPosition(168, 32)],
-		 'SOUTH':     [new SheetPosition(0, 0),
-		               new SheetPosition(24, 0),
-		               new SheetPosition(48, 0),
-		               new SheetPosition(72, 0),
-		               new SheetPosition(96, 0),
-		               new SheetPosition(120, 0),
-		               new SheetPosition(144, 0),
-		               new SheetPosition(168, 0)],
-		 'WEST':      [new SheetPosition(0, 64),
-		               new SheetPosition(24, 64),
-		               new SheetPosition(48, 64),
-		               new SheetPosition(72, 64),
-		               new SheetPosition(96, 64),
-		               new SheetPosition(120, 64),
-		               new SheetPosition(144, 64),
-		               new SheetPosition(168, 64)],
-		 'NORTHWEST': [new SheetPosition(0, 64),
-		               new SheetPosition(24, 64),
-		               new SheetPosition(48, 64),
-		               new SheetPosition(72, 64),
-		               new SheetPosition(96, 64),
-		               new SheetPosition(120, 64),
-		               new SheetPosition(144, 64),
-		               new SheetPosition(168, 64)],
-		 'NORTHEAST': [new SheetPosition(0, 96),
-		               new SheetPosition(24, 96),
-		               new SheetPosition(48, 96),
-		               new SheetPosition(72, 96),
-		               new SheetPosition(96, 96),
-		               new SheetPosition(120, 96),
-		               new SheetPosition(144, 96),
-		               new SheetPosition(168, 96)],
-		 'SOUTHWEST': [new SheetPosition(0, 64),
-		               new SheetPosition(24, 64),
-		               new SheetPosition(48, 64),
-		               new SheetPosition(72, 64),
-		               new SheetPosition(96, 64),
-		               new SheetPosition(120, 64),
-		               new SheetPosition(144, 64),
-		               new SheetPosition(168, 64)],
-		 'SOUTHEAST': [new SheetPosition(0, 96),
-		               new SheetPosition(24, 96),
-		               new SheetPosition(48, 96),
-		               new SheetPosition(72, 96),
-		               new SheetPosition(96, 96),
-		               new SheetPosition(120, 96),
-		               new SheetPosition(144, 96),
-		               new SheetPosition(168, 96)],
+	this.renderSources =
+		{'STILL':
+			new MoveStyleRenders(
+				[new SheetPosition(0, 0)],
+				[new SheetPosition(0, 0)],
+			  SOUTH_DODGE
+			),
+		 'EAST':
+			new MoveStyleRenders(
+				EAST_WALK,
+				EAST_WALK,
+				EAST_DODGE
+		 ),
+		 'NORTH':
+			new MoveStyleRenders(
+				NORTH_WALK,
+				NORTH_WALK,
+				NORTH_DODGE
+		 ),
+		 'SOUTH':
+		  new MoveStyleRenders(
+			  SOUTH_WALK,
+				SOUTH_WALK,
+				SOUTH_DODGE
+			),
+		 'WEST':
+			new MoveStyleRenders(
+				WEST_WALK,
+				WEST_WALK,
+				WEST_DODGE
+			),
+		 'NORTHWEST':
+		  new MoveStyleRenders(
+			  WEST_WALK,
+			  WEST_WALK,
+			  WEST_DODGE
+		 ),
+		 'NORTHEAST':
+		  new MoveStyleRenders(
+			  EAST_WALK,
+			  EAST_WALK,
+			  EAST_DODGE
+		),
+		 'SOUTHWEST':
+		  new MoveStyleRenders(
+			  WEST_WALK,
+			  WEST_WALK,
+			  WEST_DODGE
+		 ),
+		 'SOUTHEAST':
+		  new MoveStyleRenders(
+			  EAST_WALK,
+			  EAST_WALK,
+			  EAST_DODGE
+		),
 };
 }
 
 Player.prototype.walk = function() {
-	this.state.sprinting = false;
+	this.state.moveType = 'NORMAL';
 }
 
 Player.prototype.sprint = function() {
-	this.state.sprinting = true;
+	if(this.state.moveType == 'DODGING') return;
+	this.state.moveType = 'SPRINTING';
 }
 
 Player.prototype.dodge = function() {
-	this.state.dodging = true;
+	this.state.moveType = 'DODGING';
 }
 
 Player.prototype.moveWest = function() {
@@ -153,13 +213,13 @@ Player.prototype.moveSouthWest = function() {
 Player.prototype.still = function() {
 	this.state.moveState = 'STILL';
 }
-	/**
-	 * @function update
-	 * Updates the player based on the supplied input
-	 * @param {DOMHighResTimeStamp} elapsedTime
-	 * @param {Input} input object defining input, must have
-	 * boolean properties: up, left, right, down
-	 */
+/**
+ * @function update
+ * Updates the player based on the supplied input
+ * @param {DOMHighResTimeStamp} elapsedTime
+ * @param {Input} input object defining input, must have
+ * boolean properties: up, left, right, down
+ */
 Player.prototype.update = function(elapsedTime) {
 
 	// set the velocity
@@ -168,10 +228,10 @@ Player.prototype.update = function(elapsedTime) {
 
 	var updateSpeed = PLAYER_SPEED;
 
-	if(this.state.dodging) {
-
+	if(this.state.moveType == 'DODGING') {
+		updateSpeed = 1.5 * PLAYER_SPEED;
 	}
-	else if(this.state.sprinting) {	
+	else if(this.state.moveType == 'SPRINTING') {
 		updateSpeed = 2 * PLAYER_SPEED;
 	}
 
@@ -211,30 +271,30 @@ Player.prototype.update = function(elapsedTime) {
 	this.position.y += this.velocity.y;
 }
 
-	/**
-	 * @function render
-	 * Renders the player in world coordinates
-	 * @param {DOMHighResTimeStamp} elapsedTime
-	 * @param {CanvasRenderingContext2D} ctx
-	 */
-Player.prototype.render = function(elapsedTime, ctx) { 
+/**
+ * @function render
+ * Renders the player in world coordinates
+ * @param {DOMHighResTimeStamp} elapsedTime
+ * @param {CanvasRenderingContext2D} ctx
+ */
+Player.prototype.render = function(elapsedTime, ctx) {
 	ctx.save();
 	ctx.translate(this.position.x, this.position.y);
 
 	this.timer += elapsedTime;
-	
-	//Select rendersheet based on time passed since starting this state.
-	var renderstates = this.renderSources[this.state.moveState][this.renderPosition];
+
+//Select rendersheet based on time passed since starting this state.
+	var renderstates = this.renderSources[this.state.moveState][this.state.moveType][this.renderPosition];
 
 	if(renderstates == undefined) {
 		this.renderPosition = 0;
-		renderstates = this.renderSources[this.state.moveState][this.renderPosition];
+		renderstates = this.renderSources[this.state.moveState][this.state.moveType][this.renderPosition];
 	}
-	
+
 	if(this.timer > RENDER_TIMER) {
 		this.renderPosition++;
 		this.timer = 0;
-	}	
+	}
 
 	ctx.drawImage(
 		this.renderSource,

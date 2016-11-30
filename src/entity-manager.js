@@ -108,6 +108,43 @@ EntityManager.prototype.collide = function(callback) {
         if(i % (self.widthInCells - 1) != 0) {
           self.cells[i+1].forEach(function(entity2) {
             //checkForCollision(entity1, entity2, callback);
+            if(entity1.shape == "square" && entity2.shape == "square") {
+              if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
+                return true;
+              }
+              else {
+                return false;
+              }
+            }
+            else if(entity1.shape == "circle" && entity2.shape == "circle") {
+              if(Collision.checkForSingleCircleCollision(entity1, entity2)) {
+                return true;
+              }
+              else {
+                return false;
+              }
+            }
+            else if(entity1.shape == "circle" && entity2.shape == "square" || entity1.shape == "square" && entity2.shape == "circle") {
+              if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
+                return true;
+              }
+              else {
+                return false;
+              }
+            }
+            else if(entity1.shape == "complex" || entity2.shape == "complex") {
+              if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
+                if(Collision.checkForShapeCollision(entity1, entity2)) {
+                  return true;
+                }
+                else {
+                  return false;
+                }
+              }
+              else {
+                return false;
+              }
+            }
           });
         }
 
@@ -115,6 +152,43 @@ EntityManager.prototype.collide = function(callback) {
         if(i < self.numberOfCells - self.widthInCells) {
           self.cells[i+self.widthInCells].forEach(function(entity2){
             //checkForCollision(entity1, entity2, callback);
+            if(entity1.shape == "square" && entity2.shape == "square") {
+              if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
+                return true;
+              }
+              else {
+                return false;
+              }
+            }
+            else if(entity1.shape == "circle" && entity2.shape == "circle") {
+              if(Collision.checkForSingleCircleCollision(entity1, entity2)) {
+                return true;
+              }
+              else {
+                return false;
+              }
+            }
+            else if(entity1.shape == "circle" && entity2.shape == "square" || entity1.shape == "square" && entity2.shape == "circle") {
+              if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
+                return true;
+              }
+              else {
+                return false;
+              }
+            }
+            else if(entity1.shape == "complex" || entity2.shape == "complex") {
+              if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
+                if(Collision.checkForShapeCollision(entity1, entity2)) {
+                  return true;
+                }
+                else {
+                  return false;
+                }
+              }
+              else {
+                return false;
+              }
+            }
           });
         }
 
@@ -122,6 +196,43 @@ EntityManager.prototype.collide = function(callback) {
         if(i < self.numberOfCells - self.withInCells && i % (self.widthInCells - 1) != 0) {
           self.cells[i+self.widthInCells + 1].forEach(function(entity2){
             //checkForCollision(entity1, entity2, callback);
+            if(entity1.shape == "square" && entity2.shape == "square") {
+              if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
+                return true;
+              }
+              else {
+                return false;
+              }
+            }
+            else if(entity1.shape == "circle" && entity2.shape == "circle") {
+              if(Collision.checkForSingleCircleCollision(entity1, entity2)) {
+                return true;
+              }
+              else {
+                return false;
+              }
+            }
+            else if(entity1.shape == "circle" && entity2.shape == "square" || entity1.shape == "square" && entity2.shape == "circle") {
+              if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
+                return true;
+              }
+              else {
+                return false;
+              }
+            }
+            else if(entity1.shape == "complex" || entity2.shape == "complex") {
+              if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
+                if(Collision.checkForShapeCollision(entity1, entity2)) {
+                  return true;
+                }
+                else {
+                  return false;
+                }
+              }
+              else {
+                return false;
+              }
+            }
           });
         }
       });

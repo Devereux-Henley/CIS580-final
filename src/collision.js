@@ -33,7 +33,7 @@ Collision.prototype.checkForSingleCircleCollision = function(entity1, entity2)
 }
 
 Collision.prototype.checkForShapeCollision = function(entity1, entity2) {
-    var axes = Vector.findAxes(entity1) + Vector.findAxes(entity2);
+    var axes = Vector.findAxes(entity1.points) + Vector.findAxes(entity2.points);
     for(var i = 0; i < axes.length; i++) {
         var proj1 = Vector.project(entity1, axes[i]);
         var proj2 = Vector.project(entity2, axes[i]);

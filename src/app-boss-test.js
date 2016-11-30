@@ -2,7 +2,7 @@
 
 /* Classes and Libraries */
 const Game = require('./game');
-const Boss = require('.boss');
+const Boss = require('./boss');
 
 /* Global variables */
 var canvas = document.getElementById('screen');
@@ -42,11 +42,6 @@ function update(elapsedTime) {
   * @param {CanvasRenderingContext2D} ctx the context to render to
   */
 function render(elapsedTime, ctx) {
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, 1024, 786);
-
-  // TODO: Render background
-
   // Transform the coordinate system using
   // the camera position BEFORE rendering
   // objects in the world - that way they
@@ -63,15 +58,14 @@ function render(elapsedTime, ctx) {
   * @param {CanvasRenderingContext2D} ctx the context to render to
   */
 function renderWorld(elapsedTime, ctx) {
-    // Render the player
-	ctx.drawImage(
-		background,
-		0, 0, 640, 400,
-		0, 0, canvas.width, canvas.height);
+  // Background
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, 1024, 786);
 
 	ctx.save();
 
   //TODO: Render the Boss
+
 
 	ctx.restore();
 }

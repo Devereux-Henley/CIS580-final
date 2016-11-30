@@ -12,16 +12,19 @@ module.exports = exports = Boulder;
  * Creates a new player object
  * @param {Postition} position object specifying an x and y
  */
-function Boulder(position,direction) {
+function Boulder(point,direction) {
   this.spritesheet  = new Image();
   this.spritesheet.src = encodeURI('assets/boulder.png');
-  this.position = {
+  this.points = [{
     x: position.x,
     y: position.y
-  };
-  this.height = 30;
-  this.width = 30;
+  }];
+  this.height = 32;
+  this.width = 32;
   this.direction = direction
+  this.shape = "circle";
+  this.radius = 16;
+  this.tag = "boulder";
 }
 
 Boulder.prototype.onCollision = function(entity)

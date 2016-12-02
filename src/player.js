@@ -300,6 +300,8 @@ Player.prototype.update = function(elapsedTime) {
 	this.position.x += this.velocity.x;
 	this.position.y += this.velocity.y;
 
+  this.timer += elapsedTime;
+
   if(this.timer > RENDER_TIMER) {
     this.renderPosition++;
     this.timer = 0;
@@ -324,8 +326,6 @@ Player.prototype.update = function(elapsedTime) {
 Player.prototype.render = function(elapsedTime, ctx) {
 	ctx.save();
 	ctx.translate(this.position.x, this.position.y);
-
-	this.timer += elapsedTime;
 
 //Select rendersheet based on time passed since starting this state.
 	ctx.drawImage(

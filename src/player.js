@@ -103,6 +103,8 @@ function Player(position) {
 	this.position = position;
 	this.velocity = {x: 0, y: 0};
 	this.state = new PlayerState('STILL', 'NORMAL');
+  this.tag = "player";
+  this.shape = "square";
 	this.renderSource = new Image();
 	this.renderSource.src = 'assets/rpg_sprite_walk.png';
 	this.timer = 0;
@@ -163,13 +165,14 @@ function Player(position) {
 			  EAST_DODGE
 		),
 	};
+  this.currentRender = this.renderSources[this.state.moveState][this.state.moveType][this.renderPosition];
 	// Initialize health.
 	this.health = 6;
 	this.hearts = [3];
 	for (var i = 0; i < 3; i++) {
 		this.hearts[i] = new Image();
 		this.hearts[i].src = 'assets/heart_full.png';
-		console.log(this.hearts[i].src);	
+		console.log(this.hearts[i].src);
 	}
 }
 
@@ -224,7 +227,7 @@ Player.prototype.still = function() {
 
 // Update Health
 Player.prototype.damage = function() {
-	
+
 	if (this.hearts != null){
 		if (this.health % 2 == 0){
 			this.hearts[this.hearts.length - 1].src = 'assets/heart_half.png';
@@ -234,6 +237,10 @@ Player.prototype.damage = function() {
 		}
 	}
 	this.health--;
+}
+
+Player.prototype.onCollision = function(entity) {
+
 }
 
 /**
@@ -292,6 +299,20 @@ Player.prototype.update = function(elapsedTime) {
 	// move the player
 	this.position.x += this.velocity.x;
 	this.position.y += this.velocity.y;
+
+  if(this.timer > RENDER_TIMER) {
+    this.renderPosition++;
+    this.timer = 0;
+  }
+
+  var nextRender = this.renderSources[this.state.moveState][this.state.moveType][this.renderPosition];
+
+  if(nextRender == undefined) {
+    this.renderPosition = 0;
+  }
+  else {
+    this.currentRender = nextRender;
+  }
 }
 
 /**
@@ -307,26 +328,14 @@ Player.prototype.render = function(elapsedTime, ctx) {
 	this.timer += elapsedTime;
 
 //Select rendersheet based on time passed since starting this state.
-	var renderstates = this.renderSources[this.state.moveState][this.state.moveType][this.renderPosition];
-
-	if(renderstates == undefined) {
-		this.renderPosition = 0;
-		renderstates = this.renderSources[this.state.moveState][this.state.moveType][this.renderPosition];
-	}
-
-	if(this.timer > RENDER_TIMER) {
-		this.renderPosition++;
-		this.timer = 0;
-	}
-
 	ctx.drawImage(
 		this.renderSource,
-		renderstates.x, renderstates.y, renderstates.width, renderstates.height,
+		this.currentRender.x, this.currentRender.y, this.currentRender.width, this.currentRender.height,
 		0, 0, 24, 32);
 	ctx.restore();
-	
+
 	// Hearts
-	for (var i = 0; i < this.hearts.length; i++ ) { 
+	for (var i = 0; i < this.hearts.length; i++ ) {
 		ctx.drawImage(
 			this.hearts[i],
 			0, 0, 120, 120,

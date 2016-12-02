@@ -67,8 +67,8 @@ const EAST_WALK =
 	const SOUTH_DODGE=
 	[new SheetPosition(0, 0),
 	 new SheetPosition(0, 64),
-	 new SheetPosition(0, 96),
-	 new SheetPosition(0, 32)];
+	 new SheetPosition(0, 32),
+	 new SheetPosition(0, 96)];
 
 /**
  * @module Player

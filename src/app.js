@@ -29,34 +29,34 @@ background.src = 'assets/background.png';
 window.onkeydown = function(event) {
   input.shift = event.shiftKey;
   switch(event.key) {
-	case "W":
+	  case "W":
     case "ArrowUp":
     case "w":
       input.up = true;
       event.preventDefault();
       break;
-	case "S":
+	  case "S":
     case "ArrowDown":
     case "s":
       input.down = true;
       event.preventDefault();
       break;
-	case "A":
+	  case "A":
     case "ArrowLeft":
     case "a":
       input.left = true;
       event.preventDefault();
       break;
-	case "D":
+	  case "D":
     case "ArrowRight":
     case "d":
       input.right = true;
-	  event.preventDefault();
-      break;	
-	case " ":
-	  input.space = true;
-	  event.preventDefault();
-	  break;
+	    event.preventDefault();
+      break;
+	  case " ":
+	    input.space = true;
+	    event.preventDefault();
+	    break;
   }
 }
 
@@ -67,34 +67,34 @@ window.onkeydown = function(event) {
 window.onkeyup = function(event) {
   input.shift = event.shiftKey;
   switch(event.key) {
-	case "W":
+	  case "W":
     case "ArrowUp":
     case "w":
       input.up = false;
       event.preventDefault();
       break;
-	case "S":
+	  case "S":
     case "ArrowDown":
     case "s":
       input.down = false;
       event.preventDefault();
       break;
-	case "A":
+	  case "A":
     case "ArrowLeft":
     case "a":
       input.left = false;
       event.preventDefault();
       break;
-	case "D":
+	  case "D":
     case "ArrowRight":
     case "d":
       input.right = false;
       event.preventDefault();
       break;
-	case " ":
-	  input.space = false;
-	  event.preventDefault();
-	  break;
+	  case " ":
+	    input.space = false;
+	    event.preventDefault();
+	    break;
   }
 }
 
@@ -120,7 +120,7 @@ masterLoop(performance.now());
 function update(elapsedTime) {
   // update the player
   checkMoveState();
-  player.update(elapsedTime); 
+  player.update(elapsedTime);
 }
 
 function checkMoveState() {
@@ -133,11 +133,11 @@ function checkMoveState() {
 	else if(input.space) {
 		player.dodge();
 	}
-	
+
 	if(input.up) {
 		if(input.right) {
 			player.moveNorthEast();
-		} 
+		}
 		else if (input.left) {
 			player.moveNorthWest();
 		}
@@ -198,7 +198,7 @@ function render(elapsedTime, ctx) {
   // objects in the world - that way they
   // can be rendered in WORLD cooridnates
   // but appear in SCREEN coordinates
-  renderWorld(elapsedTime, ctx); 
+  renderWorld(elapsedTime, ctx);
 
   // Render the GUI without transforming the
   // coordinate system
@@ -220,7 +220,7 @@ function renderWorld(elapsedTime, ctx) {
 		0, 0, canvas.width, canvas.height);
 
 	ctx.save();
-    player.render(elapsedTime, ctx);
+  player.render(elapsedTime, ctx);
 	ctx.restore();
 }
 

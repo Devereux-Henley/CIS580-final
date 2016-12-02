@@ -18,6 +18,18 @@ function Crate(point,direction) {
   this.points = [{
     x: position.x,
     y: position.y
+  },
+  {
+    x: position.x + width,
+    y: position.y
+  },
+  {
+    x: position.x,
+    y: position.y + height
+  },
+  {
+    x: position.x + width,
+    y: position.y + height
   }];
   this.height = 32;
   this.width = 32;

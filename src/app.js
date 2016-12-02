@@ -57,6 +57,12 @@ window.onkeydown = function(event) {
 	  input.space = true;
 	  event.preventDefault();
 	  break;
+	  
+	// Decrement health - test
+	case "T":
+	case "t":
+	  player.damage();
+	  break;
   }
 }
 

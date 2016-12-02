@@ -3,18 +3,18 @@
 const MS_PER_FRAME = 1000/8;
 
 /**
- * @module exports the boulder class
+ * @module exports the create class
  */
-module.exports = exports = Boulder;
+module.exports = exports = Crate;
 
 /**
- * @constructor boulder
- * Creates a new boulder object
+ * @constructor crate
+ * Creates a new crate object
  * @param {Postition} position object specifying an x and y
  */
-function Boulder(point,direction) {
+function Crate(point,direction) {
   this.spritesheet  = new Image();
-  this.spritesheet.src = encodeURI('assets/boulder.png');
+  this.spritesheet.src = encodeURI('assets/crate.png');
   this.points = [{
     x: position.x,
     y: position.y
@@ -22,21 +22,21 @@ function Boulder(point,direction) {
   this.height = 32;
   this.width = 32;
   this.direction = direction
-  this.shape = "circle";
+  this.shape = "square";
   this.radius = 16;
-  this.tag = "boulder";
+  this.tag = "crate";
 }
 
-Boulder.prototype.onCollision = function(entity)
+Crate.prototype.onCollision = function(entity)
 {
 
 }
 
 /**
- * @function updates the boulder object
+ * @function updates the crate object
  * {DOMHighResTimeStamp} time the elapsed time since the last frame
  */
-Boulder.prototype.update = function(time)
+Crate.prototype.update = function(time)
 {
   switch(this.direction)
   {
@@ -61,11 +61,11 @@ Boulder.prototype.update = function(time)
 }
 
 /**
- * @function renders the boulder into the provided context
+ * @function renders the crate into the provided context
  * {DOMHighResTimeStamp} time the elapsed time since the last frame
  * {CanvasRenderingContext2D} ctx the context to render into
  */
-Boulder.prototype.render = function(time, ctx) {
+Crate.prototype.render = function(time, ctx) {
   ctx.save();
   ctx.translate(this.position.x, this.position.y);
   ctx.rotate(-this.angle);

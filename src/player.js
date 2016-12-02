@@ -311,6 +311,7 @@ Player.prototype.update = function(elapsedTime) {
 
   if(nextRender == undefined) {
     this.renderPosition = 0;
+    nextRender = this.renderSources[this.state.moveState][this.state.moveType][this.renderPosition];
   }
   else {
     this.currentRender = nextRender;

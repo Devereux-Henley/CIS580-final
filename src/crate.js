@@ -31,6 +31,10 @@ function Crate(point,direction) {
     x: position.x + width,
     y: position.y + height
   }];
+  this.position = {
+    x: position.x , 
+    y: position.y
+  }
   this.height = 32;
   this.width = 32;
   this.direction = direction
@@ -41,7 +45,21 @@ function Crate(point,direction) {
 
 Crate.prototype.onCollision = function(entity)
 {
+  switch(entity.tag)
+  {
+    case "player":
 
+      break;
+    case "pillar":
+
+      break;
+    case "boulder":
+
+      break;
+    default:
+      console.log("Invalide collision")
+      break;
+  }
 }
 
 /**

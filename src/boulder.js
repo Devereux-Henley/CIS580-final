@@ -19,6 +19,10 @@ function Boulder(point,direction) {
     x: position.x,
     y: position.y
   }];
+  this.position = {
+    x: position.x,
+    y: position.y
+  }
   this.height = 32;
   this.width = 32;
   this.direction = direction
@@ -29,7 +33,24 @@ function Boulder(point,direction) {
 
 Boulder.prototype.onCollision = function(entity)
 {
+  switch(entity.tag)
+  {
+    case "boss":
 
+      break;
+    case "player":
+
+      break;
+    case "plillar":
+
+      break;
+    case "crate":
+
+      break;
+    default:
+      console.log("Invalid collision");
+      break;
+  }
 }
 
 /**

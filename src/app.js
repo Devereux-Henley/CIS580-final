@@ -51,12 +51,17 @@ window.onkeydown = function(event) {
     case "ArrowRight":
     case "d":
       input.right = true;
-	    event.preventDefault();
-      break;
-	  case " ":
-	    input.space = true;
-	    event.preventDefault();
-	    break;
+	  event.preventDefault();
+      break;	
+	case " ":
+	  input.space = true;
+	  event.preventDefault();
+	  break; 
+	// Decrement health - test
+	case "T":
+	case "t":
+	  player.damage();
+	  break;
   }
 }
 

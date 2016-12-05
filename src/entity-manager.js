@@ -3,16 +3,26 @@
 const Collision = require('./collision');
 
 /**
- *
+ * @module exports an EntityManager class
  */
 module.exports = exports = EntityManager;
 
 /**
  * Entity Manager Constructor
- * Entity must contain a collide Method, x position, y position,
- * a shape property ("square", "circle", "complex"),
- * a points property holding an array of points(x,y) for complex shapes.
  * 
+ * Each entity added to manager must have a collision method:
+ * Example: entity1.onCollision(entity2)
+ * The Entity must have the following properities for collisions to work:
+ *    .shape which will be of the type string ("square" or "circle" or "complex")
+ *    .tag which will be the string name of the object ("player" or "boss1" or ...)
+ *    .points which is an array of points [{x: x1, y: y1}, ..., {x: xn, y: yn}]
+ *      "square" shapes will need 4 points
+ *      "circle" shapes will need 4 points top, bottom, leftSide, rightSide
+ *      "complex" shapes can have n number of points
+ * 
+ * @param {width} The width of the canvas
+ * @param {height} The height of the canvas
+ * @param {cellsize} The size of the cell
  */
 function EntityManager(width, height, cellSize) {
   this.cellSize = cellSize;
@@ -26,7 +36,14 @@ function EntityManager(width, height, cellSize) {
   this.cells[-1] = [];
 }
 
-
+/**
+ * Finds the index of the entity based on the 
+ * x and y position of the entity.
+ * 
+ * @param {x} The x position
+ * @param {y} The y position
+ * @return The index of the entity
+ */
 function getIndex(x, y) {
   var x = Math.floor(x / this.cellSize);
   var y = Math.floor(y / this.cellSize);
@@ -41,7 +58,7 @@ function getIndex(x, y) {
 /**
  * Method to add an Entity to the Manager
  * 
- * 
+ * @param {entity} The entity to add to the manager
  */
 EntityManager.prototype.addEntity = function(entity){
   var index = getIndex.call(this, entity.x, entity.y);
@@ -60,12 +77,23 @@ EntityManager.prototype.updateEntity = function(entity){
   }
 }
 
+/**
+ * Method to remove entity from the manager
+ * 
+ * @param {entity} The entity to be removed from the manager
+ */
 EntityManager.prototype.removeEntity = function(entity) {
   var cellIndex = this.cells[entity._cell].indexOf(entity);
   if(cellIndex != -1) this.cells[entity._cell].splice(cellIndex, 1);
   entity._cell = undefined;
 }
 
+/**
+ * Method to check for collisions
+ * When collision detected between two entitities
+ * and the entity's onCollision method is called
+ * taking the other entity as a param.
+ */
 EntityManager.prototype.collide = function() {
   var self = this;
   this.cells.forEach(function(cell, i) {
@@ -76,18 +104,21 @@ EntityManager.prototype.collide = function() {
         if(entity1 != entity2) {
           if(entity1.shape == "square" && entity2.shape == "square") {
             if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
+              // Call entity collision methods
               entity1.onCollision(entity2);
               entity2.onCollision(entity1);
             }
           }
           else if(entity1.shape == "circle" && entity2.shape == "circle") {
             if(Collision.checkForSingleCircleCollision(entity1, entity2)) {
+              // Call entity collision methods
               entity1.onCollision(entity2);
               entity2.onCollision(entity1);
             }
           }
           else if(entity1.shape == "circle" && entity2.shape == "square" || entity1.shape == "square" && entity2.shape == "circle") {
             if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
+              // Call entity collision methods
               entity1.onCollision(entity2);
               entity2.onCollision(entity1);
             }
@@ -95,6 +126,7 @@ EntityManager.prototype.collide = function() {
           else if(entity1.shape == "complex" || entity2.shape == "complex") {
             if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
               if(Collision.checkForShapeCollision(entity1, entity2)) {
+                // Call entity collision methods
                 entity1.onCollision(entity2);
                 entity2.onCollision(entity1);
               }
@@ -107,18 +139,21 @@ EntityManager.prototype.collide = function() {
           self.cells[i+1].forEach(function(entity2) {
             if(entity1.shape == "square" && entity2.shape == "square") {
               if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
+                // Call entity collision methods
                 entity1.onCollision(entity2);
                 entity2.onCollision(entity1);
               }
             }
             else if(entity1.shape == "circle" && entity2.shape == "circle") {
               if(Collision.checkForSingleCircleCollision(entity1, entity2)) {
+                // Call entity collision methods
                 entity1.onCollision(entity2);
                 entity2.onCollision(entity1);
               }
             }
             else if(entity1.shape == "circle" && entity2.shape == "square" || entity1.shape == "square" && entity2.shape == "circle") {
               if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
+                // Call entity collision methods
                 entity1.onCollision(entity2);
                 entity2.onCollision(entity1);
               }
@@ -126,6 +161,7 @@ EntityManager.prototype.collide = function() {
             else if(entity1.shape == "complex" || entity2.shape == "complex") {
               if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
                 if(Collision.checkForShapeCollision(entity1, entity2)) {
+                  // Call entity collision methods
                   entity1.onCollision(entity2);
                   entity2.onCollision(entity1);
                 }
@@ -139,18 +175,21 @@ EntityManager.prototype.collide = function() {
           self.cells[i+self.widthInCells].forEach(function(entity2){
             if(entity1.shape == "square" && entity2.shape == "square") {
               if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
+                // Call entity collision methods
                 entity1.onCollision(entity2);
                 entity2.onCollision(entity1);
               }
             }
             else if(entity1.shape == "circle" && entity2.shape == "circle") {
               if(Collision.checkForSingleCircleCollision(entity1, entity2)) {
+                // Call entity collision methods
                 entity1.onCollision(entity2);
                 entity2.onCollision(entity1);
               }
             }
             else if(entity1.shape == "circle" && entity2.shape == "square" || entity1.shape == "square" && entity2.shape == "circle") {
               if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
+                // Call entity collision methods
                 entity1.onCollision(entity2);
                 entity2.onCollision(entity1);
               }
@@ -158,6 +197,7 @@ EntityManager.prototype.collide = function() {
             else if(entity1.shape == "complex" || entity2.shape == "complex") {
               if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
                 if(Collision.checkForShapeCollision(entity1, entity2)) {
+                  // Call entity collision methods
                   entity1.onCollision(entity2);
                   entity2.onCollision(entity1);
                 }
@@ -171,18 +211,21 @@ EntityManager.prototype.collide = function() {
           self.cells[i+self.widthInCells + 1].forEach(function(entity2){
             if(entity1.shape == "square" && entity2.shape == "square") {
               if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
+                // Call entity collision methods
                 entity1.onCollision(entity2);
                 entity2.onCollision(entity1);
               }
             }
             else if(entity1.shape == "circle" && entity2.shape == "circle") {
               if(Collision.checkForSingleCircleCollision(entity1, entity2)) {
+                // Call entity collision methods
                 entity1.onCollision(entity2);
                 entity2.onCollision(entity1);
               }
             }
             else if(entity1.shape == "circle" && entity2.shape == "square" || entity1.shape == "square" && entity2.shape == "circle") {
               if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
+                // Call entity collision methods
                 entity1.onCollision(entity2);
                 entity2.onCollision(entity1);
               }
@@ -190,6 +233,7 @@ EntityManager.prototype.collide = function() {
             else if(entity1.shape == "complex" || entity2.shape == "complex") {
               if(Collision.checkForSingleSquareCollision(entity1, entity2)) {
                 if(Collision.checkForShapeCollision(entity1, entity2)) {
+                  // Call entity collision methods
                   entity1.onCollision(entity2);
                   entity2.onCollision(entity1);
                 }

@@ -1,3 +1,8 @@
+"use strict";
+
+/**
+ * @module exports a library for vector Calculations
+ */
 module.exports = exports = {
   rotate: rotate,
   dotProduct: dotProduct,
@@ -9,7 +14,13 @@ module.exports = exports = {
   project: project
 }
 
-
+/**
+ * Find the roatation of a vector to an angle
+ * 
+ * @param {a} Vector a
+ * @param {angle} An angle to rotate about
+ * @return The rotated vector
+ */
 function rotate(a, angle)
 {
   return{
@@ -18,17 +29,35 @@ function rotate(a, angle)
         }
 }
 
-
+/**
+ * Calculates the dot product of two vectors
+ * 
+ * @param {a} Vector a
+ * @param {b} Vector b
+ * @return The result of the dot product
+ */
 function dotProduct(a,b)
 {
   return a.x * b.x + a.y * b.y
 }
 
+/**
+ * Calculates the magnitude of a vector
+ * 
+ * @param {a} Vector a
+ * @return The magnitude of vector a
+ */
 function magnitude(a)
 {
   return Math.sqrt(a.x * a.x + a.y * a.y);
 }
 
+/**
+ * Calculates the normal of a vector
+ * 
+ * @param {a} Vector a
+ * @return The normalized vector of a
+ */
 function normalize(a)
 {
   var mag = magnitude(a);
@@ -38,9 +67,9 @@ function normalize(a)
 /**
  * Subtract two vectors
  * 
- * @param {Vector} a, the first vector
- * @param {Vector} b, the second vector
- * @returns Vector
+ * @param {a} Vector a
+ * @param {b} Vector b
+ * @returns Vector result from vector subtraction
  */
 function subtract(a, b) {
     return {
@@ -52,7 +81,7 @@ function subtract(a, b) {
 /**
  * Find a perpendicular vector
  * 
- * @param {Vector} a
+ * @param {a} Vector a
  * @returns Vector perpendicular to a
  */
 function perpendicular(a) {
@@ -63,10 +92,10 @@ function perpendicular(a) {
 }
 
 /**
+ * Finds an axis
  * 
- * 
- * @param {any} shape
- * @returns
+ * @param {shape} An array of points defining the shape
+ * @returns An axes array
  */
 function findAxes(shape) {
     var axes = [];
@@ -82,17 +111,17 @@ function findAxes(shape) {
 }
 
 /**
+ * Finds the projection of a shape onto an axis
  * 
- * 
- * @param {any} shape
- * @param {any} axis
- * @returns
+ * @param {shape} An array of points defining the shape
+ * @param {axes} The axis of intercection
+ * @returns 
  */
-function project(shape, axis) {
-    var min = dotProduct(shape[0], axis.x);
+function project(shape, axes) {
+    var min = dotProduct(shape[0], axes.x);
     var max = min;
     for(var i = 1; i < shape.length; i++) {
-        var p = dotProduct(shape[i], axis);
+        var p = dotProduct(shape[i], axes);
         if(p < min) min = p;
         else if(p > max) max = p;
     }

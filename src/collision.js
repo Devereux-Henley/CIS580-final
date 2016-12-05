@@ -1,7 +1,6 @@
 "use strict";
 
 const MS_PER_FRAME = 1000/8;
-
 const Vector = require('./vector');
 
 /**
@@ -12,7 +11,8 @@ module.exports = exports = Collision;
 /**
  * Check for collision between two square objects
  * 
- * 
+ * @param {entity1} The first entity
+ * @param {entity2} The second entity
  */
 Collision.prototype.checkForSingleSquareCollision = function(entity1, entity2)
  {
@@ -29,7 +29,8 @@ Collision.prototype.checkForSingleSquareCollision = function(entity1, entity2)
 /**
  * Check for collision between two circle objects
  * 
- * 
+ * @param {entity1} The first entity
+ * @param {entity2} The second entity
  */
 Collision.prototype.checkForSingleCircleCollision = function(entity1, entity2)
 {
@@ -47,7 +48,8 @@ Collision.prototype.checkForSingleCircleCollision = function(entity1, entity2)
 /**
  * Check for collision between complex shapes
  * 
- * 
+ * @param {entity1} The first entity
+ * @param {entity2} The second entity
  */
 Collision.prototype.checkForShapeCollision = function(entity1, entity2) {
     var axes = Vector.findAxes(entity1.points) + Vector.findAxes(entity2.points);

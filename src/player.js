@@ -166,14 +166,7 @@ function Player(position) {
 		),
 	};
   this.currentRender = this.renderSources[this.state.moveState][this.state.moveType][this.renderPosition];
-	// Initialize health.
-	this.health = 6;
-	this.hearts = [3];
-	for (var i = 0; i < 3; i++) {
-		this.hearts[i] = new Image();
-		this.hearts[i].src = 'assets/heart_full.png';
-		console.log(this.hearts[i].src);
-	}
+  this.health = 6;
 }
 
 Player.prototype.walk = function() {
@@ -227,20 +220,15 @@ Player.prototype.still = function() {
 
 // Update Health
 Player.prototype.damage = function() {
-
-	if (this.hearts != null){
-		if (this.health % 2 == 0){
-			this.hearts[this.hearts.length - 1].src = 'assets/heart_half.png';
-		}
-		else {
-			this.hearts.splice(this.hearts.length - 1, 1);
-		}
-	}
 	this.health--;
 }
 
 Player.prototype.onCollision = function(entity) {
 
+}
+
+Player.prototype.getHealth = function() {
+	return this.health;
 }
 
 /**
@@ -334,13 +322,4 @@ Player.prototype.render = function(elapsedTime, ctx) {
 		this.currentRender.x, this.currentRender.y, this.currentRender.width, this.currentRender.height,
 		0, 0, 24, 32);
 	ctx.restore();
-
-	// Hearts
-	for (var i = 0; i < this.hearts.length; i++ ) {
-		ctx.drawImage(
-			this.hearts[i],
-			0, 0, 120, 120,
-		900+(40*i), 5, 40, 40
-		);
-	}
 }

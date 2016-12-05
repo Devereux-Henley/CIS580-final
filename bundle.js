@@ -432,8 +432,6 @@ function Player(position) {
 	this.position = position;
 	this.velocity = {x: 0, y: 0};
 	this.state = new PlayerState('STILL', 'NORMAL');
-  this.tag = "player";
-  this.shape = "square";
 	this.renderSource = new Image();
 	this.renderSource.src = 'assets/rpg_sprite_walk.png';
 	this.timer = 0;
@@ -494,8 +492,33 @@ function Player(position) {
 			  EAST_DODGE
 		),
 	};
-  this.currentRender = this.renderSources[this.state.moveState][this.state.moveType][this.renderPosition];
-  this.health = 6;
+    this.currentRender = this.renderSources[this.state.moveState][this.state.moveType][this.renderPosition];
+    this.health = 6;
+    // COLLISIONS
+    this.shape = "square";
+    this.tag = "player";
+    this.points = [
+		{
+		  // TOP LEFT CORNER
+		  x: this.x, 
+		  y: this.y
+		},
+		{
+		  // TOP RIGHT CORNER
+		  x: this.x + this.width,
+		  y: this.y
+		},
+		{
+		  // BOTTOM LEFT CORNER
+		  x: this.x,
+		  y: this.y + this.height
+		},
+		{
+		  // BOTTOM RIGHT CORNER
+		  x: this.x + this.width,
+		  y: this.y + this.height
+		}
+    ]
 }
 
 Player.prototype.walk = function() {
@@ -547,7 +570,6 @@ Player.prototype.still = function() {
 	this.state.moveState = 'STILL';
 }
 
-// Update Health
 Player.prototype.damage = function() {
 	this.health--;
 }
@@ -559,6 +581,30 @@ Player.prototype.onCollision = function(entity) {
 Player.prototype.getHealth = function() {
 	return this.health;
 }
+
+// Handle Collisions
+Player.prototype.onCollision = function(entity) {
+	switch(entity.tag) {
+		case "boss1":
+			break;
+		case "boss2":
+			break;
+		case "spear":
+			break;
+		case "pillar":
+			break;
+		case "crate":
+			break;
+		case "boulder":
+			break;
+		case "switch":  // Check name of tag with boss group.
+			break;
+		default: 
+			console.log("Invalid.");
+			break;
+		}
+	}
+
 
 /**
  * @function update

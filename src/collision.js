@@ -6,7 +6,11 @@ const Vector = require('./vector');
 /**
  * @module exports the Collision class
  */
-module.exports = exports = Collision;
+module.exports = exports = {
+  checkForSingleSquareCollision: checkForSingleSquareCollision,
+  checkForSingleCircleCollision: checkForSingleCircleCollision,
+  checkForShapeCollision: checkForShapeCollision
+};
 
 /**
  * Check for collision between two square objects
@@ -14,15 +18,17 @@ module.exports = exports = Collision;
  * @param {entity1} The first entity
  * @param {entity2} The second entity
  */
-Collision.prototype.checkForSingleSquareCollision = function(entity1, entity2)
+function checkForSingleSquareCollision(entity1, entity2)
  {
+   var collides = !(entity1.x + entity1.width < entity2.x ||
+                   entity1.x > entity2.x + entity2.width ||
+                   entity1.y + entity1.height < entity2.y ||
+                   entity1.y > entity2.y + entity2.height);
 
-  var collides = !(entity1.points[0].x + entity1.width < entity2.points[0].x ||
-                   entity1.points[0].x > entity2.points[0].x + entity2.width ||
-                   entity1.points[0].y + entity1.height < entity2.points[0].y ||
-                   entity1.points[0].y > entity2.points[0].y + entity2.height);
-  if(collides) {
-    return true;
+   if(collides) {
+     if(entity1.tag == "player") console.log(entity1);
+     if(entity2.tag == "player") console.log(entity2);
+     return true;
   }
 }
 
@@ -32,11 +38,11 @@ Collision.prototype.checkForSingleSquareCollision = function(entity1, entity2)
  * @param {entity1} The first entity
  * @param {entity2} The second entity
  */
-Collision.prototype.checkForSingleCircleCollision = function(entity1, entity2)
+function checkForSingleCircleCollision(entity1, entity2)
 {
     var distSquared =
-      Math.pow(entity1.points[0].x - entity2.points[0].x, 2) +
-      Math.pow(entity1.points[0].y - entity2.points[0].y, 2);
+      Math.pow(entity1.x - entity2.x, 2) +
+      Math.pow(entity1.y - entity2.y, 2);
     // (15 + 15)^2 = 900 -> sum of two balls' raidius squared
     var sumRadiusSqueared = (entity1.radius * entity1.radius) + (entity2.radius * entity2.radius);
     if(distSquared < sumRadiusSqueared)
@@ -51,7 +57,7 @@ Collision.prototype.checkForSingleCircleCollision = function(entity1, entity2)
  * @param {entity1} The first entity
  * @param {entity2} The second entity
  */
-Collision.prototype.checkForShapeCollision = function(entity1, entity2) {
+function checkForShapeCollision(entity1, entity2) {
     var axes = Vector.findAxes(entity1.points) + Vector.findAxes(entity2.points);
     for(var i = 0; i < axes.length; i++) {
         var proj1 = Vector.project(entity1.points, axes[i]);

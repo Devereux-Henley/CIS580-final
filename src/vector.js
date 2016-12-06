@@ -104,7 +104,7 @@ function findAxes(shape) {
         var p2 = (shape.length == i + 1) ? 0 : shape[i];
         var edge = subtract(p2, p1);
         var perp = perpendicular(edge);
-        var normal = normalize(prep);
+        var normal = normalize(perp);
         axes.push(normal);
     });
     return axes;
@@ -118,7 +118,7 @@ function findAxes(shape) {
  * @returns 
  */
 function project(shape, axes) {
-    var min = dotProduct(shape[0], axes.x);
+    var min = dotProduct(shape[0], axes);
     var max = min;
     for(var i = 1; i < shape.length; i++) {
         var p = dotProduct(shape[i], axes);

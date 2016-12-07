@@ -4,6 +4,7 @@
  * @module exports a library for vector Calculations
  */
 module.exports = exports = {
+  scale: scale,
   rotate: rotate,
   dotProduct: dotProduct,
   magnitude: magnitude,

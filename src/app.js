@@ -24,7 +24,6 @@ var hearts = [3];
 for (var i = 0; i < 3; i++) {
 		hearts[i] = new Image();
 		hearts[i].src = 'assets/heart_full.png';
-		console.log(hearts[i].src);
 }
 var background = new Image();
 var map = new Map.Map(2);
@@ -136,7 +135,9 @@ function update(elapsedTime) {
   // update the player
   checkMoveState();
   player.update(elapsedTime);
-  // boss.update(elapsedTime, player.position);
+  // console.log(player.position);
+  boss.update(elapsedTime, player.position);
+  console.log(boss);
 }
 
 function checkMoveState() {
@@ -248,7 +249,7 @@ function renderWorld(elapsedTime, ctx) {
 		900+(40*i), 5, 40, 40
 		);
 	}
-  // boss.render(elapsedTime, ctx);
+  boss.render(elapsedTime, ctx);
 
 }
 

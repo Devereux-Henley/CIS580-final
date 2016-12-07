@@ -20,7 +20,6 @@ function Boss(position, size) {
   this.speed = BOSS_SPEED;
   this.tag = "blob";
   this.position = position;
-  // this.state = state;
   this.velocity = {x: 0, y: 0};
 }
 
@@ -30,6 +29,7 @@ function Boss(position, size) {
   * @param {DOMHighResTimeStamp} elapedTime
   */
 Boss.prototype.update = function(elapsedTime, playerPosition) {
+
   var direction = Vector.subtract(playerPosition, this.position);
   this.velocity = Vector.scale(Vector.normalize(direction), this.speed);
   this.position.x += this.velocity.x;

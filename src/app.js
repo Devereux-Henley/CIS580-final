@@ -19,6 +19,12 @@ var input = {
 
 
 var player = new Player({x: 500, y: 500});
+var hearts = [3];
+for (var i = 0; i < 3; i++) {
+		hearts[i] = new Image();
+		hearts[i].src = 'assets/heart_full.png';
+		console.log(hearts[i].src);
+}
 var background = new Image();
 var map = new Map.Map(2);
 background.src = 'assets/background.png';
@@ -61,7 +67,7 @@ window.onkeydown = function(event) {
 	// Decrement health - test
 	case "T":
 	case "t":
-	  player.damage();
+	  damagePlayer();
 	  break;
   }
 }
@@ -230,6 +236,27 @@ function renderWorld(elapsedTime, ctx) {
 	ctx.save();
   player.render(elapsedTime, ctx);
 	ctx.restore();
+	
+	for (var i = 0; i < hearts.length; i++ ) {
+		ctx.drawImage(
+			hearts[i],
+			0, 0, 120, 120,
+		900+(40*i), 5, 40, 40
+		);
+	}
+}
+
+// HEALTH
+function damagePlayer() {
+	if (hearts != null){
+		if (player.getHealth() % 2 == 0){
+			hearts[hearts.length - 1].src = 'assets/heart_half.png';
+		}
+		else {
+			hearts.splice(hearts.length - 1, 1);
+		}
+	}
+	player.damage();
 }
 
 /**
@@ -240,4 +267,5 @@ function renderWorld(elapsedTime, ctx) {
   */
 function renderGUI(elapsedTime, ctx) {
   // TODO: Render the GUI
+
 }

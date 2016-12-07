@@ -22,7 +22,10 @@ module.exports = exports = {
  * @returns a new vector representing the scaled original
  */
 function scale(a, scale) {
- return {x: a.x * scale, y: a.y * scale};
+ return {
+   x: a.x * scale,
+   y: a.y * scale
+ };
 }
 
 /**
@@ -34,10 +37,10 @@ function scale(a, scale) {
  */
 function rotate(a, angle)
 {
-  return{
-        x: a.x * Math.cos(angle) - a.y * Math.sin(angle),
-        y: a.x * Math.sin(angle) + a.y * Math.cos(angle)
-        }
+  return {
+    x: a.x * Math.cos(angle) - a.y * Math.sin(angle),
+    y: a.x * Math.sin(angle) + a.y * Math.cos(angle)
+  };
 }
 
 /**
@@ -49,7 +52,7 @@ function rotate(a, angle)
  */
 function dotProduct(a,b)
 {
-  return a.x * b.x + a.y * b.y
+  return a.x * b.x + a.y * b.y;
 }
 
 /**
@@ -86,7 +89,7 @@ function subtract(a, b) {
     return {
         x: a.x - b.x,
         y: a.y - b.y
-    }
+    };
 }
 
 /**
@@ -99,7 +102,7 @@ function perpendicular(a) {
     return {
         x: -a.y,
         y: a.x
-    }
+    };
 }
 
 /**

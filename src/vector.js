@@ -15,6 +15,17 @@ module.exports = exports = {
 }
 
 /**
+ * @function rotate
+ * Scales a vector
+ * @param {Vector} a - the vector to scale
+ * @param {float} scale - the scalar to multiply the vector by
+ * @returns a new vector representing the scaled original
+ */
+function scale(a, scale) {
+ return {x: a.x * scale, y: a.y * scale};
+}
+
+/**
  * Find the roatation of a vector to an angle
  *
  * @param {a} Vector a

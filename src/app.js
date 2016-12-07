@@ -30,7 +30,7 @@ var background = new Image();
 var map = new Map.Map(2);
 background.src = 'assets/background.png';
 
-var boss = new Boss({x: 48, y: 48}, "", 1);
+var boss = new Boss({x: 48, y: 48}, 1);
 
 /**
  * @function onkeydown
@@ -136,6 +136,7 @@ function update(elapsedTime) {
   // update the player
   checkMoveState();
   player.update(elapsedTime);
+  // boss.update(elapsedTime, player.position);
 }
 
 function checkMoveState() {
@@ -247,6 +248,8 @@ function renderWorld(elapsedTime, ctx) {
 		900+(40*i), 5, 40, 40
 		);
 	}
+  // boss.render(elapsedTime, ctx);
+
 }
 
 // HEALTH

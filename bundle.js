@@ -20,6 +20,9 @@ var input = {
 }
 var player = new Player({x: 500, y: 500});
 
+var boss = new Boss({x: 48, y: 48}, "", 1);
+var boss2 = new Boss({x: 900, y: 48}, "", 2);
+
 /**
  * @function masterLoop
  * Advances the game in sync with the refresh rate of the screen
@@ -40,12 +43,14 @@ masterLoop(performance.now());
  * the number of milliseconds passed since the last frame.
  */
 function update(elapsedTime) {
-  // TODO: Update the Boss
-
 
   // Update the Player
   checkMoveState();
   player.update(elapsedTime);
+
+  // Update the Boss
+  boss.update(elapsedTime, player.position);
+  boss2.update(elapsedTime, player.position);
 }
 
 /**
@@ -80,10 +85,10 @@ function renderWorld(elapsedTime, ctx) {
 
   //TODO: Render the Boss
   player.render(elapsedTime, ctx);
+  boss.render(elapsedTime, ctx);
+  boss2.render(elapsedTime, ctx);
 	ctx.restore();
 }
-
-
 
 
 
@@ -223,6 +228,11 @@ function checkMoveState() {
 },{"./boss":2,"./game":3,"./player":4}],2:[function(require,module,exports){
 "use strict";
 
+const Vector = require('./vector')
+
+const BOSS_SIZE = 48;
+const BOSS_SPEED = 2;
+
 /**
   * @module Boss
   * A class representing a boss in the game
@@ -233,8 +243,13 @@ module.exports = exports = Boss;
   * @constructor Boss
   * Creates a Boss
   */
-function Boss() {
-
+function Boss(position, state, size) {
+  this.size = BOSS_SIZE / size;
+  this.speed = BOSS_SPEED;
+  this.tag = "blob";
+  this.position = position;
+  this.state = state;
+  this.velocity = {x: 0, y: 0};
 }
 
 /**
@@ -242,8 +257,12 @@ function Boss() {
   * Updates the Boss based on the supplied input
   * @param {DOMHighResTimeStamp} elapedTime
   */
-Boss.prototype.update = function(elapsedTime) {
+Boss.prototype.update = function(elapsedTime, playerPosition) {
 
+  var direction = Vector.subtract(playerPosition, this.position);
+  this.velocity = Vector.scale(Vector.normalize(direction), this.speed);
+  this.position.x += this.velocity.x;
+  this.position.y += this.velocity.y;
 }
 
 /**
@@ -253,14 +272,17 @@ Boss.prototype.update = function(elapsedTime) {
  * @param {CanvasRenderingContext2D} ctx
  */
 Boss.prototype.render = function (elapsedTime, ctx) {
-
+  ctx.fillStyle = "green";
+  ctx.beginPath();
+  ctx.arc(this.position.x, this.position.y, this.size, 0, 2*Math.PI);
+  ctx.fill();
 }
 
 Boss.prototype.onCollision = function(entity) {
-  
+
 }
 
-},{}],3:[function(require,module,exports){
+},{"./vector":5}],3:[function(require,module,exports){
 "use strict";
 
 /**
@@ -350,7 +372,7 @@ function SheetPosition(x, y) {
 	 * Creates a player
 	 * @param {Position} starting location of the player;
 	 */
-function Player(position) { 
+function Player(position) {
 	this.position = position;
 	this.velocity = {x: 0, y: 0};
 	this.state = new PlayerState('STILL', false, false);
@@ -358,7 +380,7 @@ function Player(position) {
 	this.renderSource.src = 'assets/rpg_sprite_walk.png';
 	this.timer = 0;
 	this.renderPosition = 0;
-	this.renderSources = 
+	this.renderSources =
 		{'STILL':     [new SheetPosition(0, 0)],
 		 'EAST':      [new SheetPosition(0, 96),
 		               new SheetPosition(24, 96),
@@ -492,7 +514,7 @@ Player.prototype.update = function(elapsedTime) {
 	if(this.state.dodging) {
 
 	}
-	else if(this.state.sprinting) {	
+	else if(this.state.sprinting) {
 		updateSpeed = 2 * PLAYER_SPEED;
 	}
 
@@ -538,12 +560,12 @@ Player.prototype.update = function(elapsedTime) {
 	 * @param {DOMHighResTimeStamp} elapsedTime
 	 * @param {CanvasRenderingContext2D} ctx
 	 */
-Player.prototype.render = function(elapsedTime, ctx) { 
+Player.prototype.render = function(elapsedTime, ctx) {
 	ctx.save();
 	ctx.translate(this.position.x, this.position.y);
 
 	this.timer += elapsedTime;
-	
+
 	//Select rendersheet based on time passed since starting this state.
 	var renderstates = this.renderSources[this.state.moveState][this.renderPosition];
 
@@ -551,17 +573,114 @@ Player.prototype.render = function(elapsedTime, ctx) {
 		this.renderPosition = 0;
 		renderstates = this.renderSources[this.state.moveState][this.renderPosition];
 	}
-	
+
 	if(this.timer > RENDER_TIMER) {
 		this.renderPosition++;
 		this.timer = 0;
-	}	
+	}
 
 	ctx.drawImage(
 		this.renderSource,
 		renderstates.x, renderstates.y, renderstates.width, renderstates.height,
 		0, 0, 24, 32);
 	ctx.restore();
+}
+
+},{}],5:[function(require,module,exports){
+"use strict";
+
+/**
+ * @module Vector
+ * A library of vector functions.
+ */
+module.exports = exports = {
+  add: add,
+  subtract: subtract,
+  scale: scale,
+  rotate: rotate,
+  dotProduct: dotProduct,
+  magnitude: magnitude,
+  normalize: normalize
+}
+
+
+/**
+ * @function rotate
+ * Scales a vector
+ * @param {Vector} a - the vector to scale
+ * @param {float} scale - the scalar to multiply the vector by
+ * @returns a new vector representing the scaled original
+ */
+function scale(a, scale) {
+ return {x: a.x * scale, y: a.y * scale};
+}
+
+/**
+ * @function add
+ * Computes the sum of two vectors
+ * @param {Vector} a the first vector
+ * @param {Vector} b the second vector
+ * @return the computed sum
+*/
+function add(a, b) {
+ return {x: a.x + b.x, y: a.y + b.y};
+}
+
+/**
+ * @function subtract
+ * Computes the difference of two vectors
+ * @param {Vector} a the first vector
+ * @param {Vector} b the second vector
+ * @return the computed difference
+ */
+function subtract(a, b) {
+  return {x: a.x - b.x, y: a.y - b.y};
+}
+
+/**
+ * @function rotate
+ * Rotates a vector about the Z-axis
+ * @param {Vector} a - the vector to rotate
+ * @param {float} angle - the angle to roatate by (in radians)
+ * @returns a new vector representing the rotated original
+ */
+function rotate(a, angle) {
+  return {
+    x: a.x * Math.cos(angle) - a.y * Math.sin(angle),
+    y: a.x * Math.sin(angle) + a.y * Math.cos(angle)
+  }
+}
+
+/**
+ * @function dotProduct
+ * Computes the dot product of two vectors
+ * @param {Vector} a the first vector
+ * @param {Vector} b the second vector
+ * @return the computed dot product
+ */
+function dotProduct(a, b) {
+  return a.x * b.x + a.y * b.y
+}
+
+/**
+ * @function magnitude
+ * Computes the magnitude of a vector
+ * @param {Vector} a the vector
+ * @returns the calculated magnitude
+ */
+function magnitude(a) {
+  return Math.sqrt(a.x * a.x + a.y * a.y);
+}
+
+/**
+ * @function normalize
+ * Normalizes the vector
+ * @param {Vector} a the vector to normalize
+ * @returns a new vector that is the normalized original
+ */
+function normalize(a) {
+  var mag = magnitude(a);
+  return {x: a.x / mag, y: a.y / mag};
 }
 
 },{}]},{},[1]);

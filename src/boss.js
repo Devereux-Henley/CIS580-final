@@ -1,7 +1,9 @@
 "use strict";
 
-const BOSS_SIZE = 96;
-const BOSS_SPEED = 3;
+const Vector = require('./vector')
+
+const BOSS_SIZE = 48;
+const BOSS_SPEED = 2;
 
 /**
   * @module Boss
@@ -19,6 +21,7 @@ function Boss(position, state, size) {
   this.tag = "blob";
   this.position = position;
   this.state = state;
+  this.velocity = {x: 0, y: 0};
 }
 
 /**
@@ -26,8 +29,12 @@ function Boss(position, state, size) {
   * Updates the Boss based on the supplied input
   * @param {DOMHighResTimeStamp} elapedTime
   */
-Boss.prototype.update = function(elapsedTime) {
+Boss.prototype.update = function(elapsedTime, playerPosition) {
 
+  var direction = Vector.subtract(playerPosition, this.position);
+  this.velocity = Vector.scale(Vector.normalize(direction), this.speed);
+  this.position.x += this.velocity.x;
+  this.position.y += this.velocity.y;
 }
 
 /**
@@ -37,13 +44,12 @@ Boss.prototype.update = function(elapsedTime) {
  * @param {CanvasRenderingContext2D} ctx
  */
 Boss.prototype.render = function (elapsedTime, ctx) {
-
+  ctx.fillStyle = "green";
+  ctx.beginPath();
+  ctx.arc(this.position.x, this.position.y, this.size, 0, 2*Math.PI);
+  ctx.fill();
 }
 
-/**
- * @function onCollision
- * @param  {entity} entity The opposing entity this Boss is colliding with
- */
 Boss.prototype.onCollision = function(entity) {
 
 }

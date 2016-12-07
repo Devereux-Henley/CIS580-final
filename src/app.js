@@ -4,6 +4,7 @@
 const Game = require('./game');
 const Boss = require('./boss');
 const Player = require('./player');
+const Map = require('./map');
 
 /* Global variables */
 var canvas = document.getElementById('screen');
@@ -17,10 +18,100 @@ var input = {
   shift: false,
   dodge: false
 }
+
 var player = new Player({x: 500, y: 500});
+var hearts = [3];
+for (var i = 0; i < 3; i++) {
+		hearts[i] = new Image();
+		hearts[i].src = 'assets/heart_full.png';
+		console.log(hearts[i].src);
+}
+var background = new Image();
+var map = new Map.Map(2);
+background.src = 'assets/background.png';
 
 var boss = new Boss({x: 48, y: 48}, "", 1);
-var boss2 = new Boss({x: 900, y: 48}, "", 2);
+
+/**
+ * @function onkeydown
+ * Handles keydown events
+ */
+window.onkeydown = function(event) {
+  input.shift = event.shiftKey;
+  switch(event.key) {
+	  case "W":
+    case "ArrowUp":
+    case "w":
+      input.up = true;
+      event.preventDefault();
+      break;
+	  case "S":
+    case "ArrowDown":
+    case "s":
+      input.down = true;
+      event.preventDefault();
+      break;
+	  case "A":
+    case "ArrowLeft":
+    case "a":
+      input.left = true;
+      event.preventDefault();
+      break;
+	  case "D":
+    case "ArrowRight":
+    case "d":
+      input.right = true;
+	  event.preventDefault();
+      break;
+	case " ":
+	  input.space = true;
+	  event.preventDefault();
+	  break;
+	// Decrement health - test
+	case "T":
+	case "t":
+	  damagePlayer();
+	  break;
+  }
+}
+
+/**
+ * @function onkeyup
+ * Handles keydown events
+ */
+window.onkeyup = function(event) {
+  input.shift = event.shiftKey;
+  switch(event.key) {
+	  case "W":
+    case "ArrowUp":
+    case "w":
+      input.up = false;
+      event.preventDefault();
+      break;
+	  case "S":
+    case "ArrowDown":
+    case "s":
+      input.down = false;
+      event.preventDefault();
+      break;
+	  case "A":
+    case "ArrowLeft":
+    case "a":
+      input.left = false;
+      event.preventDefault();
+      break;
+	  case "D":
+    case "ArrowRight":
+    case "d":
+      input.right = false;
+      event.preventDefault();
+      break;
+	  case " ":
+	    input.space = false;
+	    event.preventDefault();
+	    break;
+  }
+}
 
 /**
  * @function masterLoop
@@ -42,129 +133,9 @@ masterLoop(performance.now());
  * the number of milliseconds passed since the last frame.
  */
 function update(elapsedTime) {
-
-  // Update the Player
+  // update the player
   checkMoveState();
   player.update(elapsedTime);
-
-  // Update the Boss
-  boss.update(elapsedTime, player.position);
-  boss2.update(elapsedTime, player.position);
-}
-
-/**
-  * @function render
-  * Renders the current game state into a back buffer.
-  * @param {DOMHighResTimeStamp} elapsedTime indicates
-  * the number of milliseconds passed since the last frame.
-  * @param {CanvasRenderingContext2D} ctx the context to render to
-  */
-function render(elapsedTime, ctx) {
-  // Transform the coordinate system using
-  // the camera position BEFORE rendering
-  // objects in the world - that way they
-  // can be rendered in WORLD cooridnates
-  // but appear in SCREEN coordinates
-  renderWorld(elapsedTime, ctx);
-}
-
-/**
-  * @function renderWorld
-  * Renders the entities in the game world
-  * IN WORLD COORDINATES
-  * @param {DOMHighResTimeStamp} elapsedTime
-  * @param {CanvasRenderingContext2D} ctx the context to render to
-  */
-function renderWorld(elapsedTime, ctx) {
-  // Background
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, 1024, 786);
-
-	ctx.save();
-
-  //TODO: Render the Boss
-  player.render(elapsedTime, ctx);
-  boss.render(elapsedTime, ctx);
-  boss2.render(elapsedTime, ctx);
-	ctx.restore();
-}
-
-
-
-/**
- * @function onkeydown
- * Handles keydown events
- */
-window.onkeydown = function(event) {
-  input.shift = event.shiftKey;
-  switch(event.key) {
-	case "W":
-    case "ArrowUp":
-    case "w":
-      input.up = true;
-      event.preventDefault();
-      break;
-	case "S":
-    case "ArrowDown":
-    case "s":
-      input.down = true;
-      event.preventDefault();
-      break;
-	case "A":
-    case "ArrowLeft":
-    case "a":
-      input.left = true;
-      event.preventDefault();
-      break;
-	case "D":
-    case "ArrowRight":
-    case "d":
-      input.right = true;
-	  event.preventDefault();
-      break;
-	case " ":
-	  input.space = true;
-	  event.preventDefault();
-	  break;
-  }
-}
-
-/**
- * @function onkeyup
- * Handles keydown events
- */
-window.onkeyup = function(event) {
-  input.shift = event.shiftKey;
-  switch(event.key) {
-	case "W":
-    case "ArrowUp":
-    case "w":
-      input.up = false;
-      event.preventDefault();
-      break;
-	case "S":
-    case "ArrowDown":
-    case "s":
-      input.down = false;
-      event.preventDefault();
-      break;
-	case "A":
-    case "ArrowLeft":
-    case "a":
-      input.left = false;
-      event.preventDefault();
-      break;
-	case "D":
-    case "ArrowRight":
-    case "d":
-      input.right = false;
-      event.preventDefault();
-      break;
-	case " ":
-	  input.space = false;
-	  event.preventDefault();
-	  break;
-  }
 }
 
 function checkMoveState() {
@@ -222,4 +193,82 @@ function checkMoveState() {
 		player.still();
 		return;
 	}
+}
+
+/**
+  * @function render
+  * Renders the current game state into a back buffer.
+  * @param {DOMHighResTimeStamp} elapsedTime indicates
+  * the number of milliseconds passed since the last frame.
+  * @param {CanvasRenderingContext2D} ctx the context to render to
+  */
+function render(elapsedTime, ctx) {
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, 1024, 786);
+
+  // TODO: Render background
+
+  // Transform the coordinate system using
+  // the camera position BEFORE rendering
+  // objects in the world - that way they
+  // can be rendered in WORLD cooridnates
+  // but appear in SCREEN coordinates
+  renderWorld(elapsedTime, ctx);
+
+  // Render the GUI without transforming the
+  // coordinate system
+  renderGUI(elapsedTime, ctx);
+}
+
+/**
+  * @function renderWorld
+  * Renders the entities in the game world
+  * IN WORLD COORDINATES
+  * @param {DOMHighResTimeStamp} elapsedTime
+  * @param {CanvasRenderingContext2D} ctx the context to render to
+  */
+function renderWorld(elapsedTime, ctx) {
+    // Render the player
+	ctx.drawImage(
+		background,
+		0, 0, 640, 400,
+		0, 0, canvas.width, canvas.height);
+  map.getLayers().forEach(function(layer) {
+    layer.render(ctx);
+  });
+	ctx.save();
+  player.render(elapsedTime, ctx);
+	ctx.restore();
+
+	for (var i = 0; i < hearts.length; i++ ) {
+		ctx.drawImage(
+			hearts[i],
+			0, 0, 120, 120,
+		900+(40*i), 5, 40, 40
+		);
+	}
+}
+
+// HEALTH
+function damagePlayer() {
+	if (hearts != null){
+		if (player.getHealth() % 2 == 0){
+			hearts[hearts.length - 1].src = 'assets/heart_half.png';
+		}
+		else {
+			hearts.splice(hearts.length - 1, 1);
+		}
+	}
+	player.damage();
+}
+
+/**
+  * @function renderGUI
+  * Renders the game's GUI IN SCREEN COORDINATES
+  * @param {DOMHighResTimeStamp} elapsedTime
+  * @param {CanvasRenderingContext2D} ctx
+  */
+function renderGUI(elapsedTime, ctx) {
+  // TODO: Render the GUI
+
 }

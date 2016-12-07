@@ -15,12 +15,12 @@ module.exports = exports = Boss;
   * @constructor Boss
   * Creates a Boss
   */
-function Boss(position, state, size) {
+function Boss(position, size) {
   this.size = BOSS_SIZE / size;
   this.speed = BOSS_SPEED;
   this.tag = "blob";
   this.position = position;
-  this.state = state;
+  // this.state = state;
   this.velocity = {x: 0, y: 0};
 }
 
@@ -30,7 +30,6 @@ function Boss(position, state, size) {
   * @param {DOMHighResTimeStamp} elapedTime
   */
 Boss.prototype.update = function(elapsedTime, playerPosition) {
-
   var direction = Vector.subtract(playerPosition, this.position);
   this.velocity = Vector.scale(Vector.normalize(direction), this.speed);
   this.position.x += this.velocity.x;

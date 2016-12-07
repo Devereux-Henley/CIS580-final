@@ -2,12 +2,14 @@
 
 /* Classes and Libraries */
 const Game = require('./game');
+const Boss = require('./boss');
 const Player = require('./player');
 const Map = require('./map');
 
 /* Global variables */
 var canvas = document.getElementById('screen');
 var game = new Game(canvas, update, render);
+
 var input = {
   up: false,
   down: false,
@@ -16,7 +18,6 @@ var input = {
   shift: false,
   dodge: false
 }
-
 
 var player = new Player({x: 500, y: 500});
 var hearts = [3];
@@ -28,6 +29,8 @@ for (var i = 0; i < 3; i++) {
 var background = new Image();
 var map = new Map.Map(2);
 background.src = 'assets/background.png';
+
+var boss = new Boss({x: 48, y: 48}, "", 1);
 
 /**
  * @function onkeydown
@@ -59,11 +62,11 @@ window.onkeydown = function(event) {
     case "d":
       input.right = true;
 	  event.preventDefault();
-      break;	
+      break;
 	case " ":
 	  input.space = true;
 	  event.preventDefault();
-	  break; 
+	  break;
 	// Decrement health - test
 	case "T":
 	case "t":
@@ -236,7 +239,7 @@ function renderWorld(elapsedTime, ctx) {
 	ctx.save();
   player.render(elapsedTime, ctx);
 	ctx.restore();
-	
+
 	for (var i = 0; i < hearts.length; i++ ) {
 		ctx.drawImage(
 			hearts[i],

@@ -171,7 +171,7 @@ function Player(position) {
     this.points = [
 		{
 		  // TOP LEFT CORNER
-		  x: this.x, 
+		  x: this.x,
 		  y: this.y
 		},
 		{
@@ -189,7 +189,7 @@ function Player(position) {
 		  x: this.x + this.width,
 		  y: this.y + this.height
 		}
-    ]
+  ];
 }
 
 Player.prototype.walk = function() {
@@ -270,7 +270,7 @@ Player.prototype.onCollision = function(entity) {
 			break;
 		case "switch":  // Check name of tag with boss group.
 			break;
-		default: 
+		default:
 			console.log("Invalid.");
 			break;
 		}

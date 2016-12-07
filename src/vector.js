@@ -16,7 +16,7 @@ module.exports = exports = {
 
 /**
  * Find the roatation of a vector to an angle
- * 
+ *
  * @param {a} Vector a
  * @param {angle} An angle to rotate about
  * @return The rotated vector
@@ -31,7 +31,7 @@ function rotate(a, angle)
 
 /**
  * Calculates the dot product of two vectors
- * 
+ *
  * @param {a} Vector a
  * @param {b} Vector b
  * @return The result of the dot product
@@ -43,7 +43,7 @@ function dotProduct(a,b)
 
 /**
  * Calculates the magnitude of a vector
- * 
+ *
  * @param {a} Vector a
  * @return The magnitude of vector a
  */
@@ -54,7 +54,7 @@ function magnitude(a)
 
 /**
  * Calculates the normal of a vector
- * 
+ *
  * @param {a} Vector a
  * @return The normalized vector of a
  */
@@ -66,7 +66,7 @@ function normalize(a)
 
 /**
  * Subtract two vectors
- * 
+ *
  * @param {a} Vector a
  * @param {b} Vector b
  * @returns Vector result from vector subtraction
@@ -80,7 +80,7 @@ function subtract(a, b) {
 
 /**
  * Find a perpendicular vector
- * 
+ *
  * @param {a} Vector a
  * @returns Vector perpendicular to a
  */
@@ -93,7 +93,7 @@ function perpendicular(a) {
 
 /**
  * Finds an axis
- * 
+ *
  * @param {shape} An array of points defining the shape
  * @returns An axes array
  */
@@ -112,10 +112,10 @@ function findAxes(shape) {
 
 /**
  * Finds the projection of a shape onto an axis
- * 
+ *
  * @param {shape} An array of points defining the shape
  * @param {axes} The axis of intercection
- * @returns 
+ * @returns
  */
 function project(shape, axes) {
     var min = dotProduct(shape[0], axes);

@@ -18,7 +18,8 @@ module.exports = exports = Boss;
 function Boss(position, size) {
   this.size = BOSS_SIZE / size;
   this.speed = BOSS_SPEED;
-  this.tag = "blob";
+  this.tag = "boss2";
+  this.shape = "circle";
   this.position = position;
   this.velocity = {x: 0, y: 0};
 }
@@ -50,5 +51,9 @@ Boss.prototype.render = function (elapsedTime, ctx) {
 }
 
 Boss.prototype.onCollision = function(entity) {
-
+  console.log("boss is colliding");
+  switch (entity.tag) {
+    case "spike":
+      break;
+  }
 }

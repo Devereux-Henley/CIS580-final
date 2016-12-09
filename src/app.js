@@ -2,12 +2,14 @@
 
 /* Classes and Libraries */
 const Game = require('./game');
+const Boss = require('./boss');
 const Player = require('./player');
 const Map = require('./map');
 
 /* Global variables */
 var canvas = document.getElementById('screen');
 var game = new Game(canvas, update, render);
+
 var input = {
   up: false,
   down: false,
@@ -16,7 +18,6 @@ var input = {
   shift: false,
   dodge: false
 }
-
 
 var player = new Player({x: 500, y: 500});
 var hearts = [3];
@@ -28,6 +29,8 @@ for (var i = 0; i < 3; i++) {
 var background = new Image();
 var map = new Map.Map(2);
 background.src = 'assets/background.png';
+
+var boss = new Boss({x: 48, y: 48}, 1);
 
 /**
  * @function onkeydown
@@ -133,6 +136,7 @@ function update(elapsedTime) {
   // update the player
   checkMoveState();
   player.update(elapsedTime);
+  // boss.update(elapsedTime, player.position);
 }
 
 function checkMoveState() {
@@ -242,6 +246,8 @@ function renderWorld(elapsedTime, ctx) {
 		900+(40*i), 5, 40, 40
 		);
 	}
+  // boss.render(elapsedTime, ctx);
+
 }
 
 // HEALTH

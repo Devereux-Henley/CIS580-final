@@ -271,7 +271,6 @@ Player.prototype.onCollision = function(entity) {
     }
 }
 
-
 /**
  * @function update
  * Updates the player based on the supplied input

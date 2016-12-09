@@ -161,6 +161,7 @@ function Player(position) {
     };
     this.currentRender = this.renderSources[this.state.moveState][this.state.moveType][this.renderPosition];
     this.health = 6;
+    this.stamina = 100;
     // COLLISIONS
     this.shape = "square";
     this.tag = "player";
@@ -184,6 +185,7 @@ function Player(position) {
 }
 
 Player.prototype.walk = function() {
+    if (this.dodgeTimer > 0 && this.dodgeTimer < DODGE_END) return;
     this.state.moveType = 'NORMAL';
 }
 
@@ -286,11 +288,19 @@ Player.prototype.update = function(elapsedTime) {
 
     var updateSpeed = PLAYER_SPEED;
 
+    console.log(this.stamina);
     if (this.state.moveType == 'DODGING') {
         updateSpeed = 1.5 * PLAYER_SPEED;
         this.dodgeTimer += elapsedTime;
     } else if (this.state.moveType == 'SPRINTING') {
-        updateSpeed = 2 * PLAYER_SPEED;
+        if (this.stamina >= 2) {
+          updateSpeed = 2 * PLAYER_SPEED;
+          this.stamina -= 2;
+        } else {
+          this.walk();
+        }
+    } else if (this.stamina < 100) {
+      this.stamina += 1;
     }
 
     switch (this.state.moveState) {

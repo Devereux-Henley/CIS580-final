@@ -2,7 +2,7 @@
 
 /* Classes and Libraries */
 const Game = require('./game');
-const Boss = require('./boss');
+const Boss = require('./boss-2');
 const Player = require('./player');
 const Map = require('./map');
 const EntityManager = require('./entity-manager');

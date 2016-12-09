@@ -163,32 +163,32 @@ function Player(position) {
 			  EAST_DODGE
 		),
 	};
-    this.currentRender = this.renderSources[this.state.moveState][this.state.moveType][this.renderPosition];
-    this.health = 6;
-    // COLLISIONS
-    this.shape = "square";
-    this.tag = "player";
-    this.points = [
-		{
-		  // TOP LEFT CORNER
-		  x: this.x,
-		  y: this.y
-		},
-		{
-		  // TOP RIGHT CORNER
-		  x: this.x + this.width,
-		  y: this.y
-		},
-		{
-		  // BOTTOM LEFT CORNER
-		  x: this.x,
-		  y: this.y + this.height
-		},
-		{
-		  // BOTTOM RIGHT CORNER
-		  x: this.x + this.width,
-		  y: this.y + this.height
-		}
+  this.currentRender = this.renderSources[this.state.moveState][this.state.moveType][this.renderPosition];
+  this.health = 6;
+  // COLLISIONS
+  this.shape = "square";
+  this.tag = "player";
+  this.points = [
+	{
+	  // TOP LEFT CORNER
+	  x: this.x,
+	  y: this.y
+	},
+	{
+	  // TOP RIGHT CORNER
+	  x: this.x + this.width,
+	  y: this.y
+	},
+	{
+	  // BOTTOM LEFT CORNER
+	  x: this.x,
+	  y: this.y + this.height
+	},
+	{
+	  // BOTTOM RIGHT CORNER
+	  x: this.x + this.width,
+	  y: this.y + this.height
+	}
   ];
 }
 
@@ -268,6 +268,8 @@ Player.prototype.onCollision = function(entity) {
 			break;
 		case "boulder":
 			break;
+    case "spike":
+      break;
 		case "switch":  // Check name of tag with boss group.
 			break;
 		default:

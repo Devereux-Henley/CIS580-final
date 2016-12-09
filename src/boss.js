@@ -18,9 +18,9 @@ module.exports = exports = Boss;
 function Boss(position, size) {
   this.size = BOSS_SIZE / size;
   this.speed = BOSS_SPEED;
-  this.tag = "blob";
+  this.tag = "boss2";
+  this.shape = "circle";
   this.position = position;
-  // this.state = state;
   this.velocity = {x: 0, y: 0};
 }
 
@@ -30,6 +30,7 @@ function Boss(position, size) {
   * @param {DOMHighResTimeStamp} elapedTime
   */
 Boss.prototype.update = function(elapsedTime, playerPosition) {
+
   var direction = Vector.subtract(playerPosition, this.position);
   this.velocity = Vector.scale(Vector.normalize(direction), this.speed);
   this.position.x += this.velocity.x;
@@ -50,5 +51,9 @@ Boss.prototype.render = function (elapsedTime, ctx) {
 }
 
 Boss.prototype.onCollision = function(entity) {
-
+  console.log("boss is colliding");
+  switch (entity.tag) {
+    case "spike":
+      break;
+  }
 }

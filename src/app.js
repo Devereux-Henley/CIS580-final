@@ -59,11 +59,11 @@ window.onkeydown = function(event) {
     case "d":
       input.right = true;
 	  event.preventDefault();
-      break;	
+      break;
 	case " ":
 	  input.space = true;
 	  event.preventDefault();
-	  break; 
+	  break;
 	// Decrement health - test
 	case "T":
 	case "t":
@@ -136,8 +136,6 @@ function update(elapsedTime) {
 }
 
 function checkMoveState() {
-
-	player.walk();
 
 	if(input.shift) {
 		player.sprint();
@@ -236,7 +234,7 @@ function renderWorld(elapsedTime, ctx) {
 	ctx.save();
   player.render(elapsedTime, ctx);
 	ctx.restore();
-	
+
 	for (var i = 0; i < hearts.length; i++ ) {
 		ctx.drawImage(
 			hearts[i],

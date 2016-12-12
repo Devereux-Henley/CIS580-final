@@ -6,10 +6,24 @@ const Boss = require('./boss-2');
 const Player = require('./player');
 const Map = require('./map');
 const EntityManager = require('./entity-manager');
+const {LevelSwitcher, Level} = require('./level_chooser/main');
+var canvas = document.getElementById('screen');
+const levelSwitcher = new LevelSwitcher(canvas, [
+    {
+        getTitle: ()=>"Level 1",
+        update: (dt)=>update(dt),
+        render: (dt, ctx)=>render(dt, ctx),
+        hasEnded: ()=>false,
+        start: ()=>{},
+    }
+]);
 
 /* Global variables */
-var canvas = document.getElementById('screen');
-var game = new Game(canvas, update, render);
+// var game = new Game(canvas, update, render);
+var game = new Game(
+    canvas,
+    levelSwitcher.update.bind(levelSwitcher),
+    levelSwitcher.render.bind(levelSwitcher));
 
 var input = {
   up: false,

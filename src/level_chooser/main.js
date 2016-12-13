@@ -7,6 +7,10 @@ class Level {
         return false;
     }
 
+    hasWon()/*: bool */ {
+        return false;
+    }
+
     update(dt/*: number */) {
 
     }

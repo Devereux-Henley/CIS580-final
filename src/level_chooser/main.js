@@ -45,25 +45,32 @@ class Button {
     y: number
     width: number
     height: number
-    level: Level */
+    level: Level
+    state: {} */
     constructor(
-        x, y, width, height, level/*: Level */
+        x, y, width, height, level/*: Level */, state
     ) {
         this.x = x;
         this.y = y;
         this.height = width;
         this.width = height;
         this.level = level;
+        this.state = state;
     }
 
     render(
         ctx/*: CanvasRenderingContext2D */
     ) {
-        ctx.fillStyle = 'gray';
+        ctx.fillStyle = 'black';
         ctx.fillRect(this.x, this.y, this.width, this.height);
         ctx.fillStyle = 'red';
-        ctx.font = '20px bold';
+        ctx.font = 'bold 20px sans-serif';
         ctx.fillText(this.level.getTitle(), this.x + 6, this.y + this.height - 6, CELLSIZE - 12);
+
+        if (this.state[this.level.getTitle()] || 0 > 0) {
+            ctx.fillStyle = 'black';
+            ctx.fillText('✓', this.x-16, this.y+8);
+        }
     }
 }
 
@@ -72,7 +79,8 @@ class LevelSwitcher {
     _buttons: Button[]
     _mouseXY: {x: number, y: number}
     _currentLevel: Level | null
-    _levels: Level[]*/
+    _levels: Level[]
+    _state: {} */
     constructor(
         canvas/*: HTMLCanvasElement */,
         levels/*: Level[] */
@@ -81,6 +89,7 @@ class LevelSwitcher {
         this._buttons = [];
         this._currentLevel = null;
         this._levels = levels;
+        this.loadState();
 
         canvas.onmousedown = this._mouseClick.bind(this);
         canvas.onmousemove = this._mouseMove.bind(this);
@@ -94,7 +103,7 @@ class LevelSwitcher {
                 row_x = padding;
             }
             this._buttons.push(
-                new Button(row_x, row_y, CELLSIZE, CELLSIZE, level));
+                new Button(row_x, row_y, CELLSIZE, CELLSIZE, level, this._state));
             row_x += CELLSIZE + padding;
             i += 1;
         }
@@ -131,7 +140,7 @@ class LevelSwitcher {
         ctx/*: CanvasRenderingContext2D */
     ) {
         if (this._currentLevel === null) {
-            ctx.fillStyle = 'black';
+            ctx.fillStyle = 'gray';
             ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
             let padding = (ctx.canvas.width - CELLSIZE * 5) / 6;
             for (let button of this._buttons) {
@@ -155,6 +164,14 @@ class LevelSwitcher {
                 this._currentLevel = null;
             }
         }
+    }
+
+    loadState() {
+        this._state = JSON.parse(localStorage.getItem("DankSoulsGame") || "{}");
+    }
+
+    saveState() {
+        localStorage.setItem("DankSoulGame", JSON.stringify(this._state));
     }
 }
 

@@ -16,6 +16,7 @@ const levelSwitcher = new LevelSwitcher(canvas, [
         update: (dt)=>update(dt),
         render: (dt, ctx)=>render(dt, ctx),
         hasEnded: ()=>false,
+        hasWon: ()=>true,
         start: ()=>{},
     },
     new LevelCreepyCrawler(),
@@ -41,7 +42,7 @@ var boss = new Boss({x: 48, y: 48}, 1);
 
 // Initialize Map
 var background = new Image();
-var map = new Map.Map(2);
+var map = new Map.Map(2, require('../assets/map/test.json'));
 background.src = 'assets/background.png';
 
 // Initalize entity manager

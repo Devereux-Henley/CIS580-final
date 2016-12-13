@@ -75,7 +75,7 @@ class LevelSwitcher {
     _levels: Level[]*/
     constructor(
         canvas/*: HTMLCanvasElement */,
-        levels/*: Level[] */,
+        levels/*: Level[] */
     ) {
         this._mouseXY = {x: 0, y: 0};
         this._buttons = [];

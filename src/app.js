@@ -42,7 +42,7 @@ var boss = new Boss({x: 48, y: 48}, 1);
 
 // Initialize Map
 var background = new Image();
-var map = new Map.Map(2, require('../assets/map/test.json'));
+var map = new Map.Map(1, require('../assets/map/bossmap1.json'));
 background.src = 'assets/background.png';
 
 // Initalize entity manager

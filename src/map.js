@@ -32,7 +32,12 @@ function Map(scale, data) {
   });
   //construct the layers
   this.layers = [];
+  this.objlayers = [];
   this.json.layers.forEach(function(layer) {
+    if(!layer.data) {
+      self.objlayers.push(layer);
+      return;
+    }
     var map = [];
     for(var i = 0; i < layer.width; ++i) {
       map.push([]);

@@ -6,6 +6,7 @@ const Boss = require('./boss-2');
 const Player = require('./player');
 const Map = require('./map');
 const EntityManager = require('./entity-manager');
+const SpawnManager = require('./spawnManager');
 const {LevelSwitcher, Level} = require('./level_chooser/main');
 const {Gui} = require('./gui');
 var canvas = document.getElementById('screen');
@@ -48,6 +49,21 @@ var em = new EntityManager(canvas.width, canvas.height, 32);
 em.addEntity(player);
 em.addEntity(boss);
 
+var spawnManager = new SpawnManager();
+var spikeSpawner = {
+  new: function(obj) {
+    return null;
+  }
+};
+spawnManager.addAssociation("Spike", spikeSpawner);
+
+var tileSpawner = {
+  new: function(obj) {
+    return null;
+  }
+};
+spawnManager.addAssociation("Tile", tileSpawner);
+
 /**
  * @function masterLoop
  * Advances the game in sync with the refresh rate of the screen
@@ -76,6 +92,7 @@ function update(elapsedTime) {
   em.updateEntity(boss);
 
   em.collide();
+  spawnManager.update(elapsedTime);
 
 }
 
@@ -125,6 +142,7 @@ function renderWorld(elapsedTime, ctx) {
   // Render Boss
   boss.render(elapsedTime, ctx);
   gui.render(elapsedTime, ctx)
+  spawnManager.render(ctx, elapsedTime);
 }
 
 // HEALTH

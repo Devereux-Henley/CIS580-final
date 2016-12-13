@@ -1,8 +1,5 @@
 "use strict";
 
-//this is hardcoded
-const json = require('../assets/map/test.json');
-
 /**
  * @module exports the Map class
  */
@@ -12,16 +9,16 @@ module.exports = exports = {Map:Map, Tile:Tile, Tileset:Tileset};
  * @constructor Map
  * Creates a new map object
  */
-function Map(scale) {
+function Map(scale, data) {
+  this.json = data;
   if(!scale) scale = 1.0;
   this.scale = Math.sqrt(scale);
-  this.json = json;
-  this.tilewidth = json.tilewidth;
-  this.tileheight = json.tileheight;
+  this.tilewidth = this.json.tilewidth;
+  this.tileheight = this.json.tileheight;
   //construct the tilesets
   this.tilesets = [];
   var self = this;
-  json.tilesets.forEach(function (set) {
+  this.json.tilesets.forEach(function (set) {
     self.tilesets.push(new Tileset(
       set.image,
       set.tilewidth,
@@ -35,7 +32,7 @@ function Map(scale) {
   });
   //construct the layers
   this.layers = [];
-  json.layers.forEach(function(layer) {
+  this.json.layers.forEach(function(layer) {
     var map = [];
     for(var i = 0; i < layer.width; ++i) {
       map.push([]);

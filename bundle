@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+
+const fs = require("fs");
+const browserify = require("browserify");
+const watchify = require("watchify");
+
+const b = browserify("./src/app.js", {debug: true, cache: {}, packageCache: {}})
+    .plugin(watchify)
+    .transform("babelify", {plugins: ["transform-es2015-modules-commonjs"]})
+
+b.on('log', (log)=>console.log(log));
+b.on('update', ()=>b
+    .bundle()
+    .on('error', (error)=>{
+        console.log(error.message);
+        console.log(error.codeFrame);
+    })
+    .pipe(fs.createWriteStream("./bundle.js")));
+
+b.emit('update', []);

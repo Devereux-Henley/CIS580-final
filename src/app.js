@@ -7,6 +7,7 @@ const Player = require('./player');
 const Map = require('./map');
 const EntityManager = require('./entity-manager');
 const {LevelSwitcher, Level} = require('./level_chooser/main');
+const {Gui} = require('./gui');
 var canvas = document.getElementById('screen');
 
 const LevelCreepyCrawler = require('./level_creepy_crawler/level').Level;
@@ -31,11 +32,7 @@ var game = new Game(
 
 // Initialize player and player and player lives
 var player = new Player({x: 500, y: 500});
-var hearts = [3];
-for (var i = 0; i < 3; i++) {
-		hearts[i] = new Image();
-		hearts[i].src = 'assets/heart_full.png';
-}
+const gui = new Gui(player);
 
 // Initialize boss object
 var boss = new Boss({x: 48, y: 48}, 1);
@@ -101,10 +98,6 @@ function render(elapsedTime, ctx) {
   // can be rendered in WORLD cooridnates
   // but appear in SCREEN coordinates
   renderWorld(elapsedTime, ctx);
-
-  // Render the GUI without transforming the
-  // coordinate system
-  renderGUI(elapsedTime, ctx);
 }
 
 /**
@@ -129,39 +122,12 @@ function renderWorld(elapsedTime, ctx) {
   player.render(elapsedTime, ctx);
 	ctx.restore();
 
-	for (var i = 0; i < hearts.length; i++ ) {
-		ctx.drawImage(
-			hearts[i],
-			0, 0, 120, 120,
-		900+(40*i), 5, 40, 40
-		);
-	}
-
   // Render Boss
   boss.render(elapsedTime, ctx);
-
+  gui.render(elapsedTime, ctx)
 }
 
 // HEALTH
 function damagePlayer() {
-	if (hearts != null){
-		if (player.getHealth() % 2 == 0){
-			hearts[hearts.length - 1].src = 'assets/heart_half.png';
-		}
-		else {
-			hearts.splice(hearts.length - 1, 1);
-		}
-	}
 	player.damage();
-}
-
-/**
-  * @function renderGUI
-  * Renders the game's GUI IN SCREEN COORDINATES
-  * @param {DOMHighResTimeStamp} elapsedTime
-  * @param {CanvasRenderingContext2D} ctx
-  */
-function renderGUI(elapsedTime, ctx) {
-  // TODO: Render the GUI
-
 }

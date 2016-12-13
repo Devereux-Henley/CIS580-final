@@ -8,6 +8,8 @@ const Map = require('./map');
 const EntityManager = require('./entity-manager');
 const {LevelSwitcher, Level} = require('./level_chooser/main');
 var canvas = document.getElementById('screen');
+
+const LevelCreepyCrawler = require('./level_creepy_crawler/level').Level;
 const levelSwitcher = new LevelSwitcher(canvas, [
     {
         getTitle: ()=>"Level 1",
@@ -15,7 +17,8 @@ const levelSwitcher = new LevelSwitcher(canvas, [
         render: (dt, ctx)=>render(dt, ctx),
         hasEnded: ()=>false,
         start: ()=>{},
-    }
+    },
+    new LevelCreepyCrawler(),
 ]);
 
 /* Global variables */

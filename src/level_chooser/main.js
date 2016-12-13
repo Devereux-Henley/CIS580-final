@@ -3,19 +3,15 @@
 const CELLSIZE = 150;
 
 class Level {
-    constructor() {
+    hasEnded()/*: bool */ {
+        return false;
+    }
+
+    update(dt/*: number */) {
 
     }
 
-    hasEnded() {
-
-    }
-
-    update() {
-
-    }
-
-    render() {
+    render(dt/*: number */, ctx/*: CanvasRenderingContext2D */) {
 
     }
 

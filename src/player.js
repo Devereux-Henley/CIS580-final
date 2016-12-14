@@ -245,10 +245,6 @@ Player.prototype.damage = function() {
 	this.health--;
 }
 
-Player.prototype.onCollision = function(entity) {
-
-}
-
 Player.prototype.getHealth = function() {
 	return this.health;
 }

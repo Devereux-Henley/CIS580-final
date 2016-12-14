@@ -3,9 +3,10 @@
 const {Level: AbstractLevel} = require("../level_chooser/main");
 const {Map} = require("../map");
 const Player = require("../player");
-const mapdata = require('./tileMap');
 const {Gui} = require('../gui');
 const vector = require('../vector');
+const EntityManager = require('../entity-manager');
+const mapdata = require('./tileMap');
 const img = buildImage('assets/level_creepy_crawler/crawler.png');
 
 
@@ -15,16 +16,25 @@ class Level extends AbstractLevel {
     map: Map
     gui: Gui
     boss: Boss
+    em: EntityManager
+    size: {width: number, height: number}
     */
-    constructor() {
+    constructor(
+        size/*: {width: number, height: number} */
+    ) {
         super();
+        this.size = size;
     }
 
     start() {
         this.player = new Player({x: 500, y: 500});
+        this.player.tag = "";
         this.map = new Map(2, mapdata);
         this.gui = new Gui(this.player);
         this.boss = new Boss(this.player);
+        this.em = new EntityManager(this.size.width, this.size.height, 64);
+        this.em.addEntity(this.player);
+        this.em.addEntity(this.boss.collider);
     }
 
     render(
@@ -46,6 +56,9 @@ class Level extends AbstractLevel {
     ) {
         this.player.update(dt);
         this.boss.update(dt);
+        this.em.updateEntity(this.player);
+        this.em.updateEntity(this.boss.collider);
+        this.em.collide();
     }
 
     getTitle() {
@@ -63,6 +76,7 @@ class Boss {
     }
     player: Player
     renderTick: number
+    collider: Collider
     */
     constructor(player) {
         this.player = player;
@@ -71,13 +85,14 @@ class Boss {
             y: 200
         };
         this.renderTick = 0;
+        this.collider = new Collider(this.position, (a)=>null);
     }
 
     render(
         dt,
         ctx/*: CanvasRenderingContext2D */
     ) {
-        // ctx.fillRect(this.position.x-60, this.position.y-60, 120, 120);
+        ctx.fillRect(this.position.x-60, this.position.y-60, 120, 120);
         this.renderTick += 1;
         ctx.save();
         ctx.translate(this.position.x, this.position.y);
@@ -111,4 +126,30 @@ function buildImage(src) {
     let img = new Image();
     img.src = src;
     return img;
+}
+
+
+class Collider {
+    /*::
+    shape: "square" | "circle" | "complex"
+    tag: string
+    position: {x: number, y: number}
+    points: {x: number, y: number}[]
+    onCollision: (any)
+    */
+    constructor(
+        position/*: {x: number, y: number} */,
+        onCollision/*: (any) */
+    ) {
+        this.tag = "asdf";
+        this.position = position;
+        this.onCollision = onCollision;
+        this.shape = "circle";
+        this.points = [
+            {x: 0, y: 60},
+            {x: 0, y: -60},
+            {x: 60, y: 0},
+            {x: -60, y: 0}
+        ];
+    }
 }

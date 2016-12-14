@@ -20,7 +20,7 @@ const levelSwitcher = new LevelSwitcher(canvas, [
         hasWon: ()=>true,
         start: ()=>{},
     },
-    new LevelCreepyCrawler(),
+    new LevelCreepyCrawler({width: canvas.width, height: canvas.height}),
 ]);
 
 /* Global variables */

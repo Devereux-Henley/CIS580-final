@@ -9,6 +9,9 @@ const EntityManager = require('../entity-manager');
 const mapdata = require('./tileMap');
 const img = buildImage('assets/level_creepy_crawler/crawler.png');
 
+/*::
+import type {Vector} from "../vector";
+*/
 
 class Level extends AbstractLevel {
     /*::
@@ -133,12 +136,12 @@ class Collider {
     /*::
     shape: "square" | "circle" | "complex"
     tag: string
-    position: {x: number, y: number}
-    points: {x: number, y: number}[]
+    position: Vector
+    points: Vector[]
     onCollision: (any)
     */
     constructor(
-        position/*: {x: number, y: number} */,
+        position/*: Vector */,
         onCollision/*: (any) */
     ) {
         this.tag = "asdf";

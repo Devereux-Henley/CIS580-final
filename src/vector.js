@@ -3,12 +3,12 @@
 "use strict";
 
 /*::
-type Vector = {
+export type Vector = {
     x: number,
     y: number
 }
 
-type Shape = Vector[];
+export type Shape = Vector[];
 */
 
 /**

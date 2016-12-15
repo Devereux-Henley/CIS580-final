@@ -9,6 +9,21 @@ const EntityManager = require('../entity-manager');
 const mapdata = require('./tileMap');
 const img = buildImage('assets/level_creepy_crawler/crawler.png');
 
+function debounce(func, wait, immediate) {
+    var timeout;
+    return function() {
+        var context = this, args = arguments;
+        var later = function() {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
+};
+
 /*::
 import type {Vector} from "../vector";
 */
@@ -27,6 +42,10 @@ class Level extends AbstractLevel {
     ) {
         super();
         this.size = size;
+    }
+
+    hasEnded() {
+        return this.player.health <= 0;
     }
 
     start() {
@@ -88,7 +107,7 @@ class Boss {
             y: 200
         };
         this.renderTick = 0;
-        this.collider = new Collider(this.position, (a)=>null);
+        this.collider = new Collider(this.position, debounce((a)=>{this.player.health--}, 50, true));
     }
 
     render(

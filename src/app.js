@@ -50,7 +50,6 @@ em.addEntity(player);
 em.addEntity(boss);
 
 var spawnManager = new SpawnManager();
-
 var spikeSpawner = {
   new: function(obj) {
     return null;
@@ -142,7 +141,7 @@ function renderWorld(elapsedTime, ctx) {
 
   // Render Boss
   boss.render(elapsedTime, ctx);
-  gui.render(elapsedTime, ctx)
+  gui.render(elapsedTime, ctx);
   spawnManager.render(ctx, elapsedTime);
 }
 

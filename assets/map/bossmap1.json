@@ -98,11 +98,13 @@
                  "name":"Trigger",
                  "properties":
                     {
-                     "Spawn":true
+                     "Spawn":true,
+                     "health":100
                     },
                  "propertytypes":
                     {
-                     "Spawn":"bool"
+                     "Spawn":"bool",
+                     "health":"int"
                     },
                  "rotation":0,
                  "type":"Trigger",

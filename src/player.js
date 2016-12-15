@@ -1,6 +1,6 @@
 "use strict";
 
-/* Classes and Libraries */
+const input = require('./inputHandler').inputState;
 
 /* Constants */
 const PLAYER_SPEED = 2;
@@ -245,10 +245,6 @@ Player.prototype.damage = function() {
 	this.health--;
 }
 
-Player.prototype.onCollision = function(entity) {
-
-}
-
 Player.prototype.getHealth = function() {
 	return this.health;
 }
@@ -287,6 +283,7 @@ Player.prototype.onCollision = function(entity) {
  * boolean properties: up, left, right, down
  */
 Player.prototype.update = function(elapsedTime) {
+    this.checkMoveState();
 
 	// set the velocity
 	this.velocity.x = 0;
@@ -370,4 +367,62 @@ Player.prototype.render = function(elapsedTime, ctx) {
 		this.currentRender.x, this.currentRender.y, this.currentRender.width, this.currentRender.height,
 		0, 0, 24, 32);
 	ctx.restore();
+}
+
+
+Player.prototype.checkMoveState = function() {
+
+	this.walk();
+
+	if(input.shift) {
+		this.sprint();
+	}
+	else if(input.space) {
+		this.dodge();
+	}
+
+	if(input.up) {
+		if(input.right) {
+			this.moveNorthEast();
+		}
+		else if (input.left) {
+			this.moveNorthWest();
+		}
+		else if (input.down) {
+			this.still();
+		}
+		else {
+			this.moveNorth();
+		}
+		return;
+	}
+	else if(input.right) {
+		if(input.left) {
+			this.still();
+		}
+		else if (input.down) {
+			this.moveSouthEast();
+		}
+		else {
+			this.moveEast();
+		}
+		return;
+	}
+	else if(input.down) {
+		if(input.left) {
+			this.moveSouthWest();
+		}
+		else {
+			this.moveSouth();
+		}
+		return;
+	}
+	else if(input.left) {
+		this.moveWest();
+		return;
+	}
+	else {
+		this.still();
+		return;
+	}
 }

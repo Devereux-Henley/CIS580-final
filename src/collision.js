@@ -14,7 +14,7 @@ module.exports = exports = {
 
 /**
  * Check for collision between two square objects
- * 
+ *
  * @param {entity1} The first entity
  * @param {entity2} The second entity
  */
@@ -34,7 +34,7 @@ function checkForSingleSquareCollision(entity1, entity2)
 
 /**
  * Check for collision between two circle objects
- * 
+ *
  * @param {entity1} The first entity
  * @param {entity2} The second entity
  */
@@ -53,7 +53,7 @@ function checkForSingleCircleCollision(entity1, entity2)
 
 /**
  * Check for collision between complex shapes
- * 
+ *
  * @param {entity1} The first entity
  * @param {entity2} The second entity
  */

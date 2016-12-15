@@ -9,7 +9,7 @@ module.exports = exports = EntityManager;
 
 /**
  * Entity Manager Constructor
- * 
+ *
  * Each entity added to manager must have a collision method:
  * Example: entity1.onCollision(entity2)
  * The Entity must have the following properities for collisions to work:
@@ -19,7 +19,7 @@ module.exports = exports = EntityManager;
  *      "square" shapes will need 4 points
  *      "circle" shapes will need 4 points top, bottom, leftSide, rightSide
  *      "complex" shapes can have n number of points
- * 
+ *
  * @param {width} The width of the canvas
  * @param {height} The height of the canvas
  * @param {cellsize} The size of the cell
@@ -37,9 +37,9 @@ function EntityManager(width, height, cellSize) {
 }
 
 /**
- * Finds the index of the entity based on the 
+ * Finds the index of the entity based on the
  * x and y position of the entity.
- * 
+ *
  * @param {x} The x position
  * @param {y} The y position
  * @return The index of the entity
@@ -57,17 +57,17 @@ function getIndex(x, y) {
 
 /**
  * Method to add an Entity to the Manager
- * 
+ *
  * @param {entity} The entity to add to the manager
  */
 EntityManager.prototype.addEntity = function(entity){
-  var index = getIndex.call(this, entity.x, entity.y);
+  var index = getIndex.call(this, entity.position.x, entity.position.y);
   this.cells[index].push(entity);
   entity._cell = index;
 }
 
 EntityManager.prototype.updateEntity = function(entity){
-  var index = getIndex.call(this, entity.x, entity.y);
+  var index = getIndex.call(this, entity.position.x, entity.position.y);
   // If we moved to a new cell, remove from old and add to new
   if(index != entity._cell) {
     var cellIndex = this.cells[entity._cell].indexOf(entity);
@@ -79,7 +79,7 @@ EntityManager.prototype.updateEntity = function(entity){
 
 /**
  * Method to remove entity from the manager
- * 
+ *
  * @param {entity} The entity to be removed from the manager
  */
 EntityManager.prototype.removeEntity = function(entity) {

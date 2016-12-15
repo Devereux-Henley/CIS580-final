@@ -1,9 +1,21 @@
+// @flow
+
 "use strict";
+
+/*::
+export type Vector = {
+    x: number,
+    y: number
+}
+
+export type Shape = Vector[];
+*/
 
 /**
  * @module exports a library for vector Calculations
  */
 module.exports = exports = {
+  scale: scale,
   rotate: rotate,
   dotProduct: dotProduct,
   magnitude: magnitude,
@@ -21,8 +33,14 @@ module.exports = exports = {
  * @param {float} scale - the scalar to multiply the vector by
  * @returns a new vector representing the scaled original
  */
-function scale(a, scale) {
- return {x: a.x * scale, y: a.y * scale};
+function scale(
+    a/*: Vector */,
+    scale/*: number */
+)/*: Vector */ {
+ return {
+   x: a.x * scale,
+   y: a.y * scale
+ };
 }
 
 /**
@@ -32,12 +50,14 @@ function scale(a, scale) {
  * @param {angle} An angle to rotate about
  * @return The rotated vector
  */
-function rotate(a, angle)
-{
-  return{
-        x: a.x * Math.cos(angle) - a.y * Math.sin(angle),
-        y: a.x * Math.sin(angle) + a.y * Math.cos(angle)
-        }
+function rotate(
+    a/*: Vector */,
+    angle/*: number */
+)/*: Vector */ {
+  return {
+    x: a.x * Math.cos(angle) - a.y * Math.sin(angle),
+    y: a.x * Math.sin(angle) + a.y * Math.cos(angle)
+  };
 }
 
 /**
@@ -47,9 +67,11 @@ function rotate(a, angle)
  * @param {b} Vector b
  * @return The result of the dot product
  */
-function dotProduct(a,b)
-{
-  return a.x * b.x + a.y * b.y
+function dotProduct(
+    a/*: Vector */,
+    b/*: Vector */
+)/*: number */ {
+  return a.x * b.x + a.y * b.y;
 }
 
 /**
@@ -58,8 +80,9 @@ function dotProduct(a,b)
  * @param {a} Vector a
  * @return The magnitude of vector a
  */
-function magnitude(a)
-{
+function magnitude(
+    a/*: Vector */
+)/*: number */ {
   return Math.sqrt(a.x * a.x + a.y * a.y);
 }
 
@@ -69,7 +92,7 @@ function magnitude(a)
  * @param {a} Vector a
  * @return The normalized vector of a
  */
-function normalize(a)
+function normalize(a/*: Vector */)/*: Vector */
 {
   var mag = magnitude(a);
   return {x: a.x / mag, y: a.y / mag};
@@ -82,11 +105,14 @@ function normalize(a)
  * @param {b} Vector b
  * @returns Vector result from vector subtraction
  */
-function subtract(a, b) {
+function subtract(
+    a/*: Vector */,
+    b/*: Vector */
+)/*: Vector */ {
     return {
         x: a.x - b.x,
         y: a.y - b.y
-    }
+    };
 }
 
 /**
@@ -95,11 +121,13 @@ function subtract(a, b) {
  * @param {a} Vector a
  * @returns Vector perpendicular to a
  */
-function perpendicular(a) {
+function perpendicular(
+    a/*: Vector */
+)/*: Vector */ {
     return {
         x: -a.y,
         y: a.x
-    }
+    };
 }
 
 /**
@@ -108,11 +136,13 @@ function perpendicular(a) {
  * @param {shape} An array of points defining the shape
  * @returns An axes array
  */
-function findAxes(shape) {
+function findAxes(
+    shape/*: Shape */
+)/*: Shape */ {
     var axes = [];
     shape.forEach(function(p1, i) {
         // find the ajacent vertex
-        var p2 = (shape.length == i + 1) ? 0 : shape[i];
+        var p2 = (shape.length == i + 1) ? {x: 0, y: 0} : shape[i];
         var edge = subtract(p2, p1);
         var perp = perpendicular(edge);
         var normal = normalize(perp);
@@ -128,7 +158,10 @@ function findAxes(shape) {
  * @param {axes} The axis of intercection
  * @returns
  */
-function project(shape, axes) {
+function project(
+    shape/*: Shape */,
+    axes/*: Vector */
+)/*: {min: number, max: number} */ {
     var min = dotProduct(shape[0], axes);
     var max = min;
     for(var i = 1; i < shape.length; i++) {

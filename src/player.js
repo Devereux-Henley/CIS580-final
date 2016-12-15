@@ -1,10 +1,14 @@
 "use strict";
 
-/* Classes and Libraries */
+const input = require('./inputHandler').inputState;
 
 /* Constants */
-const PLAYER_SPEED = 2;
+const PLAYER_SPEED = 2.0;
+const DODGE_SPEED = 1.5 * PLAYER_SPEED;
+const SPRINT_SPEED = 2.0 * PLAYER_SPEED;
 const RENDER_TIMER = 200;
+const STAMINA_DECAY = 2;
+const STAMINA_RECHARGE = 1;
 const DODGE_END = 4 * RENDER_TIMER;
 const DODGE_DELAY = 10 * RENDER_TIMER;
 
@@ -102,86 +106,98 @@ function MoveStyleRenders(normal, sprinting, dodging) {
  * @param {Position} starting location of the player;
  */
 function Player(position) {
-    this.position = position;
-    this.velocity = {
-        x: 0,
-        y: 0
-    };
-    this.state = new PlayerState('STILL', 'NORMAL');
-    this.renderSource = new Image();
-    this.renderSource.src = 'assets/rpg_sprite_walk.png';
-    this.timer = 0;
-    this.dodgeTimer = 0;
-    this.renderPosition = 0;
-    this.renderSources = {
-        'STILL': new MoveStyleRenders(
-            [new SheetPosition(0, 0)], [new SheetPosition(0, 0)],
-            SOUTH_DODGE
-        ),
-        'EAST': new MoveStyleRenders(
-            EAST_WALK,
-            EAST_WALK,
-            EAST_DODGE
-        ),
-        'NORTH': new MoveStyleRenders(
-            NORTH_WALK,
-            NORTH_WALK,
-            NORTH_DODGE
-        ),
-        'SOUTH': new MoveStyleRenders(
-            SOUTH_WALK,
-            SOUTH_WALK,
-            SOUTH_DODGE
-        ),
-        'WEST': new MoveStyleRenders(
-            WEST_WALK,
-            WEST_WALK,
-            WEST_DODGE
-        ),
-        'NORTHWEST': new MoveStyleRenders(
-            WEST_WALK,
-            WEST_WALK,
-            WEST_DODGE
-        ),
-        'NORTHEAST': new MoveStyleRenders(
-            EAST_WALK,
-            EAST_WALK,
-            EAST_DODGE
-        ),
-        'SOUTHWEST': new MoveStyleRenders(
-            WEST_WALK,
-            WEST_WALK,
-            WEST_DODGE
-        ),
-        'SOUTHEAST': new MoveStyleRenders(
-            EAST_WALK,
-            EAST_WALK,
-            EAST_DODGE
-        ),
-    };
-    this.currentRender = this.renderSources[this.state.moveState][this.state.moveType][this.renderPosition];
-    this.health = 6;
-    this.stamina = 100;
-    // COLLISIONS
-    this.shape = "square";
-    this.tag = "player";
-    this.points = [{
-        // TOP LEFT CORNER
-        x: this.x,
-        y: this.y
-    }, {
-        // TOP RIGHT CORNER
-        x: this.x + this.width,
-        y: this.y
-    }, {
-        // BOTTOM LEFT CORNER
-        x: this.x,
-        y: this.y + this.height
-    }, {
-        // BOTTOM RIGHT CORNER
-        x: this.x + this.width,
-        y: this.y + this.height
-    }]
+	this.position = position;
+	this.velocity = {x: 0, y: 0};
+	this.state = new PlayerState('STILL', 'NORMAL');
+	this.renderSource = new Image();
+	this.renderSource.src = 'assets/rpg_sprite_walk.png';
+	this.timer = 0;
+  this.dodgeTimer = 0;
+	this.renderPosition = 0;
+	this.renderSources =
+		{'STILL':
+			new MoveStyleRenders(
+				[new SheetPosition(0, 0)],
+				[new SheetPosition(0, 0)],
+			  SOUTH_DODGE
+			),
+		 'EAST':
+			new MoveStyleRenders(
+				EAST_WALK,
+				EAST_WALK,
+				EAST_DODGE
+		 ),
+		 'NORTH':
+			new MoveStyleRenders(
+				NORTH_WALK,
+				NORTH_WALK,
+				NORTH_DODGE
+		 ),
+		 'SOUTH':
+		  new MoveStyleRenders(
+			  SOUTH_WALK,
+				SOUTH_WALK,
+				SOUTH_DODGE
+			),
+		 'WEST':
+			new MoveStyleRenders(
+				WEST_WALK,
+				WEST_WALK,
+				WEST_DODGE
+			),
+		 'NORTHWEST':
+		  new MoveStyleRenders(
+			  WEST_WALK,
+			  WEST_WALK,
+			  WEST_DODGE
+		 ),
+		 'NORTHEAST':
+		  new MoveStyleRenders(
+			  EAST_WALK,
+			  EAST_WALK,
+			  EAST_DODGE
+		),
+		 'SOUTHWEST':
+		  new MoveStyleRenders(
+			  WEST_WALK,
+			  WEST_WALK,
+			  WEST_DODGE
+		 ),
+		 'SOUTHEAST':
+		  new MoveStyleRenders(
+			  EAST_WALK,
+			  EAST_WALK,
+			  EAST_DODGE
+		),
+	};
+  this.currentRender = this.renderSources[this.state.moveState][this.state.moveType][this.renderPosition];
+  this.health = 6;
+  this.stamina = 100;
+  // COLLISIONS
+  this.shape = "square";
+  this.tag = "player";
+  this.points = [
+	{
+	  // TOP LEFT CORNER
+	  x: this.x,
+	  y: this.y
+	},
+	{
+	  // TOP RIGHT CORNER
+	  x: this.x + this.width,
+	  y: this.y
+	},
+	{
+	  // BOTTOM LEFT CORNER
+	  x: this.x,
+	  y: this.y + this.height
+	},
+	{
+	  // BOTTOM RIGHT CORNER
+	  x: this.x + this.width,
+	  y: this.y + this.height
+	}
+  ];
 }
 
 Player.prototype.walk = function() {
@@ -242,36 +258,34 @@ Player.prototype.damage = function() {
     this.health--;
 }
 
-Player.prototype.onCollision = function(entity) {
-
-}
-
 Player.prototype.getHealth = function() {
     return this.health;
 }
 
 // Handle Collisions
 Player.prototype.onCollision = function(entity) {
-    switch (entity.tag) {
-        case "boss1":
-            break;
-        case "boss2":
-            break;
-        case "spear":
-            break;
-        case "pillar":
-            break;
-        case "crate":
-            break;
-        case "boulder":
-            break;
-        case "switch": // Check name of tag with boss group.
-            break;
-        default:
-            console.log("Invalid.");
-            break;
-    }
-}
+	switch(entity.tag) {
+		case "boss1":
+			break;
+		case "boss2":
+			break;
+		case "spear":
+			break;
+		case "pillar":
+			break;
+		case "crate":
+			break;
+		case "boulder":
+			break;
+    case "spike":
+      break;
+		case "switch":  // Check name of tag with boss group.
+			break;
+		default:
+			console.log("Invalid.");
+			break;
+		}
+	}
 
 /**
  * @function update
@@ -281,6 +295,7 @@ Player.prototype.onCollision = function(entity) {
  * boolean properties: up, left, right, down
  */
 Player.prototype.update = function(elapsedTime) {
+    this.checkMoveState();
 
     // set the velocity
     this.velocity.x = 0;
@@ -290,17 +305,17 @@ Player.prototype.update = function(elapsedTime) {
 
     console.log(this.stamina);
     if (this.state.moveType == 'DODGING') {
-        updateSpeed = 1.5 * PLAYER_SPEED;
+        updateSpeed = DODGE_SPEED;
         this.dodgeTimer += elapsedTime;
     } else if (this.state.moveType == 'SPRINTING') {
-        if (this.stamina >= 2) {
-          updateSpeed = 2 * PLAYER_SPEED;
-          this.stamina -= 2;
+        if (this.stamina >= STAMINA_DECAY) {
+          updateSpeed = SPRINT_SPEED;
+          this.stamina -= STAMINA_DECAY;
         } else {
           this.walk();
         }
     } else if (this.stamina < 100) {
-      this.stamina += 1;
+      this.stamina += STAMINA_RECHARGE;
     }
 
     switch (this.state.moveState) {
@@ -384,4 +399,62 @@ Player.prototype.render = function(elapsedTime, ctx) {
         this.currentRender.x, this.currentRender.y, this.currentRender.width, this.currentRender.height,
         0, 0, 24, 32);
     ctx.restore();
+}
+
+
+Player.prototype.checkMoveState = function() {
+
+	this.walk();
+
+	if(input.shift) {
+		this.sprint();
+	}
+	else if(input.space) {
+		this.dodge();
+	}
+
+	if(input.up) {
+		if(input.right) {
+			this.moveNorthEast();
+		}
+		else if (input.left) {
+			this.moveNorthWest();
+		}
+		else if (input.down) {
+			this.still();
+		}
+		else {
+			this.moveNorth();
+		}
+		return;
+	}
+	else if(input.right) {
+		if(input.left) {
+			this.still();
+		}
+		else if (input.down) {
+			this.moveSouthEast();
+		}
+		else {
+			this.moveEast();
+		}
+		return;
+	}
+	else if(input.down) {
+		if(input.left) {
+			this.moveSouthWest();
+		}
+		else {
+			this.moveSouth();
+		}
+		return;
+	}
+	else if(input.left) {
+		this.moveWest();
+		return;
+	}
+	else {
+		this.still();
+		return;
+	}
 }

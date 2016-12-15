@@ -106,6 +106,7 @@ function Player(position) {
 	this.renderSource = new Image();
 	this.renderSource.src = 'assets/rpg_sprite_walk.png';
 	this.timer = 0;
+	this.dodgeTimer = 0;
 	this.renderPosition = 0;
 	this.renderSources =
 		{'STILL':
@@ -165,6 +166,7 @@ function Player(position) {
 	};
   this.currentRender = this.renderSources[this.state.moveState][this.state.moveType][this.renderPosition];
   this.health = 6;
+  this.stamina = 100;
   // COLLISIONS
   this.shape = "square";
   this.tag = "player";
@@ -328,7 +330,33 @@ Player.prototype.update = function(elapsedTime) {
 			this.velocity.y += updateSpeed;
 			break;
 	}
+	
+	// Stamina
+	if (this.state.moveType == 'DODGING') {
+        updateSpeed = 1.5 * PLAYER_SPEED;
+        this.dodgeTimer += elapsedTime;
+    } else if (this.state.moveType == 'SPRINTING') {
+        if (this.stamina >= 2) {
+          updateSpeed = 2 * PLAYER_SPEED;
+          this.stamina -= 2;
+        } else {
+          this.walk();
+        }
+    } else if (this.stamina < 100) {
+      this.stamina += 1;
+    }   
+	
+	if (this.dodgeTimer > DODGE_END) {
+        this.walk();
+        this.dodgeTimer += elapsedTime;
+    }
 
+    if (this.dodgeTimer > DODGE_DELAY) {
+        this.dodgeTimer = 0;
+    }
+	// End stamina
+	
+	
 	// move the player
 	this.position.x += this.velocity.x;
 	this.position.y += this.velocity.y;

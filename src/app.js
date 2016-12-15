@@ -54,7 +54,7 @@ var spikeSpawner = {
   new: function(obj) {
     return {
       render: function (elapsedTime, ctx) {
-        console.log(ctx);
+    
         ctx.fillText("there is some text stuff here", 300, 300);
       },
       update: function() {

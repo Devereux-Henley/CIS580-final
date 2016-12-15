@@ -72,6 +72,7 @@ function update(elapsedTime) {
   player.update(elapsedTime);
   boss.update(elapsedTime, player.position);
 
+
   em.updateEntity(player);
   em.updateEntity(boss);
 

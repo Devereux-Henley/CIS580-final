@@ -95,19 +95,17 @@
                 {
                  "height":94,
                  "id":5,
-                 "name":"Tile",
+                 "name":"Trigger",
                  "properties":
                     {
-                     "Spawn":true,
-                     "health":100
+                     "Spawn":true
                     },
                  "propertytypes":
                     {
-                     "Spawn":"bool",
-                     "health":"int"
+                     "Spawn":"bool"
                     },
                  "rotation":0,
-                 "type":"Tile",
+                 "type":"Trigger",
                  "visible":true,
                  "width":96,
                  "x":464,

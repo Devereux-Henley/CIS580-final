@@ -51,7 +51,7 @@ Boss.prototype.render = function (elapsedTime, ctx) {
 }
 
 Boss.prototype.onCollision = function(entity) {
-  console.log("boss is colliding");
+  // console.log("boss is colliding");
   switch (entity.tag) {
     case "spike":
       break;

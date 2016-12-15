@@ -50,6 +50,7 @@ em.addEntity(player);
 em.addEntity(boss);
 
 var spawnManager = new SpawnManager();
+
 var spikeSpawner = {
   new: function(obj) {
     return null;

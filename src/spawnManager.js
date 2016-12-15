@@ -32,6 +32,7 @@ SpawnManager.prototype.getLocations = function(layers) {
       }
     }
   }
+  console.log("Objects: " + this.objects);
 }
 
 // SpawnManager.prototype.addLocation = function(position, type){
@@ -54,7 +55,9 @@ SpawnManager.prototype.update = function(deltaTime){
 }
 
 SpawnManager.prototype.render = function(ctx, deltaTime){
+  console.log(this.objects.length);
   this.objects.forEach(function(obj) {
+    console.log("Rendering object: " + obj);
     obj.render(ctx, deltaTime);
   });
 }

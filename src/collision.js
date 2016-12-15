@@ -26,8 +26,8 @@ function checkForSingleSquareCollision(entity1, entity2)
                    entity1.y > entity2.y + entity2.height);
 
    if(collides) {
-     if(entity1.tag == "player") console.log(entity1);
-     if(entity2.tag == "player") console.log(entity2);
+    //  if(entity1.tag == "player") console.log(entity1);
+    //  if(entity2.tag == "player") console.log(entity2);
      return true;
   }
 }

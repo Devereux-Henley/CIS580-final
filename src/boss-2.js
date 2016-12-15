@@ -2,7 +2,7 @@
 
 const Vector = require('./vector')
 
-const BOSS_SIZE = 48;
+const BOSS_SIZE = 32;
 const BOSS_SPEED = 2;
 
 /**
@@ -16,12 +16,13 @@ module.exports = exports = Boss;
   * Creates a Boss
   */
 function Boss(position, size) {
-  this.size = BOSS_SIZE / size;
+  this.size = BOSS_SIZE * size;
   this.speed = BOSS_SPEED;
   this.tag = "boss2";
   this.shape = "circle";
   this.position = position;
   this.velocity = {x: 0, y: 0};
+  this.immune = false;
 }
 
 /**
@@ -30,7 +31,7 @@ function Boss(position, size) {
   * @param {DOMHighResTimeStamp} elapedTime
   */
 Boss.prototype.update = function(elapsedTime, playerPosition) {
-
+  // Follow player
   var direction = Vector.subtract(playerPosition, this.position);
   this.velocity = Vector.scale(Vector.normalize(direction), this.speed);
   this.position.x += this.velocity.x;
@@ -54,6 +55,13 @@ Boss.prototype.onCollision = function(entity) {
   // console.log("boss is colliding");
   switch (entity.tag) {
     case "spike":
+      if (entity.triggered && !this.immune) {
+        size--;
+        this.immune = true;
+      }
+      break;
+    default:
+      this.immune = false;
       break;
   }
 }

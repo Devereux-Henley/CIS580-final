@@ -14,25 +14,26 @@ function Spike(position) {
   this.tag = "spike";
   this.Type = "Spike";
   this.Spawn = true;
-  this.renderResource = new Image();
-  this.rednerResource.src = 'assets/spike.png';
+  this.renderSource = new Image();
+  this.rednerSource.src = 'assets/spike.png';
   this.position = position;
   this.shape = "square";
-  this.size = 64;
-
+  this.weight, this.height = 64;
+  this.triggered = false;
 }
 
-Spike.prototype.update = function() {
-
+Spike.prototype.update = function(trigger) {
+  if (trigger.active) {
+    this.triggered = true;
+  }
 }
 
 Spike.prototype.render = function(ctx, elapsedTime) {
-  ctx.drawImage(this.renderSource,
-    this.position.x * this.size,
-    this.position.y * this.size);
-  // ctx.restore();
+  if (this.triggered) {
+    ctx.drawImage(this.renderSource, this.position.x, this.position.y);
+  }
 }
 
-Spike.prototype.onCollision = function() {
+Spike.prototype.onCollision = function(entity) {
 
 }

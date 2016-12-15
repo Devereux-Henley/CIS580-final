@@ -36,7 +36,7 @@ var player = new Player({x: 500, y: 500});
 const gui = new Gui(player);
 
 // Initialize boss object
-var boss = new Boss({x: 48, y: 48}, 1);
+var boss = new Boss({x: 48, y: 48}, 4);
 
 // Initialize Map
 var background = new Image();

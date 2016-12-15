@@ -1,6 +1,6 @@
 "use strict";
 
-const json = require('assets/map/collision-test.json');
+// const json = require('assets/map/collision-test.json');
 const SpawnLocation = require('./spawnLocation.js');
 
 /**
@@ -34,9 +34,9 @@ SpawnManager.prototype.getLocations = function(layers) {
   }
 }
 
-SpawnManager.prototype.addLocation = function(position, type){
-  this.locations.push(new SpawnLocation(position, type));
-}
+// SpawnManager.prototype.addLocation = function(position, type){
+//   this.locations.push(new SpawnLocation(position, type));
+// }
 
 SpawnManager.prototype.addAssociation = function(type, spawner){
   if(this.associations[type] == null){

@@ -3,7 +3,7 @@
 const {Level: AbstractLevel} = require("../level_chooser/main");
 const {Map} = require("../map");
 const Player = require("../player");
-const {Gui} = require('../gui');
+const Gui = require('../gui');
 const vector = require('../vector');
 const EntityManager = require('../entity-manager');
 const mapdata = require('./tileMap');

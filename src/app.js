@@ -9,6 +9,7 @@ const EntityManager = require('./entity-manager');
 const SpawnManager = require('./spawnManager');
 const {LevelSwitcher, Level} = require('./level_chooser/main');
 const Gui = require('./gui');
+
 var canvas = document.getElementById('screen');
 
 const LevelCreepyCrawler = require('./level_creepy_crawler/level').Level;
@@ -33,7 +34,7 @@ var game = new Game(
 
 // Initialize player and player and player lives
 var player = new Player({x: 500, y: 500});
-const gui = new Gui(player);
+var gui = new Gui(player);
 
 // Initialize boss object
 var boss = new Boss({x: 48, y: 48}, 4);
@@ -87,13 +88,14 @@ function update(elapsedTime) {
   // update the player
   player.update(elapsedTime);
   boss.update(elapsedTime, player.position);
-  gui.update(elapsedTime);
+  
 
   em.updateEntity(player);
   em.updateEntity(boss);
 
   em.collide();
   spawnManager.update(elapsedTime);
+  gui.update(elapsedTime);
 }
 
 /**
@@ -141,8 +143,9 @@ function renderWorld(elapsedTime, ctx) {
 
   // Render Boss
   boss.render(elapsedTime, ctx);
-  gui.render(elapsedTime, ctx);
+  
   spawnManager.render(ctx, elapsedTime);
+  gui.render(elapsedTime, ctx);
 }
 
 

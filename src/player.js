@@ -2,9 +2,12 @@
 
 const input = require('./inputHandler').inputState;
 
+
 /* Constants */
 const PLAYER_SPEED = 2;
 const RENDER_TIMER = 200;
+const DODGE_END = 4 * RENDER_TIMER;
+const DODGE_DELAY = 10 * RENDER_TIMER;
 
 const EAST_WALK =
 [new SheetPosition(0, 96),
@@ -389,7 +392,7 @@ Player.prototype.render = function(elapsedTime, ctx) {
 	ctx.save();
 	ctx.translate(this.position.x, this.position.y);
 
-//Select rendersheet based on time passed since starting this state.
+    //Select rendersheet based on time passed since starting this state.
 	ctx.drawImage(
 		this.renderSource,
 		this.currentRender.x, this.currentRender.y, this.currentRender.width, this.currentRender.height,

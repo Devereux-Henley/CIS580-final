@@ -52,17 +52,33 @@ em.addEntity(boss);
 var spawnManager = new SpawnManager();
 var spikeSpawner = {
   new: function(obj) {
-    return null;
+    return {
+      render: function (elapsedTime, ctx) {
+        console.log(ctx);
+        ctx.fillText("there is some text stuff here", 300, 300);
+      },
+      update: function() {
+
+      }
+    };
   }
 };
 spawnManager.addAssociation("Spike", spikeSpawner);
 
 var tileSpawner = {
   new: function(obj) {
-    return null;
+    return {
+      render: function () {
+
+      },
+      update: function() {
+
+      }
+    };
   }
 };
 spawnManager.addAssociation("Tile", tileSpawner);
+spawnManager.getLocations(map.objlayers)
 
 /**
  * @function masterLoop
@@ -142,7 +158,7 @@ function renderWorld(elapsedTime, ctx) {
   // Render Boss
   boss.render(elapsedTime, ctx);
   gui.render(elapsedTime, ctx);
-  spawnManager.render(ctx, elapsedTime);
+  spawnManager.render(elapsedTime, ctx);
 }
 
 

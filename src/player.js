@@ -5,6 +5,8 @@ const input = require('./inputHandler').inputState;
 /* Constants */
 const PLAYER_SPEED = 2;
 const RENDER_TIMER = 200;
+const DODGE_END = 4*RENDER_TIMER;
+const DODGE_DELAY = 10*RENDER_TIMER;
 
 const EAST_WALK =
 [new SheetPosition(0, 96),
@@ -330,7 +332,7 @@ Player.prototype.update = function(elapsedTime) {
 			this.velocity.y += updateSpeed;
 			break;
 	}
-	
+
 	// Stamina
 	if (this.state.moveType == 'DODGING') {
         updateSpeed = 1.5 * PLAYER_SPEED;
@@ -344,8 +346,8 @@ Player.prototype.update = function(elapsedTime) {
         }
     } else if (this.stamina < 100) {
       this.stamina += 1;
-    }   
-	
+    }
+
 	if (this.dodgeTimer > DODGE_END) {
         this.walk();
         this.dodgeTimer += elapsedTime;
@@ -355,8 +357,8 @@ Player.prototype.update = function(elapsedTime) {
         this.dodgeTimer = 0;
     }
 	// End stamina
-	
-	
+
+
 	// move the player
 	this.position.x += this.velocity.x;
 	this.position.y += this.velocity.y;

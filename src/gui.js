@@ -49,7 +49,7 @@ function createHeartImage() {
         ctx.drawImage(
             img,
             0, 0, img.width, img.height,
-            (i*(HEART_PADDING+HEART_SIZE)), 0, HEART_SIZE, HEART_SIZE,
+            (i*(HEART_PADDING+HEART_SIZE)), 0, HEART_SIZE, HEART_SIZE
         );
     }
     return canvas;

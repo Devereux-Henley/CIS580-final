@@ -20,7 +20,7 @@ function Trigger(position) {
   this.renderSource.src = 'assets/trigger_active.png';
 }
 
-Trigger.prototype.update = function(ctx) {
+Trigger.prototype.update = function(elapsedTime) {
 
 }
 

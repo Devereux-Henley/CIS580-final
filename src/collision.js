@@ -47,7 +47,7 @@ function checkForSingleCircleCollision(entity1, entity2)
     console.log((entity1.circle.x) - (entity2.circle.x), (entity1.circle.y) - (entity2.circle.y));
     var distSquared =
       Math.pow((entity1.circle.x) - (entity2.circle.x), 2) +
-      Math.pow((entity1.circle.y) - (entity2.circle.y), 2);
+      Math.pow((entity1.circle.y) - (entity2.circle.y), 2)
 
     // (15 + 15)^2 = 900 -> sum of two balls' radius squared
     var sumRadiusSqueared = Math.pow(entity1.circle.radius + entity2.circle.radius, 2);

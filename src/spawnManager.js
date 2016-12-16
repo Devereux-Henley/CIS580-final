@@ -6,7 +6,7 @@ const SpawnLocation = require('./spawnLocation.js');
 /**
  * @module exports the Map class
  */
-module.exports = exports = SpawnManager;
+module.exports = exports = SpawnManager; 
 
 /**
  * @constructor SpawnManager
@@ -18,6 +18,7 @@ function SpawnManager() {
 }
 
 SpawnManager.prototype.getLocations = function(layers) {
+  //console.log(layers);
   for (var i = 0; i < layers.length; i++) {
 
     if(layers[i].properties.spawning){
@@ -27,15 +28,19 @@ SpawnManager.prototype.getLocations = function(layers) {
             x: layers[i].objects[j].x + (layers[i].objects[j].width / 2),
             y: layers[i].objects[j].y + (layers[i].objects[j].height / 2)
           }
-          console.log(position);
           var spawner = this.associations[layers[i].objects[j].type];
-
+          //console.log(this.associations, layers[i].objects[j].type, layers[i].objects[j]);
           this.objects.push(spawner.new(layers[i].objects[j]));
         }
       }
     }
   }
+  //console.log(this.objects);
 }
+
+// SpawnManager.prototype.addLocation = function(position, type){
+//   this.locations.push(new SpawnLocation(position, type));
+// }
 
 SpawnManager.prototype.addAssociation = function(type, spawner){
   if(this.associations[type] == null){
@@ -54,6 +59,7 @@ SpawnManager.prototype.update = function(deltaTime){
 
 SpawnManager.prototype.render = function(deltaTime, ctx){
   this.objects.forEach(function(obj) {
+    console.log(obj);
     obj.render(deltaTime, ctx);
   });
 }

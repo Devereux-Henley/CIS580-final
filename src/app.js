@@ -12,8 +12,7 @@ const {LevelSwitcher, Level} = require('./level_chooser/main');
 const Gui = require('./gui');
 
 const MissleLevel = require('./missle_boss.js');
-const ElBlobboLevel = require('./elblobbo.js');
-
+const ElBlobboLevel = require('./elblobbo.js')
 var canvas = document.getElementById('screen');
 
 const MemoryBoss = require('./ddr/boss');
@@ -21,18 +20,8 @@ const MemoryBoss = require('./ddr/boss');
 // Initialize player and player and player lives
 var player = new Player({x: 500, y: 500});
 const gui = new Gui(player);
-const LevelTown = require('./level_town/level_town').Level;
-const LevelCreepyCrawler = require('./level_creepy_crawler/level').Level;
+
 const levelSwitcher = new LevelSwitcher(canvas, [
-    {
-        getTitle: ()=>"Level 1",
-        update: (dt)=>update(dt),
-        render: (dt, ctx)=>render(dt, ctx),
-        hasEnded: ()=>false,
-        hasWon: ()=>true,
-        start: ()=>{},
-    },
-    new LevelCreepyCrawler({width: canvas.width, height: canvas.height}),
     new MissleLevel(),
     new LevelTown({width: canvas.width, height: canvas.height}),
     new ElBlobboLevel(),
@@ -185,8 +174,5 @@ function renderWorld(elapsedTime, ctx) {
 }
 
 
-// HEALTH
-function damagePlayer() {
-	player.damage();
-	gui.damage();
-}
+  // spawnManager.render(ctx, elapsedTime);
+  // gui.render(elapsedTime, ctx);

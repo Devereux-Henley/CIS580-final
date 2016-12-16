@@ -4,12 +4,12 @@ const input = require('./inputHandler').inputState;
 //const Gui = require('./gui');
 
 /* Constants */
-const PLAYER_SPEED = 2.0;
+const PLAYER_SPEED = 2.5;
 const DODGE_SPEED = 1.5 * PLAYER_SPEED;
-const SPRINT_SPEED = 2.0 * PLAYER_SPEED;
+const SPRINT_SPEED = 2.5 * PLAYER_SPEED;
 const RENDER_TIMER = 200;
-const STAMINA_DECAY = 2;
-const STAMINA_RECHARGE = 1;
+const STAMINA_DECAY = 1;
+const STAMINA_RECHARGE = .5;
 const DODGE_END = 4 * RENDER_TIMER;
 const DODGE_DELAY = 10 * RENDER_TIMER;
 const PLAYER_SHAPE = "circle";
@@ -116,8 +116,6 @@ function Player(position) {
 	this.renderSource.src = 'assets/rpg_sprite_walk.png';
   this.width = 24;
   this.height = 32;
-  this.radius = PLAYER_RADIUS;
-  this.circle = {x: this.position.x + 12, y: this.position.y + 16, radius: 12};
 	this.timer = 0;
   this.dodgeTimer = 0;
 	this.renderPosition = 0;
@@ -181,10 +179,6 @@ function Player(position) {
   this.health = 6;
   this.stamina = 100;
   // COLLISIONS
-<<<<<<< HEAD
-  this.shape = PLAYER_SHAPE;
-=======
->>>>>>> ff2c9a7c4921c3cd6834bb51126c16ad08b1364a
   this.tag = "player";
   this.points = [
 	{
@@ -269,17 +263,10 @@ Player.prototype.still = function() {
 Player.prototype.damage = function() {
   this.health--;
 	if(this.health == 0) {
-<<<<<<< HEAD
 		// gameover
 	}
 	else {
 		//this.gui.damage();
-=======
-		// gameover
-	}
-	else {
-		//this.gui.damage();
->>>>>>> ff2c9a7c4921c3cd6834bb51126c16ad08b1364a
 	}
 }
 
@@ -295,10 +282,6 @@ Player.prototype.onCollision = function(entity) {
 		case "asdf":
 		case "boss":
 			this.damage();
-<<<<<<< HEAD
-      console.log("ahh real monsters!");
-=======
->>>>>>> ff2c9a7c4921c3cd6834bb51126c16ad08b1364a
 			break;
 		case "boss2":
 			this.damage();
@@ -396,13 +379,6 @@ Player.prototype.update = function(elapsedTime) {
     if (this.dodgeTimer > DODGE_DELAY) {
         this.dodgeTimer = 0;
     }
-<<<<<<< HEAD
-
-    if (this.state.moveType == 'DODGING') {
-
-    }
-=======
->>>>>>> ff2c9a7c4921c3cd6834bb51126c16ad08b1364a
 
     if (this.timer > RENDER_TIMER) {
         this.renderPosition++;

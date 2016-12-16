@@ -173,4 +173,3 @@ function renderWorld(elapsedTime, ctx) {
 
   // spawnManager.render(ctx, elapsedTime);
   // gui.render(elapsedTime, ctx);
-}

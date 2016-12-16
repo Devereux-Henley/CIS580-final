@@ -27,10 +27,16 @@ function debounce(func, wait, immediate) {
 };
 
 class CollisionEntity {
+    /*::
+    onCollide: any
+    */
     constructor() {
 
     }
-    onCollide() {
+    onCollide(other/*: CollisionEntity */) {
+
+    }
+    render(dt, ctx) {
 
     }
 }
@@ -41,6 +47,18 @@ class CircleEntity extends CollisionEntity {
     y: number
     radius: number
     */
+    constructor({x, y, radius}/*: {x: number, y: number, radius: number} */) {
+        super();
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+    }
+
+    render(dt, ctx/*: CanvasRenderingContext2D */) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
+        ctx.stroke();
+    }
 }
 class SquareEntity extends CollisionEntity {
     /*::
@@ -49,14 +67,25 @@ class SquareEntity extends CollisionEntity {
     width: number
     height: number
     */
+    constructor(prop/*: {x: number, y: number, width: number, height: number} */) {
+        super()
+        this.x = prop.x;
+        this.y = prop.y;
+        this.width = prop.width;
+        this.height = prop.height;
+    }
+
+    render(dt, ctx) {
+        ctx.strokeRect(this.x, this.y, this.width, this.height);
+    }
 }
 
 class CollisionManager {
     /*::
     _actors: CollisionEntity[]
     */
-    constructor() {
-        this._actors = [];
+    constructor(actors/*: CollisionEntity[] */) {
+        this._actors = actors;
     }
     checkCollisions() {
         for (let i=0; i<this._actors.length; i++) {
@@ -64,20 +93,26 @@ class CollisionManager {
                 let a = this._actors[i];
                 let b = this._actors[j];
 
-                if (a.constructor == CircleEntity && b.constructor == CircleEntity) {
+                if (a instanceof CircleEntity && b instanceof CircleEntity) {
                     if (this.circleCircle(a, b)) {
                         a.onCollide(b);
                         b.onCollide(a);
                     }
                 }
-                if (a.constructor == CircleEntity && b.constructor == SquareEntity) {
+                if (a instanceof CircleEntity && b instanceof CircleEntity) {
                     if (this.circleCircle(a, b)) {
                         a.onCollide(b);
                         b.onCollide(a);
                     }
                 }
-                if (a.constructor == SquareEntity && b.constructor == CircleEntity) {
-                    if (this.circleSquare(c, r)) {
+                if (a instanceof SquareEntity && b instanceof CircleEntity) {
+                    if (this.circleSquare(b, a)) {
+                        a.onCollide(b);
+                        b.onCollide(a);
+                    }
+                }
+                if (a instanceof SquareEntity && b instanceof SquareEntity) {
+                    if (this.squareSquare(b, a)) {
                         a.onCollide(b);
                         b.onCollide(a);
                     }
@@ -86,7 +121,10 @@ class CollisionManager {
         }
     }
     squareSquare(a/* SquareEntity */, b/*: SquareEntity */) {
-        return false;
+        return (a.x < b.x + b.width &&
+            a.x + a.width > b.x &&
+            a.y < b.y + b.height &&
+            a.height + a.y > b.y)
     }
     circleSquare(c/*: CircleEntity */, r/*: SquareEntity */) {
         let cx = Math.abs(c.x - r.x - r.width/2);
@@ -109,6 +147,12 @@ class CollisionManager {
     circleCircle(a/*: CircleEntity */, b/*: CircleEntity */) {
         return Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2) < Math.pow(a.radius + b.radius, 2);
     }
+    render(dt, ctx) {
+        ctx.strokeStyle = 'green';
+        for (let actor of this._actors) {
+            actor.render(dt, ctx);
+        }
+    }
 }
 
 /*::
@@ -123,6 +167,7 @@ class Level extends AbstractLevel {
     boss: Boss
     em: EntityManager
     size: {width: number, height: number}
+    player_collision: SquareEntity
     */
     constructor(
         size/*: {width: number, height: number} */
@@ -142,12 +187,25 @@ class Level extends AbstractLevel {
         this.gui = new Gui(this.player);
         this.boss = new Boss(this.player);
 
-        this.em = new EntityManager(this.size.width, this.size.height, 64);
-        this.em.addEntity(this.player);
-        this.em.addEntity(this.boss.collider);
-        this.em.addEntity(new Collider({x: 24*SQRT, y: 4*SQRT}, (a)=>console.log("asdf")))
-        this.em.addEntity(new Collider({x: 34*SQRT, y: 16*SQRT}, (a)=>console.log("asdf")))
-        this.em.addEntity(new Collider({x: 8*SQRT, y: 20*SQRT}, (a)=>console.log("asdf")))
+        let player = new SquareEntity({x: 10, y: 10, width: 20, height: 40});
+        this.player_collision = player;
+        let onCollide = debounce(()=>this.player.health -= 1, 60, true);
+        player.onCollide = (other) => {
+            if (other instanceof SquareEntity) {
+                this.player.health = 0;
+            }
+            if (other instanceof CircleEntity) {
+                onCollide();
+            }
+        }
+
+        this.em = new CollisionManager([
+            player,
+            new SquareEntity({x: SQRT*24, y: SQRT*4, width: SQRT*6, height: SQRT*6}),
+            new SquareEntity({x: SQRT*34, y: SQRT*16, width: SQRT*6, height: SQRT*6}),
+            new SquareEntity({x: SQRT*8, y: SQRT*20, width: SQRT*6, height: SQRT*6}),
+            this.boss.collider,
+        ]);
     }
 
     render(
@@ -162,16 +220,17 @@ class Level extends AbstractLevel {
         this.player.render(dt, ctx);
         this.gui.render(dt, ctx);
         this.boss.render(dt, ctx);
+        this.em.render(dt, ctx);
     }
 
     update(
         dt/*: number */
     ) {
         this.player.update(dt);
+        this.player_collision.x = this.player.position.x;
+        this.player_collision.y = this.player.position.y;
         this.boss.update(dt);
-        this.em.updateEntity(this.player);
-        this.em.updateEntity(this.boss.collider);
-        this.em.collide();
+        this.em.checkCollisions();
     }
 
     getTitle() {
@@ -189,7 +248,7 @@ class Boss {
     }
     player: Player
     renderTick: number
-    collider: Collider
+    collider: CircleEntity
     */
     constructor(player) {
         this.player = player;
@@ -198,19 +257,14 @@ class Boss {
             y: 200
         };
         this.renderTick = 0;
-        this.collider = new Collider(this.position, debounce((a)=>{this.player.health--}, 50, true));
+        this.collider = new CircleEntity({x: this.position.x, y: this.position.y, radius: 60});
+        this.collider.onCollide = (other) => console.log('asdf');
     }
 
     render(
         dt,
         ctx/*: CanvasRenderingContext2D */
     ) {
-        ctx.fillStyle = 'green';
-        ctx.fillRect(SQRT*24, SQRT*4, SQRT*6, SQRT*6);
-        ctx.fillRect(SQRT*34, SQRT*16, SQRT*6, SQRT*6);
-        ctx.fillRect(SQRT*8, SQRT*20, SQRT*6, SQRT*6);
-
-        ctx.fillRect(this.position.x-60, this.position.y-60, 120, 120);
         this.renderTick += 1;
         ctx.save();
         ctx.translate(this.position.x, this.position.y);
@@ -237,6 +291,8 @@ class Boss {
 
         this.position.x += norm.x;
         this.position.y += norm.y;
+        this.collider.x = this.position.x;
+        this.collider.y = this.position.y;
     }
 }
 
@@ -244,46 +300,4 @@ function buildImage(src) {
     let img = new Image();
     img.src = src;
     return img;
-}
-
-
-class Collider {
-    /*::
-    shape: "square" | "circle" | "complex"
-    tag: string
-    position: Vector
-    points: Vector[]
-    onCollision: (any)
-    */
-    constructor(
-        position/*: Vector */,
-        onCollision/*: (any) */
-    ) {
-        this.tag = "asdf";
-        this.position = position;
-        this.onCollision = onCollision;
-        this.shape = "circle";
-        this.points = [
-            {x: 0, y: 60},
-            {x: 0, y: -60},
-            {x: 60, y: 0},
-            {x: -60, y: 0}
-        ];
-    }
-}
-
-class ClassPitCollider extends Collider {
-    constructor(
-        position,
-        onCollision
-    ) {
-        super(position, onCollision);
-        this.shape = "square";
-        this.points = [
-            {x: 0, y: 0},
-            {x: 6*SQRT, y: 0},
-            {x: 0, y: 6*SQRT},
-            {x: 6*SQRT, y: 6*SQRT}
-        ]
-    }
 }

@@ -189,13 +189,15 @@ class Level extends AbstractLevel {
 
         let player = new SquareEntity({x: 10, y: 10, width: 20, height: 40});
         this.player_collision = player;
-        let onCollide = debounce(()=>this.player.health -= 1, 60, true);
         player.onCollide = (other) => {
             if (other instanceof SquareEntity) {
                 this.player.health = 0;
             }
             if (other instanceof CircleEntity) {
-                onCollide();
+                let diff = vector.normalize(vector.subtract(player, other));
+                this.player.position.x += diff.x * 12;
+                this.player.position.y += diff.y * 12;
+                this.player.health -= 1;
             }
         }
 

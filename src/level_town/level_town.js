@@ -8,6 +8,7 @@ const vector = require('../vector');
 const SpawnManager = require('../SpawnManager');
 const mapdata = require('./town_map');
 const Boulder = require('../boulder');
+const Collision = require('../collision');
 /*::
 import type {Vector} from "../vector";
 */
@@ -22,6 +23,14 @@ function checkcircle(a, b) {
   let dist2 = diffx*diffx + diffy*diffy;
   let maxd = a.radius + b.radius;
   return dist2 < maxd*maxd;
+}
+
+function checkCircleBox(circle, box) {
+  //pretend like the box is a circle
+  console.log(circle.x,circle.y,box.x,box.y);
+  return checkcircle(circle,
+    {x:box.x+box.width/2, y:box.y+box.height/2, radius:box.width/2}
+  );
 }
 
 class Level extends AbstractLevel {
@@ -46,7 +55,6 @@ class Level extends AbstractLevel {
         this.player.height = 32;
         this.boulders = [];
         this.map = new Map(1, mapdata);
-        this.gui = new Gui(this.player);
         this.portals = [];
         this.sm = new SpawnManager();
         var self = this;
@@ -63,26 +71,48 @@ class Level extends AbstractLevel {
                 }
               },
               update:function(dt) {
-                  if(checkcircle(this, self.boulders.forEach(function(b){b})){
+                for (var i = 0; i < boulders.length; i++) {
+                  if(checkcircle(this, boulders[i].position)){
                     portal.off = true;
                   }
+                }
               }
             };
+            if(!myPortal.off){
+                self.portals.push(myPortal);
+            }
             //console.log(myPortal);
-            self.portals.push(myPortal);
 
         }
       }
       this.sm.addAssociation("Portal",portalSpawn);
       this.sm.getLocations(this.map.objlayers);
       this.boss = new Boss(this.player, this.portals);
+      this.boulders.push(new Boulder({x:110, y: 45}));
+      console.log(this.boulders);
 
     }
 
     update(dt/*: number */) {
+        var self = this;
         this.player.update(dt);
         this.player.x = this.player.position.x;
         this.player.y = this.player.position.y;
+        this.boulders.forEach(function(b, index){
+          if(checkCircleBox(b, self.player)) {
+            console.log("it done did it");
+            let diffx = self.player.position.x - b.x;
+            let diffy = self.player.position.y - b.y;
+            let mag = Math.sqrt(diffx*diffx + diffy*diffy);
+            b.x += 30 * diffx / mag;
+            b.y += 30 * diffy / mag;
+            console.log(b.x, b.y);}
+            if(checkCircleBox(b, self.boss)) {
+              console.log("dead boulder");
+              b.splice(index,1);
+        }}
+      );
+
         this.boss.update(dt);
 
     }
@@ -99,6 +129,9 @@ class Level extends AbstractLevel {
             layer.render(ctx);
         }
         this.player.render(dt, ctx);
+        this.boulders.forEach(function(b){
+          b.render(dt, ctx);
+        });
         this.boss.render(dt, ctx);
         ctx.restore();
         }
@@ -135,9 +168,8 @@ class Missile {
     let y = this.target.y + this.target.height / 2;
     let diffx = x - this.x;
     let diffy = y - this.y;
-    console.log("diffs", diffx, diffy);
+
     let mag = Math.sqrt(diffx*diffx + diffy*diffy);
-    console.log("mag", mag);
     this.x += speed * dt * diffx / mag;
     this.y += speed * dt * diffy / mag;
     if(checkbox(this, this.target)) {
@@ -159,7 +191,6 @@ class Boss {
           y: this.randPort.y
          };
         this.missiles = [];
-
         this.timer = 0;
         this.state = "idle";
     }
@@ -189,7 +220,6 @@ class Boss {
         }
         break;
         case "attack":
-          console.log(this.player);
           this.missiles.push(new Missile(
             this.position.x,
             this.position.y, this.player));
@@ -203,11 +233,12 @@ class Boss {
           this.state = "wait to attack";
         break;
         case "wait to move":
-
+        if(this.portals.length == 1){
+          this.position = {x:500,y:500};
+        }
         if(this.timer > 1500){
-          this.state = "move";
           this.timer = 0;
-          this.timer -= 1500;
+          this.state = "move";
         }
         break;
         case "wait to attack":

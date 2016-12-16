@@ -86,13 +86,21 @@ class ElBlobbo {
     this.player = player;
     this.timer = 0;
     this.spikes = [];
+    this.health = 5;
+    this.renderSource = new Image();
+    this.renderSource.src = "assets/el_blobbo/blob5.png";
   }
 
   render(dt, ctx) {
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
-    ctx.fillStyle = toColor(this.color);
-    ctx.fill();
+    ctx.save();
+
+    ctx.translate(-100, -100);
+    ctx.drawImage(
+      this.renderSource,
+      this.x, this.y, this.radius*2, this.radius*2
+    );
+
+    ctx.restore();
   }
 
   update(dt) {
@@ -102,6 +110,11 @@ class ElBlobbo {
     let mag = Math.sqrt(diffx*diffx + diffy*diffy);
     this.x += speed * dt * diffx / mag;
     this.y += speed * dt * diffy / mag;
+  }
+
+  transform() {
+    // this.renderSource = new Image();
+    this.renderSource.src = "assets/el_blobbo/blob" + this.health + ".png";
   }
 
 }
@@ -143,6 +156,10 @@ class ElBlobboLevel {
         if(checkCircleBox(this.boss, s)) {
           this.boss.color[0] = Math.min(this.boss.color[0] + 55, 255);
           this.boss.color[1] = Math.max(this.boss.color[1] - 55, 0);
+          if (this.boss.health != 1) {
+            this.boss.health--;
+            this.boss.transform();
+          }
           toRemove.push(s);
         }
       });

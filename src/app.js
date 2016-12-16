@@ -1,4 +1,3 @@
-
 "use strict";
 
 /* Classes and Libraries */
@@ -12,8 +11,7 @@ const {LevelSwitcher, Level} = require('./level_chooser/main');
 const Gui = require('./gui');
 
 const MissleLevel = require('./missle_boss.js');
-const ElBlobboLevel = require('./elblobbo.js');
-
+const ElBlobboLevel = require('./elblobbo.js')
 var canvas = document.getElementById('screen');
 
 const MemoryBoss = require('./ddr/boss');
@@ -21,27 +19,16 @@ const MemoryBoss = require('./ddr/boss');
 // Initialize player and player and player lives
 var player = new Player({x: 500, y: 500});
 const gui = new Gui(player);
-const LevelTown = require('./level_town/level_town').Level;
-const LevelCreepyCrawler = require('./level_creepy_crawler/level').Level;
+
 const levelSwitcher = new LevelSwitcher(canvas, [
-    {
-        getTitle: ()=>"Level 1",
-        update: (dt)=>update(dt),
-        render: (dt, ctx)=>render(dt, ctx),
-        hasEnded: ()=>false,
-        hasWon: ()=>true,
-        start: ()=>{},
-    },
-    new LevelCreepyCrawler({width: canvas.width, height: canvas.height}),
     new MissleLevel(),
-    new LevelTown({width: canvas.width, height: canvas.height}),
     new ElBlobboLevel(),
     new MemoryBoss(player, {width: canvas.width, height: canvas.height})
 ]);
 
 
 /* Global variables */
-// var game = new Game(canvas, update, render);
+//var game = new Game(canvas, update, render);
 var game = new Game(
     canvas,
     levelSwitcher.update.bind(levelSwitcher),
@@ -131,8 +118,7 @@ function update(elapsedTime) {
   em.updateEntity(player);
   em.updateEntity(boss);
 
-  em.collide();
-  spawnManager.update(elapsedTime);
+  //gui.update(elapsedTime);
 }
 
 /**
@@ -165,13 +151,13 @@ function render(elapsedTime, ctx) {
   */
 function renderWorld(elapsedTime, ctx) {
 	ctx.drawImage(
-		background,
-		0, 0, 640, 400,
-		0, 0, canvas.width, canvas.height);
+	background,
+	0, 0, 640, 400,
+	0, 0, canvas.width, canvas.height);
 
-  map.getLayers().forEach(function(layer) {
-    layer.render(ctx);
-  });
+  //map.getLayers().forEach(function(layer) {
+  //  layer.render(ctx);
+  //});
 
   // Render the player
   ctx.save();
@@ -185,8 +171,5 @@ function renderWorld(elapsedTime, ctx) {
 }
 
 
-// HEALTH
-function damagePlayer() {
-	player.damage();
-	gui.damage();
-}
+  // spawnManager.render(ctx, elapsedTime);
+  // gui.render(elapsedTime, ctx);

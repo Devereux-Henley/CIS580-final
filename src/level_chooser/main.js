@@ -1,6 +1,8 @@
 
-const CELLSIZE = 150;
 
+const CELLSIZE = 150;
+var chooseLevel = new Audio();
+chooseLevel.src = "assets/boulderHittingWood.wav";
 class Level {
     hasEnded()/*: bool */ {
         return false;
@@ -74,7 +76,7 @@ class Button {
         }
           ctx.fillRect(this.x, this.y, this.width, this.height);
           ctx.fillStyle = 'red';
-          if(this.won == false){
+          if(this.won == false || this.won == true){
               ctx.fillStyle = 'white';
           }
           ctx.font = 'bold 20px sans-serif';
@@ -140,6 +142,7 @@ class LevelSwitcher {
             this._currentLevel = buttonOver.level;
             this._currentLevel.start();
             this.currentButton = buttonOver;
+            chooseLevel.play();
         }
     }
 
@@ -178,7 +181,6 @@ class LevelSwitcher {
         } else {
             this._currentLevel.update(dt);
             if (this._currentLevel !== null && this._currentLevel.hasEnded()) {
-              console.log(this._buttons, this.currentButton);
                 this._currentLevel = null;
                 for (var i = 0; i < this._buttons.length; i++) {
                   if(this._buttons[i] == this.currentButton){

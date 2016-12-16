@@ -18,6 +18,12 @@ function checkcircle(a, b) {
   return dist2 < maxd*maxd;
 }
 
+function checkCircleBox(circle, box) {
+  //pretend like the box is a circle
+  return checkcircle(circle,
+    {x:box.x+box.width/2, y:box.y+box.height/2, radius:box.width/2}
+  );
+}
 
 const SPIKE_TAG = "spike";
 const SPIKE_SHAPE = "square";
@@ -31,7 +37,8 @@ class Spike {
     this.x = x;
     this.y = y;
     this.shape = "square";
-    this.weight, this.height = 64;
+    this.width = 64;
+    this.height = 64;
     this.triggered = true;
   }
   update(dt) {
@@ -39,7 +46,7 @@ class Spike {
   }
   render(dt, ctx) {
     if (this.triggered) {
-      ctx.drawImage(this.renderSource, this.x, this.y);
+      ctx.drawImage(this.renderSource, this.x, this.y, this.width, this.height);
     }
   }
 }
@@ -55,12 +62,26 @@ class Tile {
   render(dt, ctx) { }
 }
 
+String.prototype.lpad = function(padString, length) {
+    var str = this;
+    while (str.length < length)
+        str = padString + str;
+    return str;
+}
+
+function toColor(color) {
+  return "#" + color[0].toString(16).lpad("0", 2)
+             + color[1].toString(16).lpad("0", 2)
+             + color[2].toString(16).lpad("0", 2);
+}
+
 class ElBlobbo {
 
   constructor(player, gui) {
     this.gui = gui;
     this.x = 300;
     this.y = 300;
+    this.color = [0, 255, 0];
     this.radius = 100;
     this.player = player;
     this.timer = 0;
@@ -70,12 +91,12 @@ class ElBlobbo {
   render(dt, ctx) {
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
-    ctx.fillStyle = 'green';
+    ctx.fillStyle = toColor(this.color);
     ctx.fill();
   }
 
   update(dt) {
-    let speed = 0.05;
+    let speed = 0.12;
     let diffx = this.player.x - this.x;
     let diffy = this.player.y - this.y;
     let mag = Math.sqrt(diffx*diffx + diffy*diffy);
@@ -96,7 +117,7 @@ class ElBlobboLevel {
     }
 
     hasWon()/*: bool */ {
-        return this.boss.radius < 15;
+        return this.boss.color[1] <= 0;
     }
 
     update(dt/*: number */) {
@@ -104,23 +125,54 @@ class ElBlobboLevel {
       this.player.x = this.player.position.x;
       this.player.y = this.player.position.y;
       this.boss.update(dt);
+
+      if(checkCircleBox(this.boss, this.player)) {
+        console.log("it done did it");
+        let diffx = this.player.x - this.boss.x;
+        let diffy = this.player.y - this.boss.y;
+        let mag = Math.sqrt(diffx*diffx + diffy*diffy);
+        this.player.position.x += 30 * diffx / mag;
+        this.player.position.y += 30 * diffy / mag;
+        console.log(this.player.x, this.player.y);
+        this.player.damage();
+        this.gui.damage();
+      }
+
+      let toRemove = [];
+      this.spikes.forEach((s) => {
+        if(checkCircleBox(this.boss, s)) {
+          this.boss.color[0] = Math.min(this.boss.color[0] + 55, 255);
+          this.boss.color[1] = Math.max(this.boss.color[1] - 55, 0);
+          toRemove.push(s);
+        }
+      });
+      for(let spike of toRemove) {
+        this.spikes.splice(this.spikes.indexOf(spike), 1);
+      }
     }
 
     render(dt/*: number */, ctx/*: CanvasRenderingContext2D */) {
       map.getLayers().forEach((layer) => layer.render(ctx));
+      this.spikes.forEach((s) => s.render(dt, ctx));
       this.player.render(dt, ctx);
       this.boss.render(dt, ctx);
       this.gui.render(dt, ctx);
-      this.spikes.forEach((s) => s.render(dt, ctx));
     }
 
     start() {
       this.player = new Player({x: 500, y: 500});
+      this.spikes = [
+        new Spike(16 * 8, 9 * 16),
+        new Spike(16 * 52, 9 * 16),
+        new Spike(16 * 8, 36 * 16),
+        new Spike(16 * 52, 36 * 16),
+        new Spike(30 * 16, 22 * 16)
+      ];
       this.player.width = 24;
       this.player.height = 32;
       this.gui = new Gui(this.player);
       this.boss = new ElBlobbo(this.player, this.gui);
-      this.spikes = [new Spike(16 * 6, 7 * 16)];
+
     }
 
     getTitle()/*: string */ {

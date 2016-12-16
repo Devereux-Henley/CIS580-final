@@ -44,7 +44,7 @@ class Level extends AbstractLevel {
         this.boss = new ElBlobbo(this.player, 4);
         this.em = new EntityManager(this.size.width, this.size.height, 64);
         this.em.addEntity(this.player);
-        this.em.addEntity(this.boss.collider);
+        this.em.addEntity(this.boss);
 
         this.spawnManager = new SpawnManager();
         let spikeSpawner = {

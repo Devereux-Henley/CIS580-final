@@ -10,6 +10,7 @@ const SpawnManager = require('./spawnManager');
 const {LevelSwitcher, Level} = require('./level_chooser/main');
 const Gui = require('./gui');
 const MissleLevel = require('./missle_boss.js');
+const ElBlobboLevel = require('./elblobbo.js')
 var canvas = document.getElementById('screen');
 
 const LevelCreepyCrawler = require('./level_creepy_crawler/level').Level;
@@ -23,7 +24,8 @@ const levelSwitcher = new LevelSwitcher(canvas, [
         start: ()=>{},
     },
     new LevelCreepyCrawler({width: canvas.width, height: canvas.height}),
-    new MissleLevel()
+    new MissleLevel(),
+    new ElBlobboLevel()
 ]);
 
 /* Global variables */

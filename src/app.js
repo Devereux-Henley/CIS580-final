@@ -9,6 +9,7 @@ const EntityManager = require('./entity-manager');
 const SpawnManager = require('./spawnManager');
 const {LevelSwitcher, Level} = require('./level_chooser/main');
 const Gui = require('./gui');
+const MissleLevel = require('./missle_boss.js');
 var canvas = document.getElementById('screen');
 
 const LevelCreepyCrawler = require('./level_creepy_crawler/level').Level;
@@ -22,6 +23,7 @@ const levelSwitcher = new LevelSwitcher(canvas, [
         start: ()=>{},
     },
     new LevelCreepyCrawler({width: canvas.width, height: canvas.height}),
+    new MissleLevel()
 ]);
 
 /* Global variables */
@@ -40,7 +42,7 @@ var boss = new Boss({x: 48, y: 48}, 4);
 
 // Initialize Map
 var background = new Image();
-var map = new Map.Map(1, require('../assets/map/bossmap1.json'));
+var map = new Map.Map(2, require('../assets/map/bossmap1.json'));
 background.src = 'assets/background.png';
 
 // Initalize entity manager
@@ -52,9 +54,17 @@ em.addEntity(boss);
 var spawnManager = new SpawnManager();
 var spikeSpawner = {
   new: function(obj) {
+
     return {
       render: function (elapsedTime, ctx) {
-    
+        ctx.beginPath();
+        let innerRadius = 50;
+        let outerRadius = 200;
+        let lineWidth = outerRadius - innerRadius;
+        ctx.arc(200, 200, innerRadius + lineWidth/2, 0, Math.PI);
+        ctx.lineWidth = lineWidth;
+        ctx.strokeStyle = 'black';
+        ctx.stroke();
         ctx.fillText("there is some text stuff here", 300, 300);
       },
       update: function() {

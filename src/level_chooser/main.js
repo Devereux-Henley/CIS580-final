@@ -1,4 +1,4 @@
-// @flow
+
 
 const CELLSIZE = 150;
 

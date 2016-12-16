@@ -1,6 +1,6 @@
 "use strict";
 
-const json = require('assets/map/collision-test.json');
+// const json = require('assets/map/collision-test.json');
 const SpawnLocation = require('./spawnLocation.js');
 
 /**
@@ -13,7 +13,7 @@ module.exports = exports = SpawnManager;
  * Creates a new SpawnManager object
  */
 function SpawnManager() {
-  this.locations = [];
+  this.objects = [];
   this.associations = {};
 }
 
@@ -26,16 +26,17 @@ SpawnManager.prototype.getLocations = function(layers) {
             x: layers[i].objects[j].x + (layers[i].objects[j].width / 2),
             y: layers[i].objects[j].y + (layers[i].objects[j].height / 2)
           }
-          addLocation(position, layers[i].objects[j].Type);
+          var spawner = this.associations[layers[i].objects[j].Type];
+          this.objects.push(spawner.new(layers[i].objects[j]));
         }
       }
     }
   }
 }
 
-SpawnManager.prototype.addLocation = function(position, type){
-  this.locations.push(new SpawnLocation(position, type));
-}
+// SpawnManager.prototype.addLocation = function(position, type){
+//   this.locations.push(new SpawnLocation(position, type));
+// }
 
 SpawnManager.prototype.addAssociation = function(type, spawner){
   if(this.associations[type] == null){
@@ -46,8 +47,14 @@ SpawnManager.prototype.addAssociation = function(type, spawner){
   }
 }
 
-SpawnManager.prototype.update = function(){
-  for (var i = 0; i < locations.length; i++) {
-    associations[locations[i].Type].update();
-  }
+SpawnManager.prototype.update = function(deltaTime){
+  this.objects.forEach(function(obj) {
+    obj.update(deltaTime);
+  });
+}
+
+SpawnManager.prototype.render = function(ctx, deltaTime){
+  this.objects.forEach(function(obj) {
+    obj.render(ctx, deltaTime);
+  });
 }

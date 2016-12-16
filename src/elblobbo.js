@@ -132,7 +132,7 @@ class ElBlobboLevel {
     }
 
     hasEnded()/*: bool */ {
-        return this.player.health <= 0 || this.hasWon();
+        return this.player.health <= 0;
     }
 
     hasWon()/*: bool */ {

@@ -9,6 +9,8 @@ const EntityManager = require('../entity-manager');
 const mapdata = require('./tileMap');
 const img = buildImage('assets/level_creepy_crawler/crawler.png');
 
+const SQRT = Math.sqrt(2) * 16;
+
 function debounce(func, wait, immediate) {
     var timeout;
     return function() {
@@ -23,6 +25,91 @@ function debounce(func, wait, immediate) {
         if (callNow) func.apply(context, args);
     };
 };
+
+class CollisionEntity {
+    constructor() {
+
+    }
+    onCollide() {
+
+    }
+}
+
+class CircleEntity extends CollisionEntity {
+    /*::
+    x: number
+    y: number
+    radius: number
+    */
+}
+class SquareEntity extends CollisionEntity {
+    /*::
+    x: number
+    y: number
+    width: number
+    height: number
+    */
+}
+
+class CollisionManager {
+    /*::
+    _actors: CollisionEntity[]
+    */
+    constructor() {
+        this._actors = [];
+    }
+    checkCollisions() {
+        for (let i=0; i<this._actors.length; i++) {
+            for (let j=i+1; j<this._actors.length; j++) {
+                let a = this._actors[i];
+                let b = this._actors[j];
+
+                if (a.constructor == CircleEntity && b.constructor == CircleEntity) {
+                    if (this.circleCircle(a, b)) {
+                        a.onCollide(b);
+                        b.onCollide(a);
+                    }
+                }
+                if (a.constructor == CircleEntity && b.constructor == SquareEntity) {
+                    if (this.circleCircle(a, b)) {
+                        a.onCollide(b);
+                        b.onCollide(a);
+                    }
+                }
+                if (a.constructor == SquareEntity && b.constructor == CircleEntity) {
+                    if (this.circleSquare(c, r)) {
+                        a.onCollide(b);
+                        b.onCollide(a);
+                    }
+                }
+            }
+        }
+    }
+    squareSquare(a/* SquareEntity */, b/*: SquareEntity */) {
+        return false;
+    }
+    circleSquare(c/*: CircleEntity */, r/*: SquareEntity */) {
+        let cx = Math.abs(c.x - r.x - r.width/2);
+        let xDist = r.width/2 + c.radius;
+        if (cx > xDist)
+            return false;
+        let cy = Math.abs(c.y - r.y - r.height/2);
+        let yDist = r.height/2 + c.radius;
+        if (cy > yDist)
+            return false;
+        if (cx <= r.width/2 || cy <= r.height/2)
+            return true;
+        let xCornerDist = cx - r.width/2;
+        let yCornerDist = cy - r.height/2;
+        let xCornerDistSq = xCornerDist * xCornerDist;
+        let yCornerDistSq = yCornerDist * yCornerDist;
+        let maxCornerDistSq = c.radius * c.radius;
+        return xCornerDistSq + yCornerDistSq <= maxCornerDistSq;
+    }
+    circleCircle(a/*: CircleEntity */, b/*: CircleEntity */) {
+        return Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2) < Math.pow(a.radius + b.radius, 2);
+    }
+}
 
 /*::
 import type {Vector} from "../vector";
@@ -54,9 +141,13 @@ class Level extends AbstractLevel {
         this.map = new Map(2, mapdata);
         this.gui = new Gui(this.player);
         this.boss = new Boss(this.player);
+
         this.em = new EntityManager(this.size.width, this.size.height, 64);
         this.em.addEntity(this.player);
         this.em.addEntity(this.boss.collider);
+        this.em.addEntity(new Collider({x: 24*SQRT, y: 4*SQRT}, (a)=>console.log("asdf")))
+        this.em.addEntity(new Collider({x: 34*SQRT, y: 16*SQRT}, (a)=>console.log("asdf")))
+        this.em.addEntity(new Collider({x: 8*SQRT, y: 20*SQRT}, (a)=>console.log("asdf")))
     }
 
     render(
@@ -114,6 +205,11 @@ class Boss {
         dt,
         ctx/*: CanvasRenderingContext2D */
     ) {
+        ctx.fillStyle = 'green';
+        ctx.fillRect(SQRT*24, SQRT*4, SQRT*6, SQRT*6);
+        ctx.fillRect(SQRT*34, SQRT*16, SQRT*6, SQRT*6);
+        ctx.fillRect(SQRT*8, SQRT*20, SQRT*6, SQRT*6);
+
         ctx.fillRect(this.position.x-60, this.position.y-60, 120, 120);
         this.renderTick += 1;
         ctx.save();
@@ -173,5 +269,21 @@ class Collider {
             {x: 60, y: 0},
             {x: -60, y: 0}
         ];
+    }
+}
+
+class ClassPitCollider extends Collider {
+    constructor(
+        position,
+        onCollision
+    ) {
+        super(position, onCollision);
+        this.shape = "square";
+        this.points = [
+            {x: 0, y: 0},
+            {x: 6*SQRT, y: 0},
+            {x: 0, y: 6*SQRT},
+            {x: 6*SQRT, y: 6*SQRT}
+        ]
     }
 }

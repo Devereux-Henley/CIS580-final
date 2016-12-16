@@ -20,10 +20,10 @@ module.exports = exports = {
  */
 function checkForSingleSquareCollision(entity1, entity2)
  {
-   var collides = !(entity1.x + entity1.width < entity2.x ||
-                   entity1.x > entity2.x + entity2.width ||
-                   entity1.y + entity1.height < entity2.y ||
-                   entity1.y > entity2.y + entity2.height);
+   var collides = !(entity1.position.x + entity1.width < entity2.position.x ||
+                   entity1.position.x > entity2.position.x + entity2.width ||
+                   entity1.position.y + entity1.height < entity2.position.y ||
+                   entity1.position.y > entity2.position.y + entity2.height);
 
    if(collides) {
     //  if(entity1.tag == "player") console.log(entity1);
@@ -41,8 +41,8 @@ function checkForSingleSquareCollision(entity1, entity2)
 function checkForSingleCircleCollision(entity1, entity2)
 {
     var distSquared =
-      Math.pow(entity1.x - entity2.x, 2) +
-      Math.pow(entity1.y - entity2.y, 2);
+      Math.pow(entity1.position.x - entity2.position.x, 2) +
+      Math.pow(entity1.position.y - entity2.position.y, 2);
     // (15 + 15)^2 = 900 -> sum of two balls' raidius squared
     var sumRadiusSqueared = (entity1.radius * entity1.radius) + (entity2.radius * entity2.radius);
     if(distSquared < sumRadiusSqueared)

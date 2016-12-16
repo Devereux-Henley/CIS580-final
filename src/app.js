@@ -17,26 +17,7 @@ const ElBlobbo = require('./el_blobbo').Level;
 
 const levelSwitcher = new LevelSwitcher(canvas, [
     new ElBlobbo({width: canvas.width, height: canvas.height}),
-    new LevelCreepyCrawler({width: canvas.width, height: canvas.height}),
-	new ElBlobbo({width: canvas.width, height: canvas.height}),
-	new ElBlobbo({width: canvas.width, height: canvas.height}),
-	new ElBlobbo({width: canvas.width, height: canvas.height}),
-	new ElBlobbo({width: canvas.width, height: canvas.height}),
-	new ElBlobbo({width: canvas.width, height: canvas.height}),
-	new ElBlobbo({width: canvas.width, height: canvas.height}),
-	new ElBlobbo({width: canvas.width, height: canvas.height}),
-	new ElBlobbo({width: canvas.width, height: canvas.height}),
-	new ElBlobbo({width: canvas.width, height: canvas.height}),
-	new ElBlobbo({width: canvas.width, height: canvas.height}),
-	new ElBlobbo({width: canvas.width, height: canvas.height}),
-	new ElBlobbo({width: canvas.width, height: canvas.height}),
-	new ElBlobbo({width: canvas.width, height: canvas.height}),
-	new ElBlobbo({width: canvas.width, height: canvas.height}),
-	new ElBlobbo({width: canvas.width, height: canvas.height}),
-	new ElBlobbo({width: canvas.width, height: canvas.height}),
-	new ElBlobbo({width: canvas.width, height: canvas.height}),
-	new ElBlobbo({width: canvas.width, height: canvas.height}),
-	
+    new LevelCreepyCrawler({width: canvas.width, height: canvas.height})
 ]);
 
 /* Global variables */
@@ -103,7 +84,7 @@ function update(elapsedTime) {
   // update the player
   player.update(elapsedTime);
   boss.update(elapsedTime, player.position);
-  
+
 
   em.updateEntity(player);
   em.updateEntity(boss);
@@ -158,9 +139,7 @@ function renderWorld(elapsedTime, ctx) {
 
   // Render Boss
   boss.render(elapsedTime, ctx);
-  
+
   spawnManager.render(ctx, elapsedTime);
   //gui.render(elapsedTime, ctx);
 }
-
-

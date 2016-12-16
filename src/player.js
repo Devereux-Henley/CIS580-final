@@ -12,6 +12,7 @@ const STAMINA_DECAY = 2;
 const STAMINA_RECHARGE = 1;
 const DODGE_END = 4 * RENDER_TIMER;
 const DODGE_DELAY = 10 * RENDER_TIMER;
+const PLAYER_SHAPE = "circle";
 
 const EAST_WALK = [new SheetPosition(0, 96),
     new SheetPosition(24, 96),
@@ -112,6 +113,9 @@ function Player(position) {
 	this.state = new PlayerState('STILL', 'NORMAL');
 	this.renderSource = new Image();
 	this.renderSource.src = 'assets/rpg_sprite_walk.png';
+  this.width = 24;
+  this.height = 32;
+  this.radius = 16;
 	this.timer = 0;
     this.dodgeTimer = 0;
 	this.renderPosition = 0;
@@ -175,31 +179,31 @@ function Player(position) {
   this.health = 6;
   this.stamina = 100;
   // COLLISIONS
-  this.shape = "square";
+  this.shape = PLAYER_SHAPE;
   this.tag = "player";
   this.points = [
 	{
 	  // TOP LEFT CORNER
-	  x: this.x,
-	  y: this.y
+	  x: this.position.x,
+	  y: this.position.y
 	},
 	{
 	  // TOP RIGHT CORNER
-	  x: this.x + this.width,
-	  y: this.y
+	  x: this.position.x + this.width,
+	  y: this.position.y
 	},
 	{
 	  // BOTTOM LEFT CORNER
-	  x: this.x,
-	  y: this.y + this.height
+	  x: this.position.x,
+	  y: this.position.y + this.height
 	},
 	{
 	  // BOTTOM RIGHT CORNER
-	  x: this.x + this.width,
-	  y: this.y + this.height
+	  x: this.position.x + this.width,
+	  y: this.position.y + this.height
 	}
   ];
-  
+
   //this.gui = new Gui(this);
 }
 
@@ -317,7 +321,6 @@ Player.prototype.update = function(elapsedTime) {
 
     var updateSpeed = PLAYER_SPEED;
 
-    console.log(this.stamina);
     if (this.state.moveType == 'DODGING') {
         updateSpeed = DODGE_SPEED;
         this.dodgeTimer += elapsedTime;
@@ -395,7 +398,7 @@ Player.prototype.update = function(elapsedTime) {
     } else {
         this.currentRender = nextRender;
     }
-	
+
 	//this.gui.update(elapsedTime);
 }
 
@@ -413,9 +416,9 @@ Player.prototype.render = function(elapsedTime, ctx) {
     ctx.drawImage(
         this.renderSource,
         this.currentRender.x, this.currentRender.y, this.currentRender.width, this.currentRender.height,
-        0, 0, 24, 32);
+        0, 0, this.width, this.height);
     ctx.restore();
-	
+
 	//this.gui.render(elapsedTime, ctx);
 }
 

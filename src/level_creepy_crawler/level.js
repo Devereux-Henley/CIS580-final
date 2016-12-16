@@ -31,7 +31,6 @@ class Level extends AbstractLevel {
 
     start() {
         this.player = new Player({x: 500, y: 500});
-        this.player.tag = "player";
         this.map = new Map(2, mapdata);
         this.gui = new Gui(this.player);
         this.boss = new Boss(this.player);

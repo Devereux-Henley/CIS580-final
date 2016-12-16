@@ -9,6 +9,10 @@ const EntityManager = require('./entity-manager');
 const mapdata = require('../assets/map/bossmap1');
 const img = buildImage('assets/level_creepy_crawler/crawler.png');
 
+const BLOB_TAG = "boss";
+const BLOB_SHAPE = "circle";
+const BLOB_RADIUS = 128;
+
 const BOSS_SIZE = 32;
 const BOSS_SPEED = 2;
 
@@ -34,7 +38,6 @@ class Level extends AbstractLevel {
 
     start() {
         this.player = new Player({x: 500, y: 500});
-        this.player.tag = "player";
         this.map = new Map(1, mapdata);
         this.gui = new Gui(this.player);
         this.boss = new ElBlobbo(this.player, 4);
@@ -94,11 +97,11 @@ class ElBlobbo {
         };
         this.renderTick = 0;
         this.collider = new Collider(this.position, (a)=>null);
-		
+
 		this.size = BOSS_SIZE * size;
 		this.speed = BOSS_SPEED;
 		this.tag = "boss";
-		this.shape = "circle";
+		this.shape = BLOB_SHAPE;
 		this.radius = this.size;
 		this.velocity = {x: 0, y: 0};
 		this.immune = false;
@@ -110,7 +113,7 @@ class ElBlobbo {
     ) {
 		ctx.fillStyle = "green";
 		ctx.beginPath();
-		ctx.arc(this.position.x, this.position.y, this.size, 0, 2*Math.PI);
+		ctx.arc(this.position.x, this.position.y, this.size / 2, 0, 2*Math.PI);
 		ctx.fill();
     }
 
@@ -142,10 +145,11 @@ class Collider {
         position/*: Vector */,
         onCollision/*: (any) */
     ) {
-        this.tag = "boss";  // CHECK
+        this.tag = BLOB_TAG;  // CHECK
         this.position = position;
         this.onCollision = onCollision;
-        this.shape = "circle";
+        this.shape = BLOB_SHAPE;
+        this.radius = BLOB_RADIUS;
         this.points = [
             {x: 0, y: 60},
             {x: 0, y: -60},

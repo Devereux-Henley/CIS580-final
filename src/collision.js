@@ -40,17 +40,16 @@ function checkForSingleSquareCollision(entity1, entity2)
  */
 function checkForSingleCircleCollision(entity1, entity2)
 {
-    // var distSquared =
-    //   Math.pow((entity1.position.x + entity1.radius) - (entity2.position.x + entity2.radius), 2) +
-    //   Math.pow((entity1.position.y + entity1.radius) - (entity2.position.y + entity2.radius), 2);
-
     var distSquared =
-      Math.pow((entity1.position.x) - (entity2.position.x), 2) +
-      Math.pow((entity1.position.y) - (entity2.position.y), 2);
+      Math.pow((entity1.position.x + entity1.radius) - (entity2.position.x + entity2.radius), 2) +
+      Math.pow((entity1.position.y + entity1.radius) - (entity2.position.y + entity2.radius), 2);
+
+    // var distSquared =
+    //   Math.pow((entity1.position.x) - (entity2.position.x), 2) +
+    //   Math.pow((entity1.position.y) - (entity2.position.y), 2);
 
     // (15 + 15)^2 = 900 -> sum of two balls' radius squared
     var sumRadiusSqueared = Math.pow(entity1.radius + entity2.radius, 2);
-    console.log("Distance: " + distSquared);
 
     if(distSquared <= sumRadiusSqueared)
   {

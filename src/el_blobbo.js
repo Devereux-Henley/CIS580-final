@@ -3,9 +3,12 @@
 const {Level: AbstractLevel} = require("./level_chooser/main");
 const {Map} = require("./map");
 const Player = require("./player");
+const Spike = require("./spike");
+const Trigger = require("./trigger");
 const Gui = require('./gui');
 const vector = require('./vector');
 const EntityManager = require('./entity-manager');
+const SpawnManager = require('./spawnManager');
 const mapdata = require('../assets/map/bossmap1');
 const img = buildImage('assets/level_creepy_crawler/crawler.png');
 
@@ -42,6 +45,26 @@ class Level extends AbstractLevel {
         this.em = new EntityManager(this.size.width, this.size.height, 64);
         this.em.addEntity(this.player);
         this.em.addEntity(this.boss.collider);
+
+        this.spawnManager = new SpawnManager();
+        let spikeSpawner = {
+          new: function(obj) {
+            return new Spike({x:176, y:176});
+          }
+        };
+        let triggerSpawner = {
+          new: function(obj) {
+            return new Trigger({x:464, y:336});
+          }
+        }
+        console.log(spikeSpawner, this.spawnManager);
+        this.spawnManager.addAssociation("Spike", spikeSpawner);
+        this.spawnManager.addAssociation("Trigger", triggerSpawner);
+        console.log(this.map.objlayers);
+        this.spawnManager.getLocations(this.map.objlayers);
+
+        // console.log(this.spawnManager.objects);
+        // console.log(this.spawnManager.associations);
     }
 
     render(dt, ctx) {
@@ -52,6 +75,7 @@ class Level extends AbstractLevel {
         }
         this.player.render(dt, ctx);
         this.gui.render(dt, ctx);
+        this.spawnManager.render(dt, ctx);
         this.boss.render(dt, ctx);
     }
 
@@ -66,6 +90,7 @@ class Level extends AbstractLevel {
     update(dt) {
         this.player.update(dt);
         this.boss.update(dt);
+        this.spawnManager.update(dt);
         this.em.updateEntity(this.player);
         this.em.updateEntity(this.boss.collider);
         this.em.collide();
@@ -122,6 +147,10 @@ class ElBlobbo {
 
         this.position.x += norm.x;
         this.position.y += norm.y;
+    }
+
+    onCollision(entity) {
+
     }
 }
 

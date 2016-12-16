@@ -22,6 +22,7 @@ Gui.prototype.damage = function() {
 			hearts.splice(hearts.length - 1, 1);
 		}
 	}
+	this.health -= 1;
 }
 
 Gui.prototype.update = function(elapsedTime) {
@@ -37,7 +38,7 @@ Gui.prototype.render = function(elapsedTime, ctx) {
 		900+(40*i), 5, 40, 40
 		);
 	}
-	
+
 	// Render stamina bar.
 	ctx.fillStyle = "black";
 	ctx.fillRect(900, 44, 120, 20);

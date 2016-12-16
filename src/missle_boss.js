@@ -20,7 +20,8 @@ function checkcircle(a, b) {
 
 class Missle {
 
-  constructor(x, y, target, owner) {
+  constructor(x, y, target, owner, gui) {
+    this.gui = gui;
     this.x = x;
     this.y = y;
     this.radius = 1;
@@ -50,6 +51,9 @@ class Missle {
     this.y += speed * dt * diffy / mag;
     if(checkbox(this, this.target)) {
       console.log("player was hit!");
+      this.target.damage();
+      console.log(this.gui);
+      this.gui.damage();
       return false;
     }
     if(checkcircle(this, this.owner)) {
@@ -57,6 +61,7 @@ class Missle {
       this.owner.radius -= 3;
       this.owner.omega *= 1.05;
       this.owner.maxTime *= 0.95;
+      console.log(this.owner.radius);
       return false;
     }
     return this.timer < 5000;
@@ -65,7 +70,8 @@ class Missle {
 
 class MissleDude {
 
-  constructor(player) {
+  constructor(player, gui) {
+    this.gui = gui;
     this.x = 200;
     this.y = 200;
     this.radius = 30;
@@ -99,7 +105,8 @@ class MissleDude {
       this.timer -= 2000;
       this.missles.push(new Missle(
         this.x + diffx / mag * rad,
-        this.y + diffy / mag * rad, this.player, this));
+        this.y + diffy / mag * rad,
+        this.player, this, this.gui));
     }
     let newMissles = [];
     this.missles.forEach((m) => {
@@ -119,11 +126,11 @@ class MissleLevel {
     }
 
     hasEnded()/*: bool */ {
-        return false;
+        return this.player.health <= 0 || this.hasWon();
     }
 
     hasWon()/*: bool */ {
-        return ;
+        return this.boss.radius < 7;
     }
 
     update(dt/*: number */) {
@@ -137,14 +144,16 @@ class MissleLevel {
       map.getLayers().forEach((layer) => layer.render(ctx));
       this.player.render(dt, ctx);
       this.boss.render(dt, ctx);
+      this.gui.render(dt, ctx);
     }
 
     start() {
       this.player = new Player({x: 500, y: 500});
       this.player.width = 24;
       this.player.height = 32;
-      this.boss = new MissleDude(this.player);
       this.gui = new Gui(this.player);
+      this.boss = new MissleDude(this.player, this.gui);
+
     }
 
     getTitle()/*: string */ {

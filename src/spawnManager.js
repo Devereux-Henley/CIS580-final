@@ -1,41 +1,46 @@
 "use strict";
 
-const json = require('assets/map/collision-test.json');
+// const json = require('assets/map/collision-test.json');
 const SpawnLocation = require('./spawnLocation.js');
 
 /**
  * @module exports the Map class
  */
-module.exports = exports = SpawnManager;
+module.exports = exports = SpawnManager; 
 
 /**
  * @constructor SpawnManager
  * Creates a new SpawnManager object
  */
 function SpawnManager() {
-  this.locations = [];
+  this.objects = [];
   this.associations = {};
 }
 
 SpawnManager.prototype.getLocations = function(layers) {
+  //console.log(layers);
   for (var i = 0; i < layers.length; i++) {
-    if(layers[i].spawning){
+
+    if(layers[i].properties.spawning){
       for (var j = 0; j < layers[i].objects.length; j++) {
-        if(layers[i].objects[j].Spawn){
+        if(layers[i].objects[j].properties.Spawn){
            var position = {
             x: layers[i].objects[j].x + (layers[i].objects[j].width / 2),
             y: layers[i].objects[j].y + (layers[i].objects[j].height / 2)
           }
-          addLocation(position, layers[i].objects[j].Type);
+          var spawner = this.associations[layers[i].objects[j].type];
+          //console.log(this.associations, layers[i].objects[j].type, layers[i].objects[j]);
+          this.objects.push(spawner.new(layers[i].objects[j]));
         }
       }
     }
   }
+  //console.log(this.objects);
 }
 
-SpawnManager.prototype.addLocation = function(position, type){
-  this.locations.push(new SpawnLocation(position, type));
-}
+// SpawnManager.prototype.addLocation = function(position, type){
+//   this.locations.push(new SpawnLocation(position, type));
+// }
 
 SpawnManager.prototype.addAssociation = function(type, spawner){
   if(this.associations[type] == null){
@@ -46,8 +51,15 @@ SpawnManager.prototype.addAssociation = function(type, spawner){
   }
 }
 
-SpawnManager.prototype.update = function(){
-  for (var i = 0; i < locations.length; i++) {
-    associations[locations[i].Type].update();
-  }
+SpawnManager.prototype.update = function(deltaTime){
+  this.objects.forEach(function(obj) {
+    obj.update(deltaTime);
+  });
+}
+
+SpawnManager.prototype.render = function(deltaTime, ctx){
+  this.objects.forEach(function(obj) {
+    console.log(obj);
+    obj.render(deltaTime, ctx);
+  });
 }

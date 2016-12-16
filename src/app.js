@@ -6,40 +6,44 @@ const Boss = require('./boss-2');
 const Player = require('./player');
 const Map = require('./map');
 const EntityManager = require('./entity-manager');
+const SpawnManager = require('./spawnManager');
 const {LevelSwitcher, Level} = require('./level_chooser/main');
-const {Gui} = require('./gui');
+const Gui = require('./gui');
+
+const MissleLevel = require('./missle_boss.js');
+const ElBlobboLevel = require('./elblobbo.js');
+const {Level: CreeyCrawler2} = require('./level_creepy_crawler2/level.js');
 var canvas = document.getElementById('screen');
 
-const LevelCreepyCrawler = require('./level_creepy_crawler/level').Level;
-const levelSwitcher = new LevelSwitcher(canvas, [
-    {
-        getTitle: ()=>"Level 1",
-        update: (dt)=>update(dt),
-        render: (dt, ctx)=>render(dt, ctx),
-        hasEnded: ()=>false,
-        hasWon: ()=>true,
-        start: ()=>{},
-    },
-    new LevelCreepyCrawler({width: canvas.width, height: canvas.height}),
-]);
-
-/* Global variables */
-// var game = new Game(canvas, update, render);
-var game = new Game(
-    canvas,
-    levelSwitcher.update.bind(levelSwitcher),
-    levelSwitcher.render.bind(levelSwitcher));
+const MemoryBoss = require('./ddr/boss');
 
 // Initialize player and player and player lives
 var player = new Player({x: 500, y: 500});
 const gui = new Gui(player);
 
+const levelSwitcher = new LevelSwitcher(canvas, [
+    new MissleLevel(),
+    new ElBlobboLevel(),
+    new CreeyCrawler2({width: canvas.width, height: canvas.height}),
+    new MemoryBoss(player, {width: canvas.width, height: canvas.height})
+]);
+
+
+/* Global variables */
+//var game = new Game(canvas, update, render);
+var game = new Game(
+    canvas,
+    levelSwitcher.update.bind(levelSwitcher),
+    levelSwitcher.render.bind(levelSwitcher));
+
+
+
 // Initialize boss object
-var boss = new Boss({x: 48, y: 48}, 1);
+var boss = new Boss({x: 48, y: 48}, 4);
 
 // Initialize Map
 var background = new Image();
-var map = new Map.Map(1, require('../assets/map/bossmap1.json'));
+var map = new Map.Map(2, require('../assets/map/bossmap1.json'));
 background.src = 'assets/background.png';
 
 // Initalize entity manager
@@ -47,6 +51,45 @@ var em = new EntityManager(canvas.width, canvas.height, 32);
 
 em.addEntity(player);
 em.addEntity(boss);
+
+var spawnManager = new SpawnManager();
+var spikeSpawner = {
+  new: function(obj) {
+
+    return {
+      render: function (elapsedTime, ctx) {
+        ctx.beginPath();
+        let innerRadius = 50;
+        let outerRadius = 200;
+        let lineWidth = outerRadius - innerRadius;
+        ctx.arc(200, 200, innerRadius + lineWidth/2, 0, Math.PI);
+        ctx.lineWidth = lineWidth;
+        ctx.strokeStyle = 'black';
+        ctx.stroke();
+        ctx.fillText("there is some text stuff here", 300, 300);
+      },
+      update: function() {
+
+      }
+    };
+  }
+};
+spawnManager.addAssociation("Spike", spikeSpawner);
+
+var tileSpawner = {
+  new: function(obj) {
+    return {
+      render: function () {
+
+      },
+      update: function() {
+
+      }
+    };
+  }
+};
+spawnManager.addAssociation("Tile", tileSpawner);
+spawnManager.getLocations(map.objlayers)
 
 /**
  * @function masterLoop
@@ -71,12 +114,13 @@ function update(elapsedTime) {
   // update the player
   player.update(elapsedTime);
   boss.update(elapsedTime, player.position);
+  gui.update(elapsedTime);
+  MemoryBoss.update(elapsedTime, player.position, canvas);
 
   em.updateEntity(player);
   em.updateEntity(boss);
 
-  em.collide();
-
+  //gui.update(elapsedTime);
 }
 
 /**
@@ -109,25 +153,25 @@ function render(elapsedTime, ctx) {
   */
 function renderWorld(elapsedTime, ctx) {
 	ctx.drawImage(
-		background,
-		0, 0, 640, 400,
-		0, 0, canvas.width, canvas.height);
+	background,
+	0, 0, 640, 400,
+	0, 0, canvas.width, canvas.height);
 
-  map.getLayers().forEach(function(layer) {
-    layer.render(ctx);
-  });
+  //map.getLayers().forEach(function(layer) {
+  //  layer.render(ctx);
+  //});
 
   // Render the player
-	ctx.save();
+  ctx.save();
   player.render(elapsedTime, ctx);
-	ctx.restore();
+  ctx.restore();
 
   // Render Boss
   boss.render(elapsedTime, ctx);
-  gui.render(elapsedTime, ctx)
+  gui.render(elapsedTime, ctx);
+  spawnManager.render(elapsedTime, ctx);
 }
 
-// HEALTH
-function damagePlayer() {
-	player.damage();
-}
+
+  // spawnManager.render(ctx, elapsedTime);
+  // gui.render(elapsedTime, ctx);

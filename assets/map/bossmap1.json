@@ -13,7 +13,7 @@
         }, 
         {
          "draworder":"topdown",
-         "height":49,
+         "height":0,
          "name":"spike",
          "objects":[
                 {
@@ -112,9 +112,17 @@
                  "y":339
                 }],
          "opacity":1,
+         "properties":
+            {
+             "spawning":true
+            },
+         "propertytypes":
+            {
+             "spawning":"bool"
+            },
          "type":"objectgroup",
          "visible":true,
-         "width":64,
+         "width":0,
          "x":0,
          "y":0
         }],

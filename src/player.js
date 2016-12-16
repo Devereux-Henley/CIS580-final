@@ -181,7 +181,10 @@ function Player(position) {
   this.health = 6;
   this.stamina = 100;
   // COLLISIONS
+<<<<<<< HEAD
   this.shape = PLAYER_SHAPE;
+=======
+>>>>>>> ff2c9a7c4921c3cd6834bb51126c16ad08b1364a
   this.tag = "player";
   this.points = [
 	{
@@ -266,10 +269,17 @@ Player.prototype.still = function() {
 Player.prototype.damage = function() {
   this.health--;
 	if(this.health == 0) {
+<<<<<<< HEAD
 		// gameover
 	}
 	else {
 		//this.gui.damage();
+=======
+		// gameover
+	}
+	else {
+		//this.gui.damage();
+>>>>>>> ff2c9a7c4921c3cd6834bb51126c16ad08b1364a
 	}
 }
 
@@ -285,7 +295,10 @@ Player.prototype.onCollision = function(entity) {
 		case "asdf":
 		case "boss":
 			this.damage();
+<<<<<<< HEAD
       console.log("ahh real monsters!");
+=======
+>>>>>>> ff2c9a7c4921c3cd6834bb51126c16ad08b1364a
 			break;
 		case "boss2":
 			this.damage();
@@ -383,10 +396,13 @@ Player.prototype.update = function(elapsedTime) {
     if (this.dodgeTimer > DODGE_DELAY) {
         this.dodgeTimer = 0;
     }
+<<<<<<< HEAD
 
     if (this.state.moveType == 'DODGING') {
 
     }
+=======
+>>>>>>> ff2c9a7c4921c3cd6834bb51126c16ad08b1364a
 
     if (this.timer > RENDER_TIMER) {
         this.renderPosition++;

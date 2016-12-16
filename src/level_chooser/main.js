@@ -1,4 +1,3 @@
-// @flow
 
 const CELLSIZE = 150;
 
@@ -48,7 +47,7 @@ class Button {
     level: Level
     state: {} */
     constructor(
-        x, y, width, height, level/*: Level */, state
+        x, y, width, height, level/*: Level */, state, winCondition, inGame
     ) {
         this.x = x;
         this.y = y;
@@ -56,21 +55,36 @@ class Button {
         this.width = height;
         this.level = level;
         this.state = state;
+        this.won = winCondition;
+        this.inGame = inGame;
     }
 
     render(
         ctx/*: CanvasRenderingContext2D */
     ) {
-        ctx.fillStyle = 'black';
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-        ctx.fillStyle = 'red';
-        ctx.font = 'bold 20px sans-serif';
-        ctx.fillText(this.level.getTitle(), this.x + 6, this.y + this.height - 6, CELLSIZE - 12);
-
-        if (this.state[this.level.getTitle()] || 0 > 0) {
-            ctx.fillStyle = 'black';
-            ctx.fillText('✓', this.x-16, this.y+8);
+      if(this.inGame == null){
+        if(this.won == null){
+          ctx.fillStyle = 'black';
         }
+        else if(this.won == false){
+          ctx.fillStyle = '#990000';
+        }
+        else if(this.won == true){
+          ctx.fillStyle = 'green';
+        }
+          ctx.fillRect(this.x, this.y, this.width, this.height);
+          ctx.fillStyle = 'red';
+          if(this.won == false){
+              ctx.fillStyle = 'white';
+          }
+          ctx.font = 'bold 20px sans-serif';
+          ctx.fillText(this.level.getTitle(), this.x + 6, this.y + this.height - 6, CELLSIZE - 12);
+
+          if (this.state[this.level.getTitle()] || 0 > 0) {
+              ctx.fillStyle = 'black';
+              ctx.fillText('✓', this.x-16, this.y+8);
+          }
+      }
     }
 }
 
@@ -90,6 +104,8 @@ class LevelSwitcher {
         this._currentLevel = null;
         this._levels = levels;
         this.loadState();
+        this.won = null;
+        this.currentButton = null;
 
         canvas.onmousedown = this._mouseClick.bind(this);
         canvas.onmousemove = this._mouseMove.bind(this);
@@ -103,7 +119,7 @@ class LevelSwitcher {
                 row_x = padding;
             }
             this._buttons.push(
-                new Button(row_x, row_y, CELLSIZE, CELLSIZE, level, this._state));
+                new Button(row_x, row_y, CELLSIZE, CELLSIZE, level, this._state, this.won, this._currentLevel));
             row_x += CELLSIZE + padding;
             i += 1;
         }
@@ -120,9 +136,10 @@ class LevelSwitcher {
     ) {
         this._mouseXY = {x: ev.offsetX, y: ev.offsetY};
         let buttonOver = this._buttonOver();
-        if (buttonOver !== null) {
+        if (buttonOver !== null && this._currentLevel == null) {
             this._currentLevel = buttonOver.level;
             this._currentLevel.start();
+            this.currentButton = buttonOver;
         }
     }
 
@@ -161,7 +178,21 @@ class LevelSwitcher {
         } else {
             this._currentLevel.update(dt);
             if (this._currentLevel !== null && this._currentLevel.hasEnded()) {
+              console.log(this._buttons, this.currentButton);
                 this._currentLevel = null;
+                for (var i = 0; i < this._buttons.length; i++) {
+                  if(this._buttons[i] == this.currentButton){
+                    this._buttons[i].won = false;
+                  }
+                }
+            }
+            else if(this._currentLevel !== null && this._currentLevel.hasWon()){
+              this._currentLevel = null;
+              for (var i = 0; i < this._buttons.length; i++) {
+                if(this._buttons[i] == this.currentButton){
+                  this._buttons[i].won = true;
+                }
+              }
             }
         }
     }

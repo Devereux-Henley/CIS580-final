@@ -44,6 +44,7 @@ class Level extends AbstractLevel {
         this.player = new Player({x: 204, y: 204});
         this.player.width = 24;
         this.player.height = 32;
+        this.boulders = [];
         this.map = new Map(1, mapdata);
         this.gui = new Gui(this.player);
         this.portals = [];
@@ -51,21 +52,20 @@ class Level extends AbstractLevel {
         var self = this;
         var portalSpawn = {
           new: function(portal){
-
             var myPortal = {
               x: portal.x,
               y: portal.y,
               render:function(dt, ctx) {
-                //if(portal.properties.off){
-                  //ctx.drawImage('assets/boulder.png',
-                    //0, 0, portal.width, portal.height,
-                    //portal.width/2,portal.height/2,portal.width/2,portal.height/2);
-                //}
+                if(portal.properties.off){
+                ctx.drawImage('assets/boulder.png',
+                0, 0, portal.width, portal.height,
+                portal.width/2,portal.height/2,portal.width/2,portal.height/2);
+                }
               },
               update:function(dt) {
-                  //if(collide.boulder){
-                  //  portal.off = true;
-                  //}
+                  if(checkcircle(this, self.boulders.forEach(function(b){b})){
+                    portal.off = true;
+                  }
               }
             };
             //console.log(myPortal);

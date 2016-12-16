@@ -1,6 +1,7 @@
 "use strict";
 
 const input = require('./inputHandler').inputState;
+//const Gui = require('./gui');
 
 /* Constants */
 const PLAYER_SPEED = 2.0;
@@ -11,6 +12,8 @@ const STAMINA_DECAY = 2;
 const STAMINA_RECHARGE = 1;
 const DODGE_END = 4 * RENDER_TIMER;
 const DODGE_DELAY = 10 * RENDER_TIMER;
+const PLAYER_SHAPE = "circle";
+const PLAYER_RADIUS = 16;
 
 const EAST_WALK = [new SheetPosition(0, 96),
     new SheetPosition(24, 96),
@@ -111,6 +114,10 @@ function Player(position) {
 	this.state = new PlayerState('STILL', 'NORMAL');
 	this.renderSource = new Image();
 	this.renderSource.src = 'assets/rpg_sprite_walk.png';
+  this.width = 24;
+  this.height = 32;
+  this.radius = PLAYER_RADIUS;
+  this.circle = {x: this.position.x + 12, y: this.position.y + 16, radius: 12};
 	this.timer = 0;
   this.dodgeTimer = 0;
 	this.renderPosition = 0;
@@ -174,30 +181,32 @@ function Player(position) {
   this.health = 6;
   this.stamina = 100;
   // COLLISIONS
-  this.shape = "square";
+  this.shape = PLAYER_SHAPE;
   this.tag = "player";
   this.points = [
 	{
 	  // TOP LEFT CORNER
-	  x: this.x,
-	  y: this.y
+	  x: this.position.x,
+	  y: this.position.y
 	},
 	{
 	  // TOP RIGHT CORNER
-	  x: this.x + this.width,
-	  y: this.y
+	  x: this.position.x + this.width,
+	  y: this.position.y
 	},
 	{
 	  // BOTTOM LEFT CORNER
-	  x: this.x,
-	  y: this.y + this.height
+	  x: this.position.x,
+	  y: this.position.y + this.height
 	},
 	{
 	  // BOTTOM RIGHT CORNER
-	  x: this.x + this.width,
-	  y: this.y + this.height
+	  x: this.position.x + this.width,
+	  y: this.position.y + this.height
 	}
   ];
+
+  //this.gui = new Gui(this);
 }
 
 Player.prototype.walk = function() {
@@ -255,7 +264,13 @@ Player.prototype.still = function() {
 }
 
 Player.prototype.damage = function() {
-    this.health--;
+  this.health--;
+	if(this.health == 0) {
+		// gameover
+	}
+	else {
+		//this.gui.damage();
+	}
 }
 
 Player.prototype.getHealth = function() {
@@ -265,9 +280,15 @@ Player.prototype.getHealth = function() {
 // Handle Collisions
 Player.prototype.onCollision = function(entity) {
 	switch(entity.tag) {
-		case "boss1":
+		case "player":
+		case "":
+		case "asdf":
+		case "boss":
+			this.damage();
+      console.log("ahh real monsters!");
 			break;
 		case "boss2":
+			this.damage();
 			break;
 		case "spear":
 			break;
@@ -303,7 +324,6 @@ Player.prototype.update = function(elapsedTime) {
 
     var updateSpeed = PLAYER_SPEED;
 
-    console.log(this.stamina);
     if (this.state.moveType == 'DODGING') {
         updateSpeed = DODGE_SPEED;
         this.dodgeTimer += elapsedTime;
@@ -397,8 +417,9 @@ Player.prototype.render = function(elapsedTime, ctx) {
     ctx.drawImage(
         this.renderSource,
         this.currentRender.x, this.currentRender.y, this.currentRender.width, this.currentRender.height,
-        0, 0, 24, 32);
+        0, 0, this.width, this.height);
     ctx.restore();
+
 }
 
 

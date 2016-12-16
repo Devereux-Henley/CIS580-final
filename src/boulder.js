@@ -41,7 +41,7 @@ Boulder.prototype.onCollision = function(entity)
     case "player":
 
       break;
-    case "pillar":
+    case "plillar":
 
       break;
     case "crate":

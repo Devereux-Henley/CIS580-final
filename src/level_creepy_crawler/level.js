@@ -3,7 +3,7 @@
 const {Level: AbstractLevel} = require("../level_chooser/main");
 const {Map} = require("../map");
 const Player = require("../player");
-const {Gui} = require('../gui');
+const Gui = require('../gui');
 const vector = require('../vector');
 const EntityManager = require('../entity-manager');
 const mapdata = require('./tileMap');
@@ -31,7 +31,6 @@ class Level extends AbstractLevel {
 
     start() {
         this.player = new Player({x: 500, y: 500});
-        this.player.tag = "";
         this.map = new Map(2, mapdata);
         this.gui = new Gui(this.player);
         this.boss = new Boss(this.player);
@@ -125,6 +124,45 @@ class Boss {
     }
 }
 
+class ElBlobbo {
+    /*::
+    position: {
+        x: number,
+        y: number
+    }
+    player: Player
+    renderTick: number
+    collider: Collider
+    */
+    constructor(player) {
+        this.player = player;
+        this.position = {
+            x: 200,
+            y: 200
+        };
+        this.renderTick = 0;
+        this.collider = new Collider(this.position, (a)=>null);
+    }
+
+    render(
+        dt,
+        ctx/*: CanvasRenderingContext2D */
+    ) {
+        ctx.fillStyle = "green";
+		ctx.beginPath();
+		ctx.arc(this.position.x, this.position.y, this.size, 0, 2*Math.PI);
+		ctx.fill();
+    }
+
+    update(dt) {
+        let speed = .04 * dt;
+        let norm = vector.scale(vector.normalize(vector.subtract(this.player.position, this.position)), speed);
+
+        this.position.x += norm.x;
+        this.position.y += norm.y;
+    }
+}
+
 function buildImage(src) {
     let img = new Image();
     img.src = src;
@@ -144,7 +182,7 @@ class Collider {
         position/*: Vector */,
         onCollision/*: (any) */
     ) {
-        this.tag = "asdf";
+        this.tag = "boss";  // CHECK
         this.position = position;
         this.onCollision = onCollision;
         this.shape = "circle";

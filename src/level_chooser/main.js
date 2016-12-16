@@ -1,7 +1,8 @@
 
 
 const CELLSIZE = 150;
-
+var chooseLevel = new Audio();
+chooseLevel.src = "assets/boulderHittingWood.wav";
 class Level {
     hasEnded()/*: bool */ {
         return false;
@@ -141,6 +142,7 @@ class LevelSwitcher {
             this._currentLevel = buttonOver.level;
             this._currentLevel.start();
             this.currentButton = buttonOver;
+            chooseLevel.play();
         }
     }
 

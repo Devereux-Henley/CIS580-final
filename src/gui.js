@@ -5,7 +5,6 @@ var hearts = [3];
 for (var i = 0; i < 3; i++) {
 		hearts[i] = new Image();
 		hearts[i].src = 'assets/heart_full.png';
-		console.log(hearts[i].src);
 }
 
 function Gui(p){

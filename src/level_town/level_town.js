@@ -3,7 +3,7 @@
 const {Level: AbstractLevel} = require("../level_chooser/main");
 const {Map} = require("../map");
 const Player = require("../player");
-const {Gui} = require('../gui');
+const Gui = require('../gui');
 const vector = require('../vector');
 const SpawnManager = require('../SpawnManager');
 const mapdata = require('./town_map');
@@ -63,9 +63,11 @@ class Level extends AbstractLevel {
                 }
               },
               update:function(dt) {
-                  if(checkcircle(this, self.boulders.forEach(function(b){b})){
+                this.boulders.forEach(function(b){
+                  if(checkcircle(b, this)){
                     portal.off = true;
                   }
+                });
               }
             };
             //console.log(myPortal);
@@ -100,6 +102,7 @@ class Level extends AbstractLevel {
         }
         this.player.render(dt, ctx);
         this.boss.render(dt, ctx);
+        this.gui.render(dt, ctx);
         ctx.restore();
         }
     getTitle() {

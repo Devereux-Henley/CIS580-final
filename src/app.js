@@ -11,6 +11,8 @@ const {Gui} = require('./gui');
 var canvas = document.getElementById('screen');
 
 const LevelCreepyCrawler = require('./level_creepy_crawler/level').Level;
+const LevelTown = require('./level_town/level_town').Level;
+
 const levelSwitcher = new LevelSwitcher(canvas, [
     {
         getTitle: ()=>"Level 1",
@@ -21,6 +23,7 @@ const levelSwitcher = new LevelSwitcher(canvas, [
         start: ()=>{},
     },
     new LevelCreepyCrawler({width: canvas.width, height: canvas.height}),
+    new LevelTown({width: canvas.width, height: canvas.height}),
 ]);
 
 /* Global variables */

@@ -5,6 +5,10 @@
   * A class representing a boss in the game
   */
 module.exports = exports = MemoryBoss;
+const map = require('./assets/map/ddr.json');
+require('.map.js');
+
+var mainMap = new Map(1, map);
 
 /**
   * @constructor Boss
@@ -28,8 +32,8 @@ function MemoryBoss(position, size) {
   * @param {DOMHighResTimeStamp} elapedTime
   */
 Boss.prototype.update = function(elapsedTime, playerPosition, canvas) {
-  while (this.pattern.count != 0 && playerPosition != onblacktile) {
-    if(tilePlayerIsOn == this.pattern[0]) {
+  while (this.pattern.count != 0) {
+    if(layers.getLayerByName("MainLayer").getTile(playerPosition.x / 16, playerPosition.y / 16).id != 715) {
       playerPosition.x = canvas.width / 2;
       playerPosition.y = canvas.height / 2;
       this.pattern.splice(0, 1);
@@ -56,7 +60,7 @@ Boss.prototype.displayNewPattern = function(layers, ctx){
   var count = 0;
   var displaying = false;
   while (count < this.pattern.count) {
-    layers[this.pattern[count]].render();
+    layers.getLayerByName(this.pattern[count]).render();
 
     if(displaying == false){
       setTimeout(function(){
@@ -66,4 +70,8 @@ Boss.prototype.displayNewPattern = function(layers, ctx){
       displaying = true;
     }
   }
+}
+
+Boss.prototype.render = function(ctx){
+  mainMap.getLayerByName("MainLayer").render(ctx);
 }

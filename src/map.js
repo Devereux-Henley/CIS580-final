@@ -52,11 +52,11 @@ function Map(scale, data) {
             ++k;
           }
           //console.log(layer);
-          map[i].push(new Tile(self.tilesets[k], datum, layer.name, layer.properties));
+          map[i].push(new Tile(self.tilesets[k], datum));
         }
       }
     }
-    self.layers.push(new Layer(map, self));
+    self.layers.push(new Layer(map, self, layer.name, layer.properties));
   });
 }
 

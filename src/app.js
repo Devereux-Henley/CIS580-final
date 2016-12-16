@@ -23,6 +23,8 @@ const levelSwitcher = new LevelSwitcher(canvas, [
     new LevelCreepyCrawler({width: canvas.width, height: canvas.height}),
 ]);
 
+const MemoryMap = require('./ddr/boss');
+
 /* Global variables */
 // var game = new Game(canvas, update, render);
 var game = new Game(

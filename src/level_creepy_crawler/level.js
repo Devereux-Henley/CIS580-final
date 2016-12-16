@@ -11,21 +11,6 @@ const img = buildImage('assets/level_creepy_crawler/crawler.png');
 
 const SQRT = Math.sqrt(2) * 16;
 
-function debounce(func, wait, immediate) {
-    var timeout;
-    return function() {
-        var context = this, args = arguments;
-        var later = function() {
-            timeout = null;
-            if (!immediate) func.apply(context, args);
-        };
-        var callNow = immediate && !timeout;
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-        if (callNow) func.apply(context, args);
-    };
-};
-
 class CollisionEntity {
     /*::
     onCollide: any
@@ -251,6 +236,7 @@ class Boss {
     player: Player
     renderTick: number
     collider: CircleEntity
+    _chunks: any
     */
     constructor(player) {
         this.player = player;
@@ -260,7 +246,15 @@ class Boss {
         };
         this.renderTick = 0;
         this.collider = new CircleEntity({x: this.position.x, y: this.position.y, radius: 60});
-        this.collider.onCollide = (other) => console.log('asdf');
+        this.collider.onCollide = (other) => {
+            if (other.width == 20) return;
+            if (`${other.x}_${other.y}` in this._chunks) {
+
+            } else {
+                this._chunks[`${other.x}_${other.y}`] = {x: other.x, y: other.y};
+            }
+        };
+        this._chunks = {};
     }
 
     render(
@@ -270,21 +264,19 @@ class Boss {
         this.renderTick += 1;
         ctx.save();
         ctx.translate(this.position.x, this.position.y);
-        ctx.save();
-        ctx.rotate(.2*this.renderTick);
-        ctx.drawImage(img, -60, -60);
+        for (let i=0; i<3-Object.keys(this._chunks).length; i++) {
+            ctx.save();
+            ctx.rotate(.2*this.renderTick);
+            ctx.drawImage(img, -60, -60);
+            ctx.restore();
+            ctx.translate(0, -40);
+        }
         ctx.restore();
-        ctx.translate(0, -40);
-        ctx.save();
-        ctx.rotate(-.3*this.renderTick);
-        ctx.drawImage(img, -60, -60);
-        ctx.restore();
-        ctx.translate(0, -40);
-        ctx.save();
-        ctx.rotate(.1*this.renderTick);
-        ctx.drawImage(img, -60, -60);
-        ctx.restore();
-        ctx.restore();
+        for (let value of Object.values(this._chunks)) {
+            ctx.save();
+            ctx.drawImage(img, value.x, value.y);
+            ctx.restore();
+        }
     }
 
     update(dt) {

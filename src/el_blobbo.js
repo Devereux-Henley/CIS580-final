@@ -1,13 +1,16 @@
 // @flow
 
-const {Level: AbstractLevel} = require("../level_chooser/main");
-const {Map} = require("../map");
-const Player = require("../player");
-const Gui = require('../gui');
-const vector = require('../vector');
-const EntityManager = require('../entity-manager');
-const mapdata = require('./tileMap');
+const {Level: AbstractLevel} = require("./level_chooser/main");
+const {Map} = require("./map");
+const Player = require("./player");
+const Gui = require('./gui');
+const vector = require('./vector');
+const EntityManager = require('./entity-manager');
+const mapdata = require('../assets/map/bossmap1');
 const img = buildImage('assets/level_creepy_crawler/crawler.png');
+
+const BOSS_SIZE = 32;
+const BOSS_SPEED = 2;
 
 /*::
 import type {Vector} from "../vector";
@@ -32,9 +35,9 @@ class Level extends AbstractLevel {
     start() {
         this.player = new Player({x: 500, y: 500});
         this.player.tag = "player";
-        this.map = new Map(2, mapdata);
+        this.map = new Map(1, mapdata);
         this.gui = new Gui(this.player);
-        this.boss = new Boss(this.player);
+        this.boss = new ElBlobbo(this.player, 4);
         this.em = new EntityManager(this.size.width, this.size.height, 64);
         this.em.addEntity(this.player);
         this.em.addEntity(this.boss.collider);
@@ -51,7 +54,9 @@ class Level extends AbstractLevel {
         }
         this.player.render(dt, ctx);
         this.gui.render(dt, ctx);
+		//console.log("before");
         this.boss.render(dt, ctx);
+		//.log("after");
     }
 
     update(
@@ -65,65 +70,11 @@ class Level extends AbstractLevel {
     }
 
     getTitle() {
-        return "Creepy Crawler";
+        return "El Blobbo";
     }
 }
 
 module.exports = {Level: Level};
-
-class Boss {
-    /*::
-    position: {
-        x: number,
-        y: number
-    }
-    player: Player
-    renderTick: number
-    collider: Collider
-    */
-    constructor(player) {
-        this.player = player;
-        this.position = {
-            x: 200,
-            y: 200
-        };
-        this.renderTick = 0;
-        this.collider = new Collider(this.position, (a)=>null);
-    }
-
-    render(
-        dt,
-        ctx/*: CanvasRenderingContext2D */
-    ) {
-        ctx.fillRect(this.position.x-60, this.position.y-60, 120, 120);
-        this.renderTick += 1;
-        ctx.save();
-        ctx.translate(this.position.x, this.position.y);
-        ctx.save();
-        ctx.rotate(.2*this.renderTick);
-        ctx.drawImage(img, -60, -60);
-        ctx.restore();
-        ctx.translate(0, -40);
-        ctx.save();
-        ctx.rotate(-.3*this.renderTick);
-        ctx.drawImage(img, -60, -60);
-        ctx.restore();
-        ctx.translate(0, -40);
-        ctx.save();
-        ctx.rotate(.1*this.renderTick);
-        ctx.drawImage(img, -60, -60);
-        ctx.restore();
-        ctx.restore();
-    }
-
-    update(dt) {
-        let speed = .04 * dt;
-        let norm = vector.scale(vector.normalize(vector.subtract(this.player.position, this.position)), speed);
-
-        this.position.x += norm.x;
-        this.position.y += norm.y;
-    }
-}
 
 class ElBlobbo {
     /*::
@@ -135,7 +86,7 @@ class ElBlobbo {
     renderTick: number
     collider: Collider
     */
-    constructor(player) {
+    constructor(player, size) {
         this.player = player;
         this.position = {
             x: 200,
@@ -143,13 +94,21 @@ class ElBlobbo {
         };
         this.renderTick = 0;
         this.collider = new Collider(this.position, (a)=>null);
+		
+		this.size = BOSS_SIZE * size;
+		this.speed = BOSS_SPEED;
+		this.tag = "boss";
+		this.shape = "circle";
+		this.radius = this.size;
+		this.velocity = {x: 0, y: 0};
+		this.immune = false;
     }
 
     render(
         dt,
         ctx/*: CanvasRenderingContext2D */
     ) {
-        ctx.fillStyle = "green";
+		ctx.fillStyle = "green";
 		ctx.beginPath();
 		ctx.arc(this.position.x, this.position.y, this.size, 0, 2*Math.PI);
 		ctx.fill();

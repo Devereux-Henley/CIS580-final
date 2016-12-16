@@ -18,9 +18,30 @@ module.exports = exports = Boss;
 function Boss(position, size) {
   this.size = BOSS_SIZE * size;
   this.speed = BOSS_SPEED;
-  this.tag = "boss2";
-  this.shape = "circle";
-  this.radius = this.size;
+  this.tag = "boss";
+  this.shape = "square";
+  this.points = [
+	{
+	  // TOP LEFT CORNER
+	  x: this.x,
+	  y: this.y
+	},
+	{
+	  // TOP RIGHT CORNER
+	  x: this.x + this.width,
+	  y: this.y
+	},
+	{
+	  // BOTTOM LEFT CORNER
+	  x: this.x,
+	  y: this.y + this.height
+	},
+	{
+	  // BOTTOM RIGHT CORNER
+	  x: this.x + this.width,
+	  y: this.y + this.height
+	}
+  ];
   this.position = position;
   this.velocity = {x: 0, y: 0};
   this.immune = false;

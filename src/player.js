@@ -1,6 +1,7 @@
 "use strict";
 
 const input = require('./inputHandler').inputState;
+//const Gui = require('./gui');
 
 /* Constants */
 const PLAYER_SPEED = 2.0;
@@ -112,7 +113,7 @@ function Player(position) {
 	this.renderSource = new Image();
 	this.renderSource.src = 'assets/rpg_sprite_walk.png';
 	this.timer = 0;
-  this.dodgeTimer = 0;
+    this.dodgeTimer = 0;
 	this.renderPosition = 0;
 	this.renderSources =
 		{'STILL':
@@ -198,6 +199,8 @@ function Player(position) {
 	  y: this.y + this.height
 	}
   ];
+  
+  //this.gui = new Gui(this);
 }
 
 Player.prototype.walk = function() {
@@ -256,6 +259,12 @@ Player.prototype.still = function() {
 
 Player.prototype.damage = function() {
     this.health--;
+	if(this.health == 0) {
+		// gameover
+	}
+	else {
+		//this.gui.damage();
+	}
 }
 
 Player.prototype.getHealth = function() {
@@ -265,9 +274,14 @@ Player.prototype.getHealth = function() {
 // Handle Collisions
 Player.prototype.onCollision = function(entity) {
 	switch(entity.tag) {
-		case "boss1":
+		case "player":
+		case "":
+		case "asdf":
+		case "boss":
+			this.damage();
 			break;
 		case "boss2":
+			this.damage();
 			break;
 		case "spear":
 			break;
@@ -381,6 +395,8 @@ Player.prototype.update = function(elapsedTime) {
     } else {
         this.currentRender = nextRender;
     }
+	
+	//this.gui.update(elapsedTime);
 }
 
 /**
@@ -399,6 +415,8 @@ Player.prototype.render = function(elapsedTime, ctx) {
         this.currentRender.x, this.currentRender.y, this.currentRender.width, this.currentRender.height,
         0, 0, 24, 32);
     ctx.restore();
+	
+	//this.gui.render(elapsedTime, ctx);
 }
 
 

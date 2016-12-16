@@ -31,7 +31,7 @@ class Level extends AbstractLevel {
 
     start() {
         this.player = new Player({x: 500, y: 500});
-        this.player.tag = "player";
+        this.player.tag = "";
         this.map = new Map(2, mapdata);
         this.gui = new Gui(this.player);
         this.boss = new Boss(this.player);
@@ -183,7 +183,7 @@ class Collider {
         position/*: Vector */,
         onCollision/*: (any) */
     ) {
-        this.tag = "boss";  // CHECK
+        this.tag = "asdf";
         this.position = position;
         this.onCollision = onCollision;
         this.shape = "circle";

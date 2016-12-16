@@ -165,6 +165,10 @@ class Level extends AbstractLevel {
         return this.player.health <= 0;
     }
 
+    hasWon() {
+        return Object.keys(this.boss._chunks).length >= 3;
+    }
+
     start() {
         this.player = new Player({x: 500, y: 500});
         this.player.tag = "";

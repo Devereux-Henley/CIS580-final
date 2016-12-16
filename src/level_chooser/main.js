@@ -1,8 +1,6 @@
 
 
 const CELLSIZE = 150;
-var chooseLevel = new Audio();
-chooseLevel.src = "assets/boulderHittingWood.wav";
 class Level {
     hasEnded()/*: bool */ {
         return false;

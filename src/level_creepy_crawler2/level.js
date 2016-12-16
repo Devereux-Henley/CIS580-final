@@ -133,10 +133,6 @@ class CollisionManager {
         return Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2) < Math.pow(a.radius + b.radius, 2);
     }
     render(dt, ctx) {
-        ctx.strokeStyle = 'green';
-        for (let actor of this._actors) {
-            actor.render(dt, ctx);
-        }
     }
 }
 

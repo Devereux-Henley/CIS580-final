@@ -15,6 +15,7 @@ var canvas = document.getElementById('screen');
 const LevelCreepyCrawler = require('./level_creepy_crawler/level').Level;
 const ElBlobbo = require('./el_blobbo').Level;
 
+
 const levelSwitcher = new LevelSwitcher(canvas, [
     new ElBlobbo({width: canvas.width, height: canvas.height}),
     new LevelCreepyCrawler({width: canvas.width, height: canvas.height})
@@ -40,27 +41,6 @@ var background = new Image();
 //var map = new Map.Map(2, require('../assets/map/bossmap1.json'));
 background.src = 'assets/background.png';
 
-// Initalize entity manager
-var em = new EntityManager(canvas.width, canvas.height, 32);
-
-em.addEntity(player);
-em.addEntity(boss);
-
-var spawnManager = new SpawnManager();
-var spikeSpawner = {
-  new: function(obj) {
-    return null;
-  }
-};
-spawnManager.addAssociation("Spike", spikeSpawner);
-
-var tileSpawner = {
-  new: function(obj) {
-    return null;
-  }
-};
-spawnManager.addAssociation("Tile", tileSpawner);
-
 /**
  * @function masterLoop
  * Advances the game in sync with the refresh rate of the screen
@@ -85,12 +65,6 @@ function update(elapsedTime) {
   player.update(elapsedTime);
   boss.update(elapsedTime, player.position);
 
-
-  em.updateEntity(player);
-  em.updateEntity(boss);
-
-  em.collide();
-  spawnManager.update(elapsedTime);
   //gui.update(elapsedTime);
 }
 
@@ -140,6 +114,6 @@ function renderWorld(elapsedTime, ctx) {
   // Render Boss
   boss.render(elapsedTime, ctx);
 
-  spawnManager.render(ctx, elapsedTime);
-  //gui.render(elapsedTime, ctx);
+  // spawnManager.render(ctx, elapsedTime);
+  // gui.render(elapsedTime, ctx);
 }

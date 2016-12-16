@@ -3,9 +3,12 @@
 const {Level: AbstractLevel} = require("./level_chooser/main");
 const {Map} = require("./map");
 const Player = require("./player");
+const Spike = require("./spike");
+const Trigger = require("./trigger");
 const Gui = require('./gui');
 const vector = require('./vector');
 const EntityManager = require('./entity-manager');
+const SpawnManager = require('./spawnManager');
 const mapdata = require('../assets/map/bossmap1');
 const img = buildImage('assets/level_creepy_crawler/crawler.png');
 
@@ -29,9 +32,7 @@ class Level extends AbstractLevel {
     em: EntityManager
     size: {width: number, height: number}
     */
-    constructor(
-        size/*: {width: number, height: number} */
-    ) {
+    constructor(size) {
         super();
         this.size = size;
     }
@@ -43,13 +44,28 @@ class Level extends AbstractLevel {
         this.boss = new ElBlobbo(this.player, 4);
         this.em = new EntityManager(this.size.width, this.size.height, 64);
         this.em.addEntity(this.player);
-        this.em.addEntity(this.boss);
+        this.em.addEntity(this.boss.collider);
+
+        this.spawnManager = new SpawnManager();
+        let spikeSpawner = {
+          new: function(obj) {
+            return new Spike({x:176, y:176});
+          }
+        };
+        let triggerSpawner = {
+          new: function(obj) {
+            return new Trigger({x:464, y:336});
+          }
+        }
+        this.spawnManager.addAssociation("Spike", spikeSpawner);
+        this.spawnManager.addAssociation("Trigger", triggerSpawner);
+        this.spawnManager.getLocations(this.map.objlayers);
+
+        // console.log(this.spawnManager.objects);
+        // console.log(this.spawnManager.associations);
     }
 
-    render(
-        dt /*: number */,
-        ctx /*: CanvasRenderingContext2D */
-    ) {
+    render(dt, ctx) {
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         for (let layer of this.map.getLayers()) {
@@ -57,9 +73,8 @@ class Level extends AbstractLevel {
         }
         this.player.render(dt, ctx);
         this.gui.render(dt, ctx);
-		//console.log("before");
+        this.spawnManager.render(dt, ctx);
         this.boss.render(dt, ctx);
-		//.log("after");
     }
 
     onCollision(entity) {
@@ -70,11 +85,10 @@ class Level extends AbstractLevel {
       }
     }
 
-    update(
-        dt/*: number */
-    ) {
+    update(dt) {
         this.player.update(dt);
         this.boss.update(dt);
+        this.spawnManager.update(dt);
         this.em.updateEntity(this.player);
         this.em.updateEntity(this.boss);
         this.em.collide();
@@ -107,28 +121,23 @@ class ElBlobbo {
         this.circle = this.position;
         this.renderTick = 0;
         this.collider = new Collider(this.position, (a)=>null);
-
-		this.size = BOSS_SIZE * size;
-		this.speed = BOSS_SPEED;
-		this.tag = "boss";
-		this.shape = BLOB_SHAPE;
-		this.radius = this.size;
-		this.velocity = {x: 0, y: 0};
-		this.immune = false;
-    this.onCollision = (a) => null;
+    		this.size = BOSS_SIZE * size;
+    		this.speed = BOSS_SPEED;
+    		this.tag = "boss";
+    		this.shape = BLOB_SHAPE;
+    		this.radius = this.size;
+    		this.velocity = {x: 0, y: 0};
+    		this.immune = false;
     }
 
-    render(
-        dt,
-        ctx/*: CanvasRenderingContext2D */
-    ) {
-    ctx.save();
-    ctx.translate(this.position.x, this.position.y);
-		ctx.fillStyle = "green";
-		ctx.beginPath();
-		ctx.arc(0, 0, this.size * .6, 0, 2*Math.PI);
-		ctx.fill();
-    ctx.restore();
+    render(dt, ctx) {
+        ctx.save();
+        ctx.translate(this.position.x, this.position.y);
+    		ctx.fillStyle = "green";
+    		ctx.beginPath();
+    		ctx.arc(0, 0, this.size / 2, 0, 2*Math.PI);
+    		ctx.fill();
+        ctx.restore();
     }
 
     update(dt) {
@@ -137,6 +146,10 @@ class ElBlobbo {
 
         this.position.x += norm.x;
         this.position.y += norm.y;
+    }
+
+    onCollision(entity) {
+
     }
 }
 
@@ -155,10 +168,7 @@ class Collider {
     points: Vector[]
     onCollision: (any)
     */
-    constructor(
-        position/*: Vector */,
-        onCollision/*: (any) */
-    ) {
+    constructor(position, onCollision) {
         this.tag = BLOB_TAG;  // CHECK
         this.position = position;
         this.onCollision = onCollision;

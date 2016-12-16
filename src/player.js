@@ -13,6 +13,7 @@ const STAMINA_RECHARGE = 1;
 const DODGE_END = 4 * RENDER_TIMER;
 const DODGE_DELAY = 10 * RENDER_TIMER;
 const PLAYER_SHAPE = "circle";
+const PLAYER_RADIUS = 16;
 
 const EAST_WALK = [new SheetPosition(0, 96),
     new SheetPosition(24, 96),
@@ -115,7 +116,7 @@ function Player(position) {
 	this.renderSource.src = 'assets/rpg_sprite_walk.png';
   this.width = 24;
   this.height = 32;
-  this.radius = 16;
+  this.radius = PLAYER_RADIUS;
 	this.timer = 0;
     this.dodgeTimer = 0;
 	this.renderPosition = 0;
@@ -283,6 +284,7 @@ Player.prototype.onCollision = function(entity) {
 		case "asdf":
 		case "boss":
 			this.damage();
+      console.log("ahh real monsters!");
 			break;
 		case "boss2":
 			this.damage();

@@ -111,10 +111,13 @@ class ElBlobbo {
         dt,
         ctx/*: CanvasRenderingContext2D */
     ) {
+    ctx.save();
+    ctx.translate(this.position.x, this.position.y);
 		ctx.fillStyle = "green";
 		ctx.beginPath();
-		ctx.arc(this.position.x, this.position.y, this.size / 2, 0, 2*Math.PI);
+		ctx.arc(0, 0, this.size / 2, 0, 2*Math.PI);
 		ctx.fill();
+    ctx.restore();
     }
 
     update(dt) {

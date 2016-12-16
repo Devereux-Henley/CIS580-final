@@ -7,6 +7,7 @@
 module.exports = exports = MemoryBoss;
 const map = require('../../assets/map/ddr.json');
 const Map = require('../map.js');
+const Player = require('../player');
 
 var mainMap = new Map.Map(1, map);
 
@@ -14,7 +15,39 @@ var mainMap = new Map.Map(1, map);
   * @constructor Boss
   * Creates a Boss
   */
-function MemoryBoss(player, canvas) {
+function MemoryBoss(canvas) {
+  this.player = new Player({x: 500, y: 500});
+  this.tag = "memoryBoss";
+  this.cornerTileIds = [];
+  this.cornerTileIds[1] = 893;
+  this.cornerTileIds[2] = 15;
+  this.cornerTileIds[3] = 6;
+  this.cornerTileIds[4] = 31;
+  this.LightUpLayers = [];
+  this.LightUpLayers[893] = "LightUpTopLeft";
+  this.LightUpLayers[15] = "LightUpTopRight";
+  this.LightUpLayers[6] = "LightUpBottomLeft";
+  this.LightUpLayers[31] = "LightUpBottomRight";
+  this.memoryCount = 2;
+  this.memoryDisplayCount = 0;
+  this.pattern = [];
+  this.gameOver = false;
+  this.canvas = canvas;
+  this.count = 0;
+  this.displaying = false;
+  this.displayedNewPattern = false;
+  this.timer = 0;
+  this.displayPatternSound = new Audio();
+  this.displayPatternSound.src = './assets/displayPattern.wav'
+  this.correctSound = new Audio();
+  this.correctSound.src = './assets/correctPattern.wav'
+  this.incorrectSound = new Audio();
+  this.incorrectSound.src = './assets/incorrectPattern.wav'
+  this.soundCounter = 0;
+}
+
+MemoryBoss.prototype.start = function(){
+    this.player = new Player({x: 500, y: 500});
   this.tag = "memoryBoss";
   this.cornerTileIds = [];
   this.cornerTileIds[1] = 893;
@@ -36,17 +69,7 @@ function MemoryBoss(player, canvas) {
   this.displaying = false;
   this.displayedNewPattern = false;
   this.timer = 0;
-  this.displayPatternSound = new Audio();
-  this.displayPatternSound.src = './assets/displayPattern.wav'
-  this.correctSound = new Audio();
-  this.correctSound.src = './assets/correctPattern.wav'
-  this.incorrectSound = new Audio();
-  this.incorrectSound.src = './assets/incorrectPattern.wav'
   this.soundCounter = 0;
-}
-
-MemoryBoss.prototype.start = function(){
-  //this.render();
 }
 
 MemoryBoss.prototype.getTitle = function(){

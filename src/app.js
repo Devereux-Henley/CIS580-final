@@ -23,7 +23,7 @@ const gui = new Gui(player);
 const levelSwitcher = new LevelSwitcher(canvas, [
     new MissleLevel(),
     new ElBlobboLevel(),
-    new MemoryBoss(player, {width: canvas.width, height: canvas.height})
+    new MemoryBoss({width: canvas.width, height: canvas.height})
 ]);
 
 

@@ -46,7 +46,7 @@ class Level extends AbstractLevel {
         this.em.addEntity(this.player);
         this.em.addEntity(this.boss);
 
-        this.spikes = [];
+        // this.spikes = [];
         this.spawnManager = new SpawnManager();
         let spikeSpawner = {
           new: function(obj) {
@@ -62,15 +62,9 @@ class Level extends AbstractLevel {
         this.spawnManager.addAssociation("Trigger", triggerSpawner);
         this.spawnManager.getLocations(this.map.objlayers);
 
-        // console.log(this.spawnManager.objects);
-        // for (let i = 0; i < 4; i++) {
-        //   this.spikes.push(new Spike({x: this.spawnManager.objects[i].x,
-        //                               y: this.spawnManager.objects[i].y}));
-        // }
-        // console.log(this.spikes);
-
-        // console.log(this.spawnManager.objects);
-        // console.log(this.spawnManager.associations);
+        // Add Trigger to EM
+        this.trigger = this.spawnManager.objects[4];
+        this.em.addEntity(this.trigger);
     }
 
     render(dt, ctx) {
@@ -79,10 +73,9 @@ class Level extends AbstractLevel {
         for (let layer of this.map.getLayers()) {
             layer.render(ctx);
         }
+        this.spawnManager.render(dt, ctx);
         this.player.render(dt, ctx);
         this.gui.render(dt, ctx);
-        this.spawnManager.render(dt, ctx);
-        this.spikes.forEach(function(spike) {spike.render(dt, ctx)});
         this.boss.render(dt, ctx);
     }
 
@@ -98,9 +91,9 @@ class Level extends AbstractLevel {
         this.player.update(dt);
         this.boss.update(dt);
         this.spawnManager.update(dt);
-        this.spikes.forEach(function(spike) {spike.update(dt)});
         this.em.updateEntity(this.player);
         this.em.updateEntity(this.boss);
+        this.em.updateEntity(this.trigger);
         this.em.collide();
     }
 

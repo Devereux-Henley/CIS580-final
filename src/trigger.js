@@ -18,6 +18,7 @@ function Trigger(position) {
   this.active = false;
   this.renderSource = new Image();
   this.renderSource.src = 'assets/trigger_active.png';
+
 }
 
 Trigger.prototype.update = function(elapsedTime) {

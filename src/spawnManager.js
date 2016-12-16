@@ -27,7 +27,6 @@ SpawnManager.prototype.getLocations = function(layers) {
             x: layers[i].objects[j].x + (layers[i].objects[j].width / 2),
             y: layers[i].objects[j].y + (layers[i].objects[j].height / 2)
           }
-          console.log(position);
           var spawner = this.associations[layers[i].objects[j].type];
 
           this.objects.push(spawner.new(layers[i].objects[j]));

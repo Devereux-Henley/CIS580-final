@@ -1,13 +1,4 @@
 "use strict;"
-// @flow
-
-// const {Level: AbstractLevel} = require("./level_chooser/main");
-// const {Map} = require("./map");
-// const Player = require("./player");
-// const Gui = require('./gui');
-// const vector = require('./vector');
-// const EntityManager = require('./entity-manager');
-// const mapdata = require('../assets/map/bossmap1');
 
 const SPIKE_TAG = "spike";
 const SPIKE_SHAPE = "square";
@@ -34,9 +25,7 @@ function Spike(position) {
 }
 
 Spike.prototype.update = function(elapsedTime) {
-  // if (trigger.active) {
-  //   this.triggered = true;
-  // }
+
 }
 
 Spike.prototype.render = function(elapsedTime, ctx) {

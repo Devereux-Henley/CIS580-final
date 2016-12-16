@@ -2,8 +2,8 @@
 
 const Vector = require('./vector')
 
-const BOSS_SIZE = 32;
-const BOSS_SPEED = 2;
+const BOSS_SIZE = 24;
+const BOSS_SPEED = 1.5;
 
 /**
   * @module Boss

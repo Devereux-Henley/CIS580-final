@@ -17,14 +17,14 @@ function Trigger(position) {
   this.position = position;
   this.active = false;
   this.renderSource = new Image();
-  this.rednerSource.src = 'assets/trigger_active.png';
+  this.renderSource.src = 'assets/trigger_active.png';
 }
 
-Trigger.prototype.update = function(ctx) {
+Trigger.prototype.update = function(elapsedTime) {
 
 }
 
-Trigger.prototype.render = function(ctx, elapsedTime) {
+Trigger.prototype.render = function(elapsedTime, ctx) {
   if (this.active) {
     ctx.drawImage(this.renderSource, this.position.x, this.position.y);
   }
@@ -35,7 +35,7 @@ Trigger.prototype.onCollision = function(entity) {
     case "player":
       this.active = true;
       break;
-    case default:
+    default:
       this.active = false;
       break;
   }

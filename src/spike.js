@@ -12,23 +12,19 @@ module.exports = exports = Spike;
  */
 function Spike(position) {
   this.tag = "spike";
-  this.Type = "Spike";
-  this.Spawn = true;
   this.renderSource = new Image();
-  this.rednerSource.src = 'assets/spike.png';
+  this.renderSource.src = 'assets/spike.png';
   this.position = position;
   this.shape = "square";
   this.weight, this.height = 64;
-  this.triggered = false;
+  this.triggered = true;
 }
 
-Spike.prototype.update = function(trigger) {
-  if (trigger.active) {
-    this.triggered = true;
-  }
+Spike.prototype.update = function(deltaTime) {
+
 }
 
-Spike.prototype.render = function(ctx, elapsedTime) {
+Spike.prototype.render = function(deltaTime, ctx) {
   if (this.triggered) {
     ctx.drawImage(this.renderSource, this.position.x, this.position.y);
   }

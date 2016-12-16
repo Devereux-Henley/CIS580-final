@@ -128,7 +128,7 @@ Tile.prototype.render = function(ctx) {
 
 
 /**
- * @constructor NullTile
+ * @constructor NullTile`
  * Defines a tile object
  */
 function NullTile(tileset, id) {

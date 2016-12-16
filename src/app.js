@@ -4,6 +4,8 @@
 const Game = require('./game');
 const Boss = require('./boss-2');
 const Player = require('./player');
+const Spike = require('./spike');
+const Trigger = require('./trigger');
 const Map = require('./map');
 const EntityManager = require('./entity-manager');
 const SpawnManager = require('./spawnManager');
@@ -50,22 +52,20 @@ em.addEntity(player);
 em.addEntity(boss);
 
 var spawnManager = new SpawnManager();
-var spikeSpawner = {
-  new: function(obj) {
-    return {
-      render: function (elapsedTime, ctx) {
-    
-        ctx.fillText("there is some text stuff here", 300, 300);
-      },
-      update: function() {
 
-      }
-    };
+var spikeNW = new Spike({x:176, y:176});
+var spikeSW = new Spike({x:176, y:544});
+var spikeNE = new Spike({x:784, y:176});
+var spikeSE = new Spike({x:786, y:544});
+var spikeSpawnerNW = {
+  new: function(obj) {
+    return spikeNW;
   }
 };
-spawnManager.addAssociation("Spike", spikeSpawner);
 
-var tileSpawner = {
+spawnManager.addAssociation("Spike", spikeSpawnerNW);
+
+var triggerSpawner = {
   new: function(obj) {
     return {
       render: function () {
@@ -77,8 +77,10 @@ var tileSpawner = {
     };
   }
 };
-spawnManager.addAssociation("Tile", tileSpawner);
+spawnManager.addAssociation("Trigger", triggerSpawner);
 spawnManager.getLocations(map.objlayers)
+
+var trigger = new Trigger({x:464, y:336});
 
 /**
  * @function masterLoop
@@ -159,6 +161,7 @@ function renderWorld(elapsedTime, ctx) {
   boss.render(elapsedTime, ctx);
   gui.render(elapsedTime, ctx);
   spawnManager.render(elapsedTime, ctx);
+  trigger.render(elapsedTime, ctx);
 }
 
 

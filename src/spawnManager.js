@@ -59,7 +59,6 @@ SpawnManager.prototype.update = function(deltaTime){
 
 SpawnManager.prototype.render = function(deltaTime, ctx){
   this.objects.forEach(function(obj) {
-    console.log(obj);
     obj.render(deltaTime, ctx);
   });
 }

@@ -24,6 +24,7 @@ function Spike(position) {
 
 Spike.prototype.update = function(trigger) {
   if (trigger.active) {
+    spikesPoppingUp.play();
     this.triggered = true;
   }
 }

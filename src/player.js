@@ -3,12 +3,12 @@
 const input = require('./inputHandler').inputState;
 
 /* Constants */
-const PLAYER_SPEED = 2.0;
+const PLAYER_SPEED = 2.5;
 const DODGE_SPEED = 1.5 * PLAYER_SPEED;
-const SPRINT_SPEED = 2.0 * PLAYER_SPEED;
+const SPRINT_SPEED = 2.5 * PLAYER_SPEED;
 const RENDER_TIMER = 200;
-const STAMINA_DECAY = 2;
-const STAMINA_RECHARGE = 1;
+const STAMINA_DECAY = 1;
+const STAMINA_RECHARGE = .5;
 const DODGE_END = 4 * RENDER_TIMER;
 const DODGE_DELAY = 10 * RENDER_TIMER;
 

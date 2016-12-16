@@ -1,7 +1,15 @@
 const Player = require('./player');
 const Map = require('./map');
 const Gui = require('./gui');
+const img = new Image();
+img.src = 'assets/level_creepy_crawler/crawler.png';
 var map = new Map.Map(2, require('../assets/map/bossmap1.json'));
+var playerGettingHit = new Audio();
+playerGettingHit.src = "assets/boulderHittingWall.wav";
+var bossGettingHitByBullet = new Audio();
+bossGettingHitByBullet.src = "assets/beatBoss.wav";
+var bossFiringBullet = new Audio();
+bossFiringBullet.src = "assets/bossGettingHit.wav";
 
 //ripped from:
 //http://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection
@@ -51,6 +59,7 @@ class Missle {
     this.y += speed * dt * diffy / mag;
     if(checkbox(this, this.target)) {
       console.log("player was hit!");
+      playerGettingHit.play();
       this.target.damage();
       console.log(this.gui);
       this.gui.damage();
@@ -61,6 +70,7 @@ class Missle {
       this.owner.radius -= 3;
       this.owner.omega *= 1.05;
       this.owner.maxTime *= 0.95;
+      bossGettingHitByBullet.play();
       console.log(this.owner.radius);
       return false;
     }
@@ -84,10 +94,10 @@ class MissleDude {
   }
 
   render(dt, ctx) {
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
-    ctx.fillStyle = 'green';
-    ctx.fill();
+    ctx.save()
+    ctx.translate(this.x - this.radius, this.y - this.radius);
+    ctx.drawImage(img, 0, 0, 120, 120, 0, 0, this.radius * 2, this.radius * 2);
+    ctx.restore();
     this.missles.forEach((m) => m.render(dt, ctx));
   }
 
@@ -103,6 +113,7 @@ class MissleDude {
       let diffy = this.player.y - this.y;
       let mag = Math.sqrt(diffx*diffx + diffy*diffy);
       this.timer -= 2000;
+      bossFiringBullet.play();
       this.missles.push(new Missle(
         this.x + diffx / mag * rad,
         this.y + diffy / mag * rad,

@@ -28,6 +28,12 @@ function checkCircleBox(circle, box) {
 const SPIKE_TAG = "spike";
 const SPIKE_SHAPE = "square";
 const SPIKE_SIZE = 64;
+var playerWalkingOnSpike = new Audio();
+playerWalkingOnSpike.src = "assets/playerGettingHit.wav";
+var bossHittingSpikes = new Audio();
+bossHittingSpikes.src = "assets/beatBoss.wav";
+var BossHittingPlayer = new Audio();
+BossHittingPlayer.src = "assets/playerGettingHit.wav";
 
 class Spike {
   constructor(x, y) {
@@ -134,6 +140,7 @@ class ElBlobboLevel {
         this.player.position.x += 30 * diffx / mag;
         this.player.position.y += 30 * diffy / mag;
         console.log(this.player.x, this.player.y);
+        BossHittingPlayer.play();
         this.player.damage();
         this.gui.damage();
       }
@@ -141,6 +148,7 @@ class ElBlobboLevel {
       let toRemove = [];
       this.spikes.forEach((s) => {
         if(checkCircleBox(this.boss, s)) {
+          bossHittingSpikes.play();
           this.boss.color[0] = Math.min(this.boss.color[0] + 55, 255);
           this.boss.color[1] = Math.max(this.boss.color[1] - 55, 0);
           toRemove.push(s);

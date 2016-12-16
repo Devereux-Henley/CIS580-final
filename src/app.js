@@ -20,17 +20,7 @@ const MemoryBoss = require('./ddr/boss');
 var player = new Player({x: 500, y: 500});
 const gui = new Gui(player);
 
-const LevelCreepyCrawler = require('./level_creepy_crawler/level').Level;
 const levelSwitcher = new LevelSwitcher(canvas, [
-    {
-        getTitle: ()=>"Level 1",
-        update: (dt)=>update(dt),
-        render: (dt, ctx)=>render(dt, ctx),
-        hasEnded: ()=>false,
-        hasWon: ()=>true,
-        start: ()=>{},
-    },
-    new LevelCreepyCrawler({width: canvas.width, height: canvas.height}),
     new MissleLevel(),
     new ElBlobboLevel(),
     new MemoryBoss(player, {width: canvas.width, height: canvas.height})

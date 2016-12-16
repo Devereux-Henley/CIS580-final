@@ -117,6 +117,7 @@ function Player(position) {
   this.width = 24;
   this.height = 32;
   this.radius = PLAYER_RADIUS;
+  this.circle = {x: this.position.x + 12, y: this.position.y + 16, radius: 12};
 	this.timer = 0;
   this.dodgeTimer = 0;
 	this.renderPosition = 0;

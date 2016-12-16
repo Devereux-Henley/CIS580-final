@@ -43,12 +43,12 @@ class Level extends AbstractLevel {
         this.boss = new ElBlobbo(this.player, 4);
         this.em = new EntityManager(this.size.width, this.size.height, 64);
         this.em.addEntity(this.player);
-        this.em.addEntity(this.boss.collider);
+        this.em.addEntity(this.boss);
     }
 
     render(
-        dt/*: number */,
-        ctx/*: CanvasRenderingContext2D */
+        dt /*: number */,
+        ctx /*: CanvasRenderingContext2D */
     ) {
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -76,7 +76,7 @@ class Level extends AbstractLevel {
         this.player.update(dt);
         this.boss.update(dt);
         this.em.updateEntity(this.player);
-        this.em.updateEntity(this.boss.collider);
+        this.em.updateEntity(this.boss);
         this.em.collide();
     }
 
@@ -101,8 +101,10 @@ class ElBlobbo {
         this.player = player;
         this.position = {
             x: 200,
-            y: 200
+            y: 200,
+            radius: 128
         };
+        this.circle = this.position;
         this.renderTick = 0;
         this.collider = new Collider(this.position, (a)=>null);
 
@@ -113,6 +115,7 @@ class ElBlobbo {
 		this.radius = this.size;
 		this.velocity = {x: 0, y: 0};
 		this.immune = false;
+    this.onCollision = (a) => null;
     }
 
     render(
@@ -123,7 +126,7 @@ class ElBlobbo {
     ctx.translate(this.position.x, this.position.y);
 		ctx.fillStyle = "green";
 		ctx.beginPath();
-		ctx.arc(0, 0, this.size / 2, 0, 2*Math.PI);
+		ctx.arc(0, 0, this.size * .6, 0, 2*Math.PI);
 		ctx.fill();
     ctx.restore();
     }

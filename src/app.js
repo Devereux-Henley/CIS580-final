@@ -15,7 +15,6 @@ var canvas = document.getElementById('screen');
 const LevelCreepyCrawler = require('./level_creepy_crawler/level').Level;
 const ElBlobbo = require('./el_blobbo').Level;
 
-
 const levelSwitcher = new LevelSwitcher(canvas, [
     new ElBlobbo({width: canvas.width, height: canvas.height}),
     new LevelCreepyCrawler({width: canvas.width, height: canvas.height})
@@ -27,6 +26,12 @@ var game = new Game(
     canvas,
     levelSwitcher.update.bind(levelSwitcher),
     levelSwitcher.render.bind(levelSwitcher));
+
+var backgroundMusic = new Audio('assets/Yee.mp3');
+
+backgroundMusic.loop = true;
+backgroundMusic.volume = 1;
+backgroundMusic.play();
 
 // Initialize player and player and player lives
 //var type = "hero";
@@ -40,6 +45,27 @@ var boss = new Boss({x: 48, y: 48}, 4);
 var background = new Image();
 //var map = new Map.Map(2, require('../assets/map/bossmap1.json'));
 background.src = 'assets/background.png';
+
+// Initalize entity manager
+var em = new EntityManager(canvas.width, canvas.height, 32);
+
+em.addEntity(player);
+em.addEntity(boss);
+
+var spawnManager = new SpawnManager();
+var spikeSpawner = {
+  new: function(obj) {
+    return null;
+  }
+};
+spawnManager.addAssociation("Spike", spikeSpawner);
+
+var tileSpawner = {
+  new: function(obj) {
+    return null;
+  }
+};
+spawnManager.addAssociation("Tile", tileSpawner);
 
 /**
  * @function masterLoop
@@ -65,6 +91,12 @@ function update(elapsedTime) {
   player.update(elapsedTime);
   boss.update(elapsedTime, player.position);
 
+
+  em.updateEntity(player);
+  em.updateEntity(boss);
+
+  em.collide();
+  spawnManager.update(elapsedTime);
   //gui.update(elapsedTime);
 }
 
@@ -114,6 +146,6 @@ function renderWorld(elapsedTime, ctx) {
   // Render Boss
   boss.render(elapsedTime, ctx);
 
-  // spawnManager.render(ctx, elapsedTime);
-  // gui.render(elapsedTime, ctx);
+  spawnManager.render(ctx, elapsedTime);
+  //gui.render(elapsedTime, ctx);
 }

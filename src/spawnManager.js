@@ -19,23 +19,24 @@ function SpawnManager() {
 
 SpawnManager.prototype.getLocations = function(layers) {
   for (var i = 0; i < layers.length; i++) {
-
-    if(layers[i].properties.spawning){
+    if(layers[i].spawning){
       for (var j = 0; j < layers[i].objects.length; j++) {
-        if(layers[i].objects[j].properties.Spawn){
+        if(layers[i].objects[j].Spawn){
            var position = {
             x: layers[i].objects[j].x + (layers[i].objects[j].width / 2),
             y: layers[i].objects[j].y + (layers[i].objects[j].height / 2)
           }
-          console.log(position);
-          var spawner = this.associations[layers[i].objects[j].type];
-
+          var spawner = this.associations[layers[i].objects[j].Type];
           this.objects.push(spawner.new(layers[i].objects[j]));
         }
       }
     }
   }
 }
+
+// SpawnManager.prototype.addLocation = function(position, type){
+//   this.locations.push(new SpawnLocation(position, type));
+// }
 
 SpawnManager.prototype.addAssociation = function(type, spawner){
   if(this.associations[type] == null){
@@ -52,8 +53,8 @@ SpawnManager.prototype.update = function(deltaTime){
   });
 }
 
-SpawnManager.prototype.render = function(deltaTime, ctx){
+SpawnManager.prototype.render = function(ctx, deltaTime){
   this.objects.forEach(function(obj) {
-    obj.render(deltaTime, ctx);
+    obj.render(ctx, deltaTime);
   });
 }

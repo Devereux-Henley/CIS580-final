@@ -32,11 +32,10 @@ class Level extends AbstractLevel {
     start() {
         this.player = new Player({x: 500, y: 500});
         this.map = new Map(2, mapdata);
-        this.gui = new Gui(this.player);
         this.boss = new Boss(this.player);
         this.em = new EntityManager(this.size.width, this.size.height, 64);
         this.em.addEntity(this.player);
-        this.em.addEntity(this.boss.collider);
+        this.em.addEntity(this.boss);
     }
 
     render(
@@ -49,7 +48,6 @@ class Level extends AbstractLevel {
             layer.render(ctx);
         }
         this.player.render(dt, ctx);
-        this.gui.render(dt, ctx);
         this.boss.render(dt, ctx);
     }
 
@@ -59,12 +57,12 @@ class Level extends AbstractLevel {
         this.player.update(dt);
         this.boss.update(dt);
         this.em.updateEntity(this.player);
-        this.em.updateEntity(this.boss.collider);
+        this.em.updateEntity(this.boss);
         this.em.collide();
     }
 
     getTitle() {
-        return "Creepy Crawler";
+        return "Dough Blender";
     }
 }
 
@@ -78,16 +76,22 @@ class Boss {
     }
     player: Player
     renderTick: number
-    collider: Collider
     */
     constructor(player) {
         this.player = player;
+        this.gui = new Gui(this.player);
         this.position = {
             x: 200,
             y: 200
         };
         this.renderTick = 0;
-        this.collider = new Collider(this.position, (a)=>null);
+
+        this.size = 100;
+    		this.tag = "boss";
+    		this.shape = "circle";
+    		this.radius = 100;
+    		this.velocity = {x: 0, y: 0};
+    		this.immune = false;
     }
 
     render(
@@ -113,7 +117,11 @@ class Boss {
         ctx.drawImage(img, -60, -60);
         ctx.restore();
         ctx.restore();
+
+        this.gui.render(dt, ctx);
     }
+
+
 
     update(dt) {
         let speed = .04 * dt;
@@ -122,75 +130,58 @@ class Boss {
         this.position.x += norm.x;
         this.position.y += norm.y;
     }
+
+    onCollision(entity) {
+      console.log("here!");
+      switch(entity.tag) {
+        case "player":
+          this.bounce();
+          this.gui.damage();
+          break;
+        default:
+          break;
+      }
+    }
+
+
+    // Bounce functionallity when hit to avoid being double-tapped. -WIP
+    bounce() {
+      /*if(this.player.position.x > this.position.x && this.player.position.y > this.position.y){
+        this.player.position.x -= 30;
+        this.player.position.y -= 30;
+      }
+      else if(this.player.position.x < this.position.x && this.player.position.y > this.position.y){
+        this.player.position.x += 30;
+        this.player.position.y += 30;
+      }
+      else if(this.player.position.y > this.position.y && this.player.position.x < this.position.x){
+        this.player.position.x += 30;
+        this.player.position.y += 30;
+      }
+      else if(this.player.position.y < this.position.y && this.player.position.x > this.position.x){
+        this.player.position.x -= 30;
+        this.player.position.y -= 30;
+      }*/
+      if(this.player.position.x > this.position.x){
+        this.player.position.x += 30;
+      }
+      if(this.player.position.x < this.position.x){
+        this.player.position.x -= 30;
+      }
+      if(this.player.position.y > this.position.y){
+        this.player.position.x -= 30;
+      }
+      if(this.player.position.x < this.position.x){
+        this.player.position.x += 30;
+      }
+    }
+
 }
 
-class ElBlobbo {
-    /*::
-    position: {
-        x: number,
-        y: number
-    }
-    player: Player
-    renderTick: number
-    collider: Collider
-    */
-    constructor(player) {
-        this.player = player;
-        this.position = {
-            x: 200,
-            y: 200
-        };
-        this.renderTick = 0;
-        this.collider = new Collider(this.position, (a)=>null);
-    }
 
-    render(
-        dt,
-        ctx/*: CanvasRenderingContext2D */
-    ) {
-        ctx.fillStyle = "green";
-		ctx.beginPath();
-		ctx.arc(this.position.x, this.position.y, this.size, 0, 2*Math.PI);
-		ctx.fill();
-    }
-
-    update(dt) {
-        let speed = .04 * dt;
-        let norm = vector.scale(vector.normalize(vector.subtract(this.player.position, this.position)), speed);
-
-        this.position.x += norm.x;
-        this.position.y += norm.y;
-    }
-}
 
 function buildImage(src) {
     let img = new Image();
     img.src = src;
     return img;
-}
-
-
-class Collider {
-    /*::
-    shape: "square" | "circle" | "complex"
-    tag: string
-    position: Vector
-    points: Vector[]
-    onCollision: (any)
-    */
-    constructor(
-        position/*: Vector */,
-        onCollision/*: (any) */
-    ) {
-        this.tag = "boss";  // CHECK
-        this.position = position;
-        this.onCollision = onCollision;
-        this.shape = "circle";
-        this.points = [
-            {x: 0, y: 60},
-            {x: 0, y: -60},
-            {x: 60, y: 0},
-            {x: -60, y: 0}
-        ];
-    }
 }

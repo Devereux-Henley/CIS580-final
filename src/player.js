@@ -117,7 +117,6 @@ function Player(position) {
   this.width = 24;
   this.height = 32;
   this.radius = PLAYER_RADIUS;
-  this.circle = {x: this.position.x + 12, y: this.position.y + 16, radius: 12};
 	this.timer = 0;
   this.dodgeTimer = 0;
 	this.renderPosition = 0;
@@ -285,7 +284,7 @@ Player.prototype.onCollision = function(entity) {
 		case "asdf":
 		case "boss":
 			this.damage();
-      console.log("ahh real monsters!");
+      //console.log("ahh real monsters!");
 			break;
 		case "boss2":
 			this.damage();

@@ -18,13 +18,16 @@ Gui.prototype.damage = function() {
 			this.hearts[this.hearts.length - 1].src = 'assets/heart_half.png';
 		}
 		else {
-			this.hearts.splice(this.hearts.length - 1, 1);
+			//this.hearts.splice(this.hearts.length - 1, 1);
+			this.hearts.pop();
 		}
 	}
+	this.health--;
 }
 
 Gui.prototype.update = function(elapsedTime) {
-	if(this.health != this.player.getHealth()){
+	var temp = this.player.getHealth();
+	if(this.health != temp){
 		this.health = this.player.getHealth();
 		this.damage();
 	}

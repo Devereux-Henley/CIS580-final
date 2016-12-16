@@ -44,22 +44,30 @@ class Level extends AbstractLevel {
         this.boss = new ElBlobbo(this.player, 4);
         this.em = new EntityManager(this.size.width, this.size.height, 64);
         this.em.addEntity(this.player);
-        this.em.addEntity(this.boss.collider);
+        this.em.addEntity(this.boss);
 
+        this.spikes = [];
         this.spawnManager = new SpawnManager();
         let spikeSpawner = {
           new: function(obj) {
-            return new Spike({x:176, y:176});
+            return new Spike({x: obj.x, y: obj.y});
           }
         };
         let triggerSpawner = {
           new: function(obj) {
-            return new Trigger({x:464, y:336});
+            return new Trigger({x: obj.x, y: obj.y});
           }
         }
         this.spawnManager.addAssociation("Spike", spikeSpawner);
         this.spawnManager.addAssociation("Trigger", triggerSpawner);
         this.spawnManager.getLocations(this.map.objlayers);
+
+        // console.log(this.spawnManager.objects);
+        // for (let i = 0; i < 4; i++) {
+        //   this.spikes.push(new Spike({x: this.spawnManager.objects[i].x,
+        //                               y: this.spawnManager.objects[i].y}));
+        // }
+        // console.log(this.spikes);
 
         // console.log(this.spawnManager.objects);
         // console.log(this.spawnManager.associations);
@@ -74,6 +82,7 @@ class Level extends AbstractLevel {
         this.player.render(dt, ctx);
         this.gui.render(dt, ctx);
         this.spawnManager.render(dt, ctx);
+        this.spikes.forEach(function(spike) {spike.render(dt, ctx)});
         this.boss.render(dt, ctx);
     }
 
@@ -89,6 +98,7 @@ class Level extends AbstractLevel {
         this.player.update(dt);
         this.boss.update(dt);
         this.spawnManager.update(dt);
+        this.spikes.forEach(function(spike) {spike.update(dt)});
         this.em.updateEntity(this.player);
         this.em.updateEntity(this.boss);
         this.em.collide();

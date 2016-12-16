@@ -30,13 +30,13 @@ function Spike(position) {
   this.position = position;
   this.shape = "square";
   this.weight, this.height = 64;
-  this.triggered = true;
+  this.triggered = false;
 }
 
-Spike.prototype.update = function(trigger) {
-  if (trigger.active) {
-    this.triggered = true;
-  }
+Spike.prototype.update = function(elapsedTime) {
+  // if (trigger.active) {
+  //   this.triggered = true;
+  // }
 }
 
 Spike.prototype.render = function(elapsedTime, ctx) {

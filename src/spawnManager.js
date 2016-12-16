@@ -6,7 +6,7 @@ const SpawnLocation = require('./spawnLocation.js');
 /**
  * @module exports the Map class
  */
-module.exports = exports = SpawnManager;
+module.exports = exports = SpawnManager; 
 
 /**
  * @constructor SpawnManager

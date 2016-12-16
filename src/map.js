@@ -51,12 +51,22 @@ function Map(scale, data) {
             //console.log(self.tilesets[k]);
             ++k;
           }
+          //console.log(layer);
           map[i].push(new Tile(self.tilesets[k], datum));
         }
       }
     }
-    self.layers.push(new Layer(map, self));
+    self.layers.push(new Layer(map, self, layer.name, layer.properties));
   });
+}
+
+Map.prototype.getLayerByName = function(name) {
+  for(let layer of this.layers) {
+    if(layer.name === name) {
+      return layer;
+    }
+  }
+  return undefined;
 }
 
 /**
@@ -71,9 +81,11 @@ Map.prototype.getLayers = function() {
   * @constructor Layer
   * contains layer information
   */
- function Layer(map, owner) {
+ function Layer(map, owner, name, properties) {
    this.map = map;
+   this.name = name;
    this.owner = owner;
+   this.properties = properties;
  }
 
  /**
@@ -104,7 +116,7 @@ Map.prototype.getLayers = function() {
   */
   Layer.prototype.getTile = function(x, y) {
     var tile = this.map[x][y];
-    return new Tile(this.tileset, this.id);
+    return new Tile(tile.tileset, tile.id);
   }
 
 /**

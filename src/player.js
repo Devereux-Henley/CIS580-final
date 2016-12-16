@@ -377,10 +377,6 @@ Player.prototype.update = function(elapsedTime) {
         this.dodgeTimer = 0;
     }
 
-    if (this.state.moveType == 'DODGING') {
-
-    }
-
     if (this.timer > RENDER_TIMER) {
         this.renderPosition++;
         this.timer = 0;
@@ -412,7 +408,6 @@ Player.prototype.render = function(elapsedTime, ctx) {
         this.currentRender.x, this.currentRender.y, this.currentRender.width, this.currentRender.height,
         0, 0, this.width, this.height);
     ctx.restore();
-
 }
 
 

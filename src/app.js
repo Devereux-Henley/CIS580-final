@@ -9,9 +9,16 @@ const EntityManager = require('./entity-manager');
 const SpawnManager = require('./spawnManager');
 const {LevelSwitcher, Level} = require('./level_chooser/main');
 const Gui = require('./gui');
+
 const MissleLevel = require('./missle_boss.js');
 const ElBlobboLevel = require('./elblobbo.js')
 var canvas = document.getElementById('screen');
+
+const MemoryBoss = require('./ddr/boss');
+
+// Initialize player and player and player lives
+var player = new Player({x: 500, y: 500});
+const gui = new Gui(player);
 
 const LevelCreepyCrawler = require('./level_creepy_crawler/level').Level;
 const levelSwitcher = new LevelSwitcher(canvas, [
@@ -25,8 +32,10 @@ const levelSwitcher = new LevelSwitcher(canvas, [
     },
     new LevelCreepyCrawler({width: canvas.width, height: canvas.height}),
     new MissleLevel(),
-    new ElBlobboLevel()
+    new ElBlobboLevel(),
+    new MemoryBoss(player, {width: canvas.width, height: canvas.height})
 ]);
+
 
 /* Global variables */
 // var game = new Game(canvas, update, render);
@@ -35,9 +44,7 @@ var game = new Game(
     levelSwitcher.update.bind(levelSwitcher),
     levelSwitcher.render.bind(levelSwitcher));
 
-// Initialize player and player and player lives
-var player = new Player({x: 500, y: 500});
-const gui = new Gui(player);
+
 
 // Initialize boss object
 var boss = new Boss({x: 48, y: 48}, 4);
@@ -116,6 +123,7 @@ function update(elapsedTime) {
   player.update(elapsedTime);
   boss.update(elapsedTime, player.position);
   gui.update(elapsedTime);
+  MemoryBoss.update(elapsedTime, player.position, canvas);
 
   em.updateEntity(player);
   em.updateEntity(boss);

@@ -364,10 +364,6 @@ Player.prototype.update = function(elapsedTime) {
         this.dodgeTimer = 0;
     }
 
-    if (this.state.moveType == 'DODGING') {
-
-    }
-
     if (this.timer > RENDER_TIMER) {
         this.renderPosition++;
         this.timer = 0;

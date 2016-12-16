@@ -116,7 +116,7 @@ Map.prototype.getLayers = function() {
   */
   Layer.prototype.getTile = function(x, y) {
     var tile = this.map[x][y];
-    return new Tile(this.tileset, this.id);
+    return new Tile(tile.tileset, tile.id);
   }
 
 /**

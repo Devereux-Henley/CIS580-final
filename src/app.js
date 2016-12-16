@@ -6,9 +6,16 @@ const Boss = require('./boss-2');
 const Player = require('./player');
 const Map = require('./map');
 const EntityManager = require('./entity-manager');
+const SpawnManager = require('./spawnManager');
 const {LevelSwitcher, Level} = require('./level_chooser/main');
-const {Gui} = require('./gui');
+const Gui = require('./gui');
 var canvas = document.getElementById('screen');
+
+const MemoryBoss = require('./ddr/boss');
+
+// Initialize player and player and player lives
+var player = new Player({x: 500, y: 500});
+const gui = new Gui.Gui(player);
 
 const LevelCreepyCrawler = require('./level_creepy_crawler/level').Level;
 const levelSwitcher = new LevelSwitcher(canvas, [
@@ -21,9 +28,9 @@ const levelSwitcher = new LevelSwitcher(canvas, [
         start: ()=>{},
     },
     new LevelCreepyCrawler({width: canvas.width, height: canvas.height}),
+    new MemoryBoss(player, {width: canvas.width, height: canvas.height})
 ]);
 
-const MemoryMap = require('./ddr/boss');
 
 /* Global variables */
 // var game = new Game(canvas, update, render);
@@ -32,12 +39,10 @@ var game = new Game(
     levelSwitcher.update.bind(levelSwitcher),
     levelSwitcher.render.bind(levelSwitcher));
 
-// Initialize player and player and player lives
-var player = new Player({x: 500, y: 500});
-const gui = new Gui(player);
+
 
 // Initialize boss object
-var boss = new Boss({x: 48, y: 48}, 1);
+var boss = new Boss({x: 48, y: 48}, 4);
 
 // Initialize Map
 var background = new Image();
@@ -49,6 +54,37 @@ var em = new EntityManager(canvas.width, canvas.height, 32);
 
 em.addEntity(player);
 em.addEntity(boss);
+
+var spawnManager = new SpawnManager();
+var spikeSpawner = {
+  new: function(obj) {
+    return {
+      render: function (elapsedTime, ctx) {
+
+        ctx.fillText("there is some text stuff here", 300, 300);
+      },
+      update: function() {
+
+      }
+    };
+  }
+};
+spawnManager.addAssociation("Spike", spikeSpawner);
+
+var tileSpawner = {
+  new: function(obj) {
+    return {
+      render: function () {
+
+      },
+      update: function() {
+
+      }
+    };
+  }
+};
+spawnManager.addAssociation("Tile", tileSpawner);
+spawnManager.getLocations(map.objlayers)
 
 /**
  * @function masterLoop
@@ -73,13 +109,14 @@ function update(elapsedTime) {
   // update the player
   player.update(elapsedTime);
   boss.update(elapsedTime, player.position);
-
+  gui.update(elapsedTime);
+  MemoryBoss.update(elapsedTime, player.position, canvas);
 
   em.updateEntity(player);
   em.updateEntity(boss);
 
   em.collide();
-
+  spawnManager.update(elapsedTime);
 }
 
 /**
@@ -121,16 +158,19 @@ function renderWorld(elapsedTime, ctx) {
   });
 
   // Render the player
-	ctx.save();
+  ctx.save();
   player.render(elapsedTime, ctx);
-	ctx.restore();
+  ctx.restore();
 
   // Render Boss
   boss.render(elapsedTime, ctx);
-  gui.render(elapsedTime, ctx)
+  gui.render(elapsedTime, ctx);
+  spawnManager.render(elapsedTime, ctx);
 }
+
 
 // HEALTH
 function damagePlayer() {
 	player.damage();
+	gui.damage();
 }
